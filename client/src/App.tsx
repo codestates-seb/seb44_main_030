@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import loadable from '@loadable/component';
 import Header from './components/header';
+import Footer from './components/Footer';
 import Globalstyle from './GlobalStyle';
 import './App.css';
 
@@ -13,9 +14,10 @@ const Mypage = loadable(() => import('./pages/Mypage'));
 
 function App() {
     return (
-        <>
+        <div>
             <Globalstyle />
             <Header></Header>
+            <div style={{ paddingTop: '85px' }}></div>
             <Routes>
                 <Route path="/" element={<Main></Main>}></Route>
                 <Route path="/signup" element={<Signup></Signup>}></Route>
@@ -24,7 +26,8 @@ function App() {
                 <Route path="/club" element={<Club></Club>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
             </Routes>
-        </>
+            <Footer></Footer>
+        </div>
     );
 }
 
