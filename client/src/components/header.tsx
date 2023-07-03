@@ -13,44 +13,46 @@ const Header = () => {
     const [isLogin, setIsLogIn] = useState<boolean>(false);
     const [menu, setMenu] = useState(false);
     return (
-        <StyledHeader>
-            <StyledImg
-                src={LOGO}
-                alt="logo"
-                onClick={() => {
-                    navigate('/');
-                }}
-            />
+        <div style={{ position: 'fixed' }}>
+            <StyledHeader>
+                <StyledImg
+                    src={LOGO}
+                    alt="logo"
+                    onClick={() => {
+                        navigate('/');
+                    }}
+                />
 
-            <div
-                onClick={() => {
-                    navigate('/community');
-                }}
-            >
-                Community
-            </div>
-
-            <div
-                onClick={() => {
-                    navigate('/club');
-                }}
-            >
-                Grouping
-            </div>
-            {isLogin === false ? (
-                <div onClick={() => setIsLogIn(true)}>Login</div>
-            ) : (
-                <div style={{ position: 'relative' }}>
-                    <StyledProfile
-                        src={profile}
-                        onClick={() => {
-                            setMenu(!menu);
-                        }}
-                    ></StyledProfile>
-                    {menu ? <Modal setIsLogIn={setIsLogIn}></Modal> : null}
+                <div
+                    onClick={() => {
+                        navigate('/community');
+                    }}
+                >
+                    Community
                 </div>
-            )}
-        </StyledHeader>
+
+                <div
+                    onClick={() => {
+                        navigate('/club');
+                    }}
+                >
+                    Grouping
+                </div>
+                {isLogin === false ? (
+                    <div onClick={() => setIsLogIn(true)}>Login</div>
+                ) : (
+                    <div style={{ position: 'relative' }}>
+                        <StyledProfile
+                            src={profile}
+                            onClick={() => {
+                                setMenu(!menu);
+                            }}
+                        ></StyledProfile>
+                        {menu ? <Modal setIsLogIn={setIsLogIn}></Modal> : null}
+                    </div>
+                )}
+            </StyledHeader>
+        </div>
     );
 };
 
@@ -84,7 +86,6 @@ const StyledHeader = styled.div`
     padding: 20px;
     height: 50px;
     width: 100vw;
-    position: fixed;
     font-size: 1.5rem;
     color: rgba(105, 105, 105, 1);
     div {
