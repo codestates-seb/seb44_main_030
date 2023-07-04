@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import loadable from '@loadable/component';
 import Header from './components/header';
 import Footer from './components/Footer';
@@ -13,11 +13,14 @@ const Club = loadable(() => import('./pages/Club'));
 const Mypage = loadable(() => import('./pages/Mypage'));
 
 function App() {
+    const location = useLocation();
+    const hideHeaderFooter = location.pathname === `/signup` || location.pathname === `/login`;
+
     return (
         <div>
             <Globalstyle />
-            <Header></Header>
-            <div style={{ paddingTop: '85px' }}></div>
+            {!hideHeaderFooter && <Header></Header>}
+            {!hideHeaderFooter && <div style={{ paddingTop: '85px' }}></div>}
             <Routes>
                 <Route path="/" element={<Main></Main>}></Route>
                 <Route path="/signup" element={<Signup></Signup>}></Route>
@@ -26,7 +29,7 @@ function App() {
                 <Route path="/club" element={<Club></Club>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
             </Routes>
-            <Footer></Footer>
+            {!hideHeaderFooter && <Footer></Footer>}
         </div>
     );
 }
