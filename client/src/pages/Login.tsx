@@ -1,12 +1,13 @@
+import styled from 'styled-components';
+import { useForm } from 'react-hook-form';
+
 import LoginBG from '../../public/login.png';
 import LogoIcon from '../../public/onlyLOGO.png';
 import Logo from '../../public/SplashZoneWhite.png';
 import Email from '../../public/e-mail Address.png';
 import Password from '../../public/Password.png';
-import EmailPlaceholder from '../../public/enter your e-mail address.png';
 
-import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
+import RegisterForm from '../components/RegisterForm';
 
 interface FormInput {
     email: string;
