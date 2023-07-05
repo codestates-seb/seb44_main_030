@@ -27,7 +27,7 @@ const StyledFooter = styled.footer`
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     padding: 10px;
-    width: 100%;
+
     height: 250px;
     color: white;
     font-size: 1.5rem;
