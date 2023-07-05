@@ -19,9 +19,9 @@ public class MemberController {
     @PostMapping("/members")
     public Member postMember(@RequestBody MemberDto memberDto) {
         Member member = new Member(memberDto);
-        Member registeredMember = memberService.registerMember(member);
+        Member createdMember = memberService.createMember(member);
 
-        return registeredMember;
+        return createdMember;
     }
 
     @GetMapping("/members")

@@ -19,17 +19,21 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public Member registerMember(Member member) {
+    public Member createMember(Member member) {
+        String memberName = member.getName();
         String memberEmail = member.getEmail();
-        Optional<Member> optionalMember = memberRepository.findByEmail(memberEmail);
 
-        if (optionalMember.isPresent()) throw new ResponseStatusException(HttpStatus.CONFLICT);
+        Optional<Member> optionalMemberByName = memberRepository.findByName(memberName);
+        Optional<Member> optionalMemberByEmail = memberRepository.findByEmail(memberEmail);
 
-        member.setRegisteredAt(LocalDateTime.now());
+        if (optionalMemberByName.isPresent() || optionalMemberByEmail.isPresent())
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
 
-        Member registeredMember = memberRepository.save(member);
+        member.setCreatedAt(LocalDateTime.now());
 
-        return registeredMember;
+        Member createdMember = memberRepository.save(member);
+
+        return createdMember;
     }
 
     public List<Member> findAllMembers() {
@@ -49,6 +53,8 @@ public class MemberService {
         Member selectedMember = findMember(memberId);
 
         if (member.getName() != null) selectedMember.setName(member.getName());
+        if (member.getProfileImageUrl() != null) selectedMember.setProfileImageUrl(member.getProfileImageUrl());
+        if (member.getBio() != null) selectedMember.setBio(member.getBio());
 
         Member updatedMember = memberRepository.save(selectedMember);
 
@@ -58,7 +64,7 @@ public class MemberService {
     public void terminateMember(long memberId) {
         Member selectedMember = findMember(memberId);
         selectedMember.setTerminatedAt(LocalDateTime.now());
-        selectedMember.setMemberStatus(true);
+        selectedMember.setTerminated(true);
 
         memberRepository.save(selectedMember);
     }
