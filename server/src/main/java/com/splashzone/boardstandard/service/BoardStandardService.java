@@ -55,7 +55,7 @@ public class BoardStandardService {
     public void deleteStandard(long standardId) {
         BoardStandard boardStandard = boardStandardRepository.findById(standardId).orElseThrow(() -> new RuntimeException());
         boardStandardRepository.save(boardStandard);
-        //TODO: 삭제 이렇게하는거 맞는지 맨정신에 확인
+        //TODO: 삭제 이렇게하는거 맞는지 재확인
     }
 
     //회원이 존재하는지 확인
