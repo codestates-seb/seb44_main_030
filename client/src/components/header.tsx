@@ -13,7 +13,7 @@ const Header = () => {
     const [isLogin, setIsLogIn] = useState<boolean>(false);
     const [menu, setMenu] = useState(false);
     return (
-        <div style={{ position: 'fixed' }}>
+        <div style={{ position: 'fixed', zIndex: '999' }}>
             <StyledHeader>
                 <StyledImg
                     src={LOGO}
@@ -84,10 +84,11 @@ const StyledHeader = styled.div`
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     padding: 20px;
-    height: 50px;
+    height: 40px;
     width: 100vw;
     font-size: 1.5rem;
     color: rgba(105, 105, 105, 1);
+    background-color: white;
     div {
         padding-top: 2px;
     }
