@@ -1,6 +1,6 @@
 package com.splashzone.boardstandard.entity;
 
-import com.splashzone.member.Member;
+import com.splashzone.member.entity.Member;
 import com.splashzone.audit.Auditable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

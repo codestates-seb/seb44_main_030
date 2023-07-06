@@ -1,6 +1,5 @@
 package com.splashzone.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

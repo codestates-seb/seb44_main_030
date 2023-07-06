@@ -1,5 +1,6 @@
-package com.splashzone.member;
+package com.splashzone.member.repository;
 
+import com.splashzone.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

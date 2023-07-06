@@ -1,6 +1,6 @@
 package com.splashzone.boardstandard.dto;
 
-import com.splashzone.member.MemberDto;
+import com.splashzone.member.dto.MemberDto;
 import lombok.Getter;
 import lombok.Setter;
 

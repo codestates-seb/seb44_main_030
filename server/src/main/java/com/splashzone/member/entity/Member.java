@@ -1,4 +1,4 @@
-package com.splashzone.member;
+package com.splashzone.member.entity;
 
 import lombok.*;
 
@@ -31,7 +31,6 @@ public class Member {
 
     @Column(nullable = true)
     private String bio;
-
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

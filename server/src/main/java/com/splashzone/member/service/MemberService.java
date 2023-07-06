@@ -1,21 +1,20 @@
-package com.splashzone.member;
+package com.splashzone.member.service;
 
 import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
+import com.splashzone.member.entity.Member;
+import com.splashzone.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.asm.MemberRemoval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,7 +40,6 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-
     public Member updateMember(Member member) {
         Optional<Member> optionalMember = memberRepository.findById(member.getMemberId());
         Member fm = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
@@ -52,13 +50,10 @@ public class MemberService {
         return memberRepository.save(fm);
     }
 
-
+    @Transactional(readOnly = true)
     public Member findMember(long memberId) {
-        Optional<Member> optionalMember = memberRepository.findById(memberId);
-        Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        return findMember;
+        return findVerifiedMember(memberId);
     }
-
 
     public Page<Member> findMembers(int page, int size) {
         return memberRepository.findAll(PageRequest.of(page, size, Sort.by("memberId").descending()));
@@ -67,5 +62,14 @@ public class MemberService {
     public void terminateMember(long memberId) {
         Member findMember = findMember(memberId);
         memberRepository.delete(findMember);
+    }
+
+    @Transactional(readOnly = true)
+    public Member findVerifiedMember(long memberId) {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member findMember =
+                optionalMember.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        return findMember;
     }
 }
