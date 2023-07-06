@@ -49,7 +49,7 @@ public class BoardStandardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{standard-id")
+    @GetMapping("/{standard-id}")
     public ResponseEntity getStandard(@PathVariable("standard-id") long standardId){
         BoardStandard boardStandard = boardStandardService.selectStandard(standardId);
         boardStandardService.increaseViews(boardStandard);

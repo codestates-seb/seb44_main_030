@@ -32,7 +32,6 @@ public class Member {
     @Column(nullable = true)
     private String bio;
 
-
     @Column(nullable = false)
     private LocalDateTime createdAt;
 

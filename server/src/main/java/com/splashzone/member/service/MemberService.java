@@ -40,7 +40,6 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-
     public Member updateMember(Member member) {
         Optional<Member> optionalMember = memberRepository.findById(member.getMemberId());
         Member fm = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
@@ -51,13 +50,10 @@ public class MemberService {
         return memberRepository.save(fm);
     }
 
-
+    @Transactional(readOnly = true)
     public Member findMember(long memberId) {
-        Optional<Member> optionalMember = memberRepository.findById(memberId);
-        Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        return findMember;
+        return findVerifiedMember(memberId);
     }
-
 
     public Page<Member> findMembers(int page, int size) {
         return memberRepository.findAll(PageRequest.of(page, size, Sort.by("memberId").descending()));

@@ -34,7 +34,6 @@ public class MemberController {
         this.mapper = mapper;
     }
 
-
     @PostMapping("/members")
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
         Member member = mapper.memberPostToMember(requestBody);
@@ -64,7 +63,6 @@ public class MemberController {
         return ResponseEntity.ok(new SingleResponseDto<>(response));
     }
 
-
     @GetMapping
     public ResponseEntity getMembers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size) {
@@ -80,5 +78,4 @@ public class MemberController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

@@ -10,8 +10,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class MemberDto {
-
-
     @Getter
     @AllArgsConstructor
     public static class Response {
@@ -37,14 +35,11 @@ public class MemberDto {
         private String password;
 
         private String bio;
-
     }
-
 
     @Getter
     public static class Patch {
         private long memberId;
-
 
 //        email, name 모두 수정 불가능
 //        @NotBlank(message = "공백이 아니어야 합니다.")
@@ -61,7 +56,5 @@ public class MemberDto {
         public void setMemberId(long memberId) {
             this.memberId = memberId;
         }
-        
     }
-
 }
