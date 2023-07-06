@@ -1,5 +1,6 @@
 package com.splashzone.boardstandard.entity;
 
+import com.splashzone.member.Member;
 import com.splashzone.audit.Auditable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,12 @@ public class BoardStandard extends Auditable {
     @Column
     private long view = 0L;
 
-    //TODO memberId, tagId mapping,likeCount 추가 해야됨!!
+    //TODO tagId mapping,likeCount 추가 해야됨!!
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
 
     public BoardStandard(long standardId, String title, String content, long view) {
         this.standardId = standardId;

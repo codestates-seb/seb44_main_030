@@ -1,5 +1,6 @@
 package com.splashzone.boardstandard.dto;
 
+import com.splashzone.member.MemberDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -54,6 +55,6 @@ public class BoardStandardDto {
         private LocalDateTime dateCreated;
         private LocalDateTime dateModified;
         private MemberDto.Response member;
-        private List<CommentDto.CommentResponseList> comments;
+
     }
 }

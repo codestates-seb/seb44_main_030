@@ -1,17 +1,17 @@
 package com.splashzone.member;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@Data
 @Entity
+@Table(name = "Member")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Member {
     @Id
     @GeneratedValue
@@ -34,17 +34,16 @@ public class Member {
 
 
     @Column(nullable = false)
-    private LocalDateTime registeredAt;
+    private LocalDateTime createdAt;
 
     private LocalDateTime terminatedAt;
 
     @Column(nullable = false)
-    private boolean memberStatus;
+    private boolean isTerminated;
 
-    public Member(MemberDto memberDto) {
-        this.name = memberDto.getName();
-        this.email = memberDto.getEmail();
-        this.password = memberDto.getPassword();
-        this.bio = memberDto.getBio();
+    public Member(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
     }
 }
