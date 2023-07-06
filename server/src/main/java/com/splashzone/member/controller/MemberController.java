@@ -34,7 +34,7 @@ public class MemberController {
         this.mapper = mapper;
     }
 
-    @PostMapping("/members")
+    @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
         Member member = mapper.memberPostToMember(requestBody);
 
