@@ -2,7 +2,9 @@ package com.splashzone.boardstandard.mapper;
 
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
-import com.splashzone.member.*;
+import com.splashzone.member.dto.MemberDto;
+import com.splashzone.member.entity.Member;
+import com.splashzone.member.mapper.MemberMapper;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.splashzone.member;
+package com.splashzone.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

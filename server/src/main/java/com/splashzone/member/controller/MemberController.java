@@ -1,7 +1,11 @@
-package com.splashzone.member;
+package com.splashzone.member.controller;
 
 import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
+import com.splashzone.member.dto.MemberDto;
+import com.splashzone.member.mapper.MemberMapper;
+import com.splashzone.member.service.MemberService;
+import com.splashzone.member.entity.Member;
 import com.splashzone.utils.UriCreator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
