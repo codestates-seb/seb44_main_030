@@ -109,9 +109,7 @@ const Modal = ({ setModal }) => {
     };
 
     const handleSave = () => {
-        // 저장 버튼을 눌렀을 때의 동작을 구현합니다.
         console.log('저장됨:', text);
-        // 여기서 필요한 로직을 추가하세요.
     };
 
     const handleClose = () => {
@@ -125,7 +123,7 @@ const Modal = ({ setModal }) => {
                     <button className="modal-close" onClick={handleClose}>
                         X
                     </button>
-                    <input type="text" placeholder="Add event..." value={text} onChange={handleTextChange} />
+                    <textarea className="input" placeholder="Add event..." value={text} onChange={handleTextChange} />
                     <div className="modal-buttons">
                         <button onClick={handleSave}>Save</button>
                         <button>Cancel</button>
@@ -346,6 +344,11 @@ const Styledmodal = styled.div`
         background-color: white;
         padding: 20px;
         border-radius: 4px;
+    }
+
+    .input {
+        width: 200px;
+        height: 200px;
     }
 
     .modal-close {
