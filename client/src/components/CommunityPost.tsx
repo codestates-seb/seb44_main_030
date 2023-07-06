@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import LikeIcon from '../assets/Like.svg';
 import LikeFilledIcon from '../assets/Like_filled.svg';
@@ -9,20 +9,21 @@ import { useNavigate } from 'react-router-dom';
 interface CommunityPostProps {
     postdata: {
         memberId: number;
-        memberProfileImg: string; //[작성자 프로필 이미지 소스] 추가: 커뮤니티 게시판 글목록 조회 시 각 게시글 작성자 프로필이미지 표시에 필요합니다.
-        name: string; //[작성자 닉네임] API명세 추가: 커뮤니티 게시판 글목록 조회 시 각 게시글 작성자 닉네임 표시에 필요합니다.
+        memberProfileImg: string; //[작성자 프로필 이미지 소스]
+        name: string; //[작성자 닉네임]
         title: string;
         content: string;
         tag: string;
         view: number;
         registeredAt: string;
         modifiedAt: string | null;
-        like: number; //[게시글에 대한 좋아요 갯수] 추가: 커뮤니티 게시판 글목록 조회 시 좋아요갯수 표시에 필요합니다.
-        commentCount: number; //[게시글에 대한 댓글 갯수] 추가: 커뮤니티 게시판 글목록 조회 시 댓글갯수 표시에 필요합니다.
-        memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열] 추가: 커뮤니티 게시판 글목록 조회 시 하트색 표시에 필요합니다.(ex. memberLiked 목록에 사용자id 포함 되어있으면 빨간하트로)
-        standardId: number; //[게시글 자체에 대한 ID] 추가: 게시판에서 게시글 목록을 구현할 때 게시글에 대한 고유한 ID가 필요합니다. + id를 알아야 상세 게시글 조회 시 요청 보낼 수 있음.
+        like: number; //[게시글에 대한 좋아요 갯수]
+        commentCount: number;
+        memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
+        standardId: number; //[게시글 자체에 대한 ID]
     };
 }
+
 const CommunityPost = (props: CommunityPostProps) => {
     const {
         memberId,
@@ -49,24 +50,24 @@ const CommunityPost = (props: CommunityPostProps) => {
         setIsLiked(memberLiked.includes(mockMemberId));
     }, [like, memberLiked, mockMemberId]);
 
-    //좋아요 하트색, 숫자 상태 변경
-    const handleLike = () => {
+    //좋아요 하트색,숫자 상태 변경 + API 요청 추가 필요
+    const handleLike = useCallback(() => {
         isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
         setIsLiked((prev) => !prev);
-    };
+    }, [isLiked]);
 
     //게시글 상세페이지로 이동
-    const handleNavigateDetail = () => {
+    const handleNavigateDetail = useCallback(() => {
         navigate(`/community/detail`, { state: standardId });
-    };
+    }, [standardId]);
 
     //프로필 페이지로 이동
-    const handleNavigateProfile = () => {
+    const handleNavigateProfile = useCallback(() => {
         navigate(`/mypage`, { state: memberId });
-    };
+    }, [memberId]);
 
-    // 날짜 어떻게 받을 건지 여쭤봐야함.(포맷팅 된 상태 or Not)
-    // 날짜 포맷팅
+    // 날짜 어떻게 받을 건지 상의 필요.(포맷팅 된 상태 or Not)
+    // 날짜 포맷팅 임의로
     const dateStr = modifiedAt || registeredAt;
     const datePart = dateStr.split('T')[0];
     const dateArr = datePart.split('-');
@@ -96,7 +97,7 @@ const CommunityPost = (props: CommunityPostProps) => {
                 </div>
             </LeftSection>
             <MiddleSection>
-                <h3 onClick={handleNavigateDetail}>{title}</h3>
+                <h3 title={`${title}`} onClick={handleNavigateDetail}>{title}</h3>
                 {/* content 잘라서 사용할 지 잘린 채로 받을 지 결정할 것 */}
                 <p>{content}</p>
                 <div>
@@ -106,7 +107,7 @@ const CommunityPost = (props: CommunityPostProps) => {
             <RightSection>
                 <div>
                     <ProfileImgStyled src={memberProfileImg} alt="profileImage" />
-                    <span onClick={handleNavigateProfile}>{name}</span>
+                    <div title={`${name}`} onClick={handleNavigateProfile}>{name}</div>
                 </div>
                 <span>{formattedDate}</span>
             </RightSection>
@@ -124,6 +125,7 @@ const PostContainer = styled.li`
     justify-content: space-around;
     &:hover {
         background-color: #eeeeee;
+        outline: solid 1px #3884d5;
     }
     cursor: default;
 `;
@@ -170,9 +172,13 @@ const MiddleSection = styled.div`
     justify-content: center;
     align-items: start;
     > h3 {
+        max-width: 320px;
         align-self: flex-start;
         margin: 0;
         font-size: 20px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
         &:hover {
             color: #3884d5;
             cursor: pointer;
@@ -181,6 +187,9 @@ const MiddleSection = styled.div`
     > p {
         margin: 10px 0 10px 0;
         font-size: 12px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
     > div > span {
         font-size: 12px;
@@ -197,11 +206,17 @@ const RightSection = styled.div`
     justify-content: end;
     font-size: 12px;
     margin-bottom: 20px;
-    > div > span {
+    > div{
+        display: flex;
+        > div {
+        width: 90px;
         cursor: pointer;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
         &:hover {
             color: #3884d5;
-        }
+        }}
     }
 `;
 export default CommunityPost;

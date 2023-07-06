@@ -7,7 +7,7 @@ const CommunityDetail = () => {
     return (
         <div>
             <div>커뮤니티 게시글 상세페이지입니다.</div>
-            <div>게시글ID: {`${standardId}`}</div>
+            <div>게시글ID: {`${standardId}`}로 요청한 데이터를 보여줍니다.</div>
         </div>
     );
 };

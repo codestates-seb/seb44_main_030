@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import CommunityPost from '../components/CommunityPost';
 import ProfileImg from '../assets/ProfileImg.png';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import SearchIcon from '../assets/Search.svg';
 import backgroundImg from '../assets/Community_background.png';
-
+import PageButton from '../components/PageButton';
+import { useNavigate } from 'react-router-dom';
 type SearchInput = {
     Keyword: string;
 };
@@ -18,7 +19,7 @@ const Community = () => {
             memberId: 1,
             memberProfileImg: ProfileImg,
             name: '닉네임1',
-            title: '아무제목이나~~',
+            title: '아무제목이나제목이길어진다면~~~~~~~~~~~~',
             content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
             tag: '카이트서핑',
             view: 200,
@@ -195,11 +196,12 @@ const Community = () => {
             standardId: 12,
         },
     ];
+    //인기게시물은 useQuery 사용 시 stale time 길게 설정
     const popularMockdata = [
         {
             memberId: 1,
             memberProfileImg: ProfileImg,
-            name: '닉네임1',
+            name: '닉네임이길어어어어',
             title: '아무제목이나~~',
             content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
             tag: '카이트서핑',
@@ -286,8 +288,9 @@ const Community = () => {
             memberLiked: [1, 2, 3],
             standardId: 6,
         },
-    ];
+    ]; 
     const tags = [
+        '전체',
         '다이빙',
         '스노클링',
         '플라이보드',
@@ -299,18 +302,46 @@ const Community = () => {
         '카이트서핑',
         '카약&카누',
     ];
-    const [currTab, setCurrTab] = useState(tags[0]);
-    const filterHandle = (e: React.MouseEvent<HTMLLIElement>) => {
-        setCurrTab(e.currentTarget.innerText);
-    };
+    const [currTag, setCurrTag] = useState<string>(tags[0]);
+    const [pageArr, setPageArr] = useState<Array<number>>([1, 2, 3, 4, 5]);
+    const [currPage, setCurrPage] = useState<number>(1);
+    const navigate = useNavigate();
+    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
+        setCurrTag(e.currentTarget.innerText);
+    }, []);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<SearchInput>();
-    const onSubmit: SubmitHandler<SearchInput> = (data) => {
-        //검색 api 요청
+    // const keywordWatched = watch("Keyword")
+    const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
+        //검색 api 요청 추가, Query key로 currTag, searchKeyword, currPage 넣기.
         console.log(data);
+    }, []);
+    const handlePageList = (e: React.MouseEvent<HTMLLIElement>) => {
+        if (e.currentTarget.innerText === '다음') {
+            setPageArr((prevPageArr) => {
+                const updatedPageArr = [...prevPageArr].map((el) => el + 5);
+                setCurrPage(updatedPageArr[0]);
+                return updatedPageArr;
+            });
+        }
+        if (e.currentTarget.innerText === '이전') {
+            currPage === 1 ||
+                setPageArr((prevPageArr) => {
+                    const updatedPageArr = [...prevPageArr].map((el) => el - 5);
+                    setCurrPage(updatedPageArr[0]);
+                    return updatedPageArr;
+                });
+        }
+    };
+    const handleNavigateCreate = () => {
+        navigate('/community/create');
+    };
+    const handleCurrPage = (e: React.MouseEvent<HTMLLIElement>) => {
+        console.log(Number(e.currentTarget.innerText));
+        setCurrPage(Number(e.currentTarget.innerText));
     };
     return (
         <Background $image={backgroundImg}>
@@ -326,7 +357,7 @@ const Community = () => {
                 <MiddleSection>
                     <TagSpace>
                         {tags.map((tagName, idx) => (
-                            <li key={idx} className={`${currTab === tagName}`} onClick={filterHandle}>
+                            <li key={idx} className={`${currTag === tagName}`} onClick={handleTagSelect}>
                                 {tagName}
                             </li>
                         ))}
@@ -351,7 +382,7 @@ const Community = () => {
                             </div>
                         </form>
                     </SearchSpace>
-                    <button>글 작성</button>
+                    <button onClick={handleNavigateCreate}>글 작성</button>
                 </MiddleSection>
                 <BottomSection>
                     <AllPostContainer>
@@ -359,7 +390,13 @@ const Community = () => {
                             <CommunityPost key={`all_${item.standardId}`} postdata={item} />
                         ))}
                     </AllPostContainer>
-                    <PageContainer></PageContainer>
+                    <PageContainer>
+                        <PageButton onClick={handlePageList} data={{ value: '이전', currPage }} />
+                        {pageArr.map((value, idx) => (
+                            <PageButton key={idx} onClick={handleCurrPage} data={{ value, currPage }} />
+                        ))}
+                        <PageButton onClick={handlePageList} data={{ value: '다음', currPage }} />
+                    </PageContainer>
                 </BottomSection>
             </CommunityContainer>
         </Background>
@@ -425,7 +462,9 @@ const TagSpace = styled.ul`
     height: 90px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: start;
+    justify-content: center;
+    padding: 5px 0 5px 0;
+    align-items: center;
     border-radius: 15px;
     border: 1px solid #696969;
     background: #fff;
@@ -462,7 +501,7 @@ const SearchSpace = styled.div`
                 border: 1px solid #696969;
                 background: #fff;
                 box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-                padding-left: 20px;
+                padding-left: 15px;
                 font-size: 20px;
                 flex-basis: 90%;
                 &:focus {
@@ -503,9 +542,22 @@ const AllPostContainer = styled.ul`
 `;
 
 const BottomSection = styled.section`
-    margin-bottom: 100px;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 `;
 
-const PageContainer = styled.div``;
+const PageContainer = styled.ul`
+    width: 385px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    > li {
+        margin: 0 3px 0 3px;
+    }
+`;
 
 export default Community;
