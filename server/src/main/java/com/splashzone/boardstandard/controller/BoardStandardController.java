@@ -33,10 +33,10 @@ public class BoardStandardController {
     private final static String STANDARD_DEFAULT_URL = "/standards";
 
 
-    @PostMapping("/{member-id}")
-    public ResponseEntity postStandard(@PathVariable("member-id") long memberId, @Valid @RequestBody BoardStandardDto.Post postDto){
+    @PostMapping
+    public ResponseEntity postStandard(@Valid @RequestBody BoardStandardDto.Post postDto){
         // TODO: 토큰 있는 경우로 수정해야됨
-        BoardStandard boardStandard = boardStandardService.createStandard(postDto, memberId);
+        BoardStandard boardStandard = boardStandardService.createStandard(boardStandardMapper.postDtoToBoardStandard(postDto));
         URI location = UriCreator.createUri(STANDARD_DEFAULT_URL, boardStandard.getStandardId());
         return ResponseEntity.created(location).build();
     }

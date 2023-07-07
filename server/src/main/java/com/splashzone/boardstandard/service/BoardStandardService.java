@@ -13,22 +13,34 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BoardStandardService {
     private final BoardStandardMapper boardStandardMapper;
     private final BoardStandardRepository boardStandardRepository;
     private final MemberService memberService;
 
-    public BoardStandard createStandard(BoardStandardDto.Post postDto, long memberId) {
-        Member member = memberService.findMember(memberId);
-        BoardStandard boardStandard = boardStandardMapper.postDtoToBoardStandard(postDto);
-        boardStandard.setMember(member);
-        boardStandardRepository.save(boardStandard);
-        return boardStandard;
+    public BoardStandard createStandard(BoardStandard boardStandard) {
+        Member member = memberService.findMember(boardStandard.getMember().getMemberId());
+        BoardStandard reBuildBoardStandard = BoardStandard.builder()
+                .title(boardStandard.getTitle())
+                .content(boardStandard.getContent())
+                .member(member)
+                .build();
+
+        member.getBoardStandards().add(reBuildBoardStandard);
+
+        return boardStandardRepository.save(reBuildBoardStandard);
+
+//        BoardStandard boardStandard = boardStandardMapper.postDtoToBoardStandard(postDto);
+//        boardStandard.setMember(member);
+//        boardStandardRepository.save(boardStandard);
+//        return boardStandard;
     }
 
     public BoardStandard updateStandard(BoardStandard boardStandard) {

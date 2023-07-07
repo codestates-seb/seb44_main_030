@@ -1,9 +1,12 @@
 package com.splashzone.member.entity;
 
+import com.splashzone.boardstandard.entity.BoardStandard;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Member")
@@ -39,6 +42,10 @@ public class Member {
 
     @Column(nullable = false)
     private boolean isTerminated;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private List<BoardStandard> boardStandards = new ArrayList<>();
 
     public Member(String email, String name, String password) {
         this.email = email;

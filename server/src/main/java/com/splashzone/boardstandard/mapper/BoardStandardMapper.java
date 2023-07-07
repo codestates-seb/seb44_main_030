@@ -13,7 +13,16 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {MemberMapper.class})
 public interface BoardStandardMapper {
-    BoardStandard postDtoToBoardStandard(BoardStandardDto.Post postDto);
+    default BoardStandard postDtoToBoardStandard(BoardStandardDto.Post postDto){
+        Member member = new Member();
+        member.setMemberId(postDto.getMemberId());
+
+        return BoardStandard.builder()
+                .title(postDto.getTitle())
+                .content(postDto.getContent())
+                .member(member)
+                .build();
+    }
 
     BoardStandard patchDtoToBoardStandard(BoardStandardDto.Patch patchDto);
 

@@ -2,17 +2,17 @@ package com.splashzone.boardstandard.entity;
 
 import com.splashzone.member.entity.Member;
 import com.splashzone.audit.Auditable;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity
 public class BoardStandard extends Auditable {
     @Id
