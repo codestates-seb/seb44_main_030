@@ -44,7 +44,7 @@ public class BoardStandardDto {
         private long standardId;
         private String title;
         private String content;
-        private long view;
+        private int view;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private MemberDto.Response member;

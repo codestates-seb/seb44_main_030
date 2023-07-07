@@ -16,6 +16,7 @@ public class MemberDto {
         private Long memberId;
         private String name;
         private String email;
+        private String nickname;
         private String bio;
     }
 
@@ -34,6 +35,10 @@ public class MemberDto {
         @Pattern(regexp = "^[A-Za-z\\d!@#$%^&*()_+~\\-=]{8,40}$")
         private String password;
 
+        @NotBlank(message = "공백이 아니어야 합니다.")
+        @Size(min = 1, max = 30, message = "이름 길이는 최대 30입니다.")
+        private String nickname;
+
         private String bio;
     }
 
@@ -49,6 +54,7 @@ public class MemberDto {
 //        @Email(message = "이메일 형식이 올바르지 않습니다.")
 //        private String email;
 
+        private String nickname;
         private String bio;
 
         public void setMemberId(long memberId) {

@@ -25,14 +25,8 @@ public class BoardStandard extends Auditable {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column
-    private LocalDateTime modifiedAt;
-
-    @Column
-    private long view = 0L;
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view;
 
     //TODO tagId mapping,likeCount 추가 해야됨!!
 
@@ -41,7 +35,7 @@ public class BoardStandard extends Auditable {
     private Member member;
 
 
-    public BoardStandard(long standardId, String title, String content, long view) {
+    public BoardStandard(long standardId, String title, String content, int view) {
         this.standardId = standardId;
         this.title = title;
         this.content = content;

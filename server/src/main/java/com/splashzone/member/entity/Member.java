@@ -23,6 +23,9 @@ public class Member {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String nickname;
+
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -47,9 +50,10 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<BoardStandard> boardStandards = new ArrayList<>();
 
-    public Member(String email, String name, String password) {
+    public Member(String email, String name, String password, String nickname) {
         this.email = email;
         this.name = name;
         this.password = password;
+        this.nickname = nickname;
     }
 }
