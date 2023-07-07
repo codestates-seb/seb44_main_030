@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class BoardClubTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long boardClubTagId;
+    private Long boardClubTagId;
 
     @ManyToOne
     @JoinColumn(name = "BOARD_CLUB_ID")

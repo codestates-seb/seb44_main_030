@@ -18,7 +18,7 @@ import java.util.List;
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long tagId;
+    private Long tagId;
 
     @Enumerated(EnumType.STRING)
     private TagName tagName;

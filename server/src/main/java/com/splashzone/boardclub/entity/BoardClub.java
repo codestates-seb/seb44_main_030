@@ -18,7 +18,7 @@ import java.util.List;
 public class BoardClub extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long boardClubId;
+    private Long boardClubId;
 
     @Column(length = 100, nullable = false)
     private String title;
@@ -45,7 +45,7 @@ public class BoardClub extends Auditable {
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.REMOVE})
     private List<BoardClubTag> boardClubTags = new ArrayList<>();
 
     public enum BoardClubStatus {
