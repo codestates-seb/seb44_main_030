@@ -5,8 +5,10 @@ import com.splashzone.audit.Auditable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -23,6 +25,12 @@ public class BoardStandard extends Auditable {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime modifiedAt;
+
     @Column
     private long view = 0L;
 
@@ -38,5 +46,14 @@ public class BoardStandard extends Auditable {
         this.title = title;
         this.content = content;
         this.view = view;
+    }
+
+    public void changeBoardStandard(BoardStandard boardStandard) {
+        if (!boardStandard.getTitle().isEmpty()) {
+            this.title = boardStandard.getTitle();
+        }
+        if (!boardStandard.getContent().isEmpty()) {
+            this.content = boardStandard.getContent();
+        }
     }
 }

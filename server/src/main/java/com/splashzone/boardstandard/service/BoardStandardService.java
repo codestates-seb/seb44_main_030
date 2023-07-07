@@ -31,13 +31,10 @@ public class BoardStandardService {
         return boardStandard;
     }
 
-    public BoardStandard updateStandard(BoardStandardDto.Patch patchDto) {
-        BoardStandard fs = findVerifiedBoardStandard(patchDto.getStandardId());
-//        Member member = memberService.findMember(memberId);
-        fs.setTitle(patchDto.getTitle());
-        fs.setContent(patchDto.getContent());
-        boardStandardRepository.save(fs);
-        return fs;
+    public BoardStandard updateStandard(BoardStandard boardStandard) {
+        BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandard.getStandardId());
+        findBoardStandard.changeBoardStandard(boardStandard);
+        return boardStandardRepository.save(findBoardStandard);
     }
 
     public BoardStandard selectStandard(long standardId) {
@@ -53,9 +50,8 @@ public class BoardStandardService {
     }
 
     public void deleteStandard(long standardId) {
-        BoardStandard boardStandard = boardStandardRepository.findById(standardId).orElseThrow(() -> new RuntimeException());
-        boardStandardRepository.save(boardStandard);
-        //TODO: 삭제 이렇게하는거 맞는지 재확인
+        BoardStandard findBoardStandard = findVerifiedBoardStandard(standardId);
+        boardStandardRepository.delete(findBoardStandard);
     }
 
     //회원이 존재하는지 확인
@@ -64,14 +60,13 @@ public class BoardStandardService {
     }
 
     //조회수 증가
-    public void increaseViews(BoardStandard boardStandard) {
-        boardStandard.setView(boardStandard.getView() + 1);
-        boardStandardRepository.save(boardStandard);
+    public int increaseViews(Long standardId) {
+        return boardStandardRepository.updateViews(standardId);
     }
 
-    public BoardStandard findVerifiedBoardStandard(long questionId) {
-        Optional<BoardStandard> optionalQuestion = boardStandardRepository.findById(questionId);
-        BoardStandard findBoardStandard = optionalQuestion.orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+    public BoardStandard findVerifiedBoardStandard(long standardId) {
+        Optional<BoardStandard> optionalBoardStandard = boardStandardRepository.findById(standardId);
+        BoardStandard findBoardStandard = optionalBoardStandard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_STANDARD_NOT_FOUND));
         return findBoardStandard;
     }
 
