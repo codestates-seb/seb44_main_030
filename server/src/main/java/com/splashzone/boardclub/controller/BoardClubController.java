@@ -39,7 +39,7 @@ public class BoardClubController {
     }
 
     @PatchMapping("/{club-id}")
-    public ResponseEntity patchBoardClub(@PathVariable("club-id") @Positive long boardClubId,
+    public ResponseEntity patchBoardClub(@PathVariable("club-id") @Positive Long boardClubId,
                                          @Valid @RequestBody BoardClubDto.Patch requestBody) {
         requestBody.setBoardClubId(boardClubId);
 
@@ -49,7 +49,7 @@ public class BoardClubController {
     }
 
     @GetMapping("/{club-id}")
-    public ResponseEntity getBoardClub(@PathVariable("club-id") @Positive long boardClubId) {
+    public ResponseEntity getBoardClub(@PathVariable("club-id") @Positive Long boardClubId) {
         BoardClub boardClub = boardClubService.findBoardClub(boardClubId);
 
         boardClubService.updateViews(boardClubId);
@@ -59,8 +59,8 @@ public class BoardClubController {
     }
 
     @GetMapping
-    public ResponseEntity getBoardClubs(@Positive @RequestParam int page,
-                                        @Positive @RequestParam int size) {
+    public ResponseEntity getBoardClubs(@Positive @RequestParam Integer page,
+                                        @Positive @RequestParam Integer size) {
         Page<BoardClub> pageBoardClubs = boardClubService.findBoardClubs(page - 1, size);
         List<BoardClub> boardClubs = pageBoardClubs.getContent();
 
@@ -69,7 +69,7 @@ public class BoardClubController {
     }
 
     @DeleteMapping("/{club-id}")
-    public ResponseEntity deleteBoardClub(@PathVariable("club-id") @Positive long boardClubId) {
+    public ResponseEntity deleteBoardClub(@PathVariable("club-id") @Positive Long boardClubId) {
         boardClubService.deleteBoardClub(boardClubId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

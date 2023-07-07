@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-//@Setter
 @Builder
 @Entity
 public class BoardClub extends Auditable {
@@ -45,7 +44,7 @@ public class BoardClub extends Auditable {
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<BoardClubTag> boardClubTags = new ArrayList<>();
 
     public enum BoardClubStatus {

@@ -3,8 +3,10 @@ package com.splashzone.boardclub.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.tag.dto.TagDto;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
@@ -16,9 +18,10 @@ import java.util.List;
 
 public class BoardClubDto {
     @Getter
+    @NoArgsConstructor
     public static class Post {
         @Positive
-        private long memberId;
+        private Long memberId;
 
         @NotBlank(message = "제목을 작성해 주세요.")
         private String title;
@@ -39,12 +42,13 @@ public class BoardClubDto {
     }
 
     @Getter
+    @NoArgsConstructor
     public static class Patch {
         @Positive
-        private long memberId;
+        private Long memberId;
 
         @Positive
-        private long boardClubId;
+        private Long boardClubId;
 
         private String title;
 
@@ -54,21 +58,24 @@ public class BoardClubDto {
 
         private String contact;
 
+        @NotEmpty
         private List<TagDto> tags;
 
         private BoardClub.BoardClubStatus boardClubStatus;
 
-        public void setBoardClubId(long boardClubId) {
+        public void setBoardClubId(Long boardClubId) {
             this.boardClubId = boardClubId;
         }
     }
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Response {
-        private long boardClubId;
+        private Long boardClubId;
 
-        private long memberId;
+        private Long memberId;
 
         private String title;
 
@@ -79,7 +86,7 @@ public class BoardClubDto {
 
         private String contact;
 
-        private long view;
+        private int view;
 
         private List<TagDto> tags;
 

@@ -28,7 +28,7 @@ public interface BoardClubMapper {
                 .build();
     }
 
-    default BoardClub boardClubPatchDtotoBoardClub(BoardClubDto.Patch requestBody, long boardClubId) {
+    default BoardClub boardClubPatchDtotoBoardClub(BoardClubDto.Patch requestBody, Long boardClubId) {
         return BoardClub.builder()
                 .boardClubId(boardClubId)
                 .title(requestBody.getTitle())
