@@ -110,14 +110,14 @@ public class BoardClubService {
     }
 
     private void bridgeTagToBoardClub(BoardClub boardClub, BoardClub reBuildBoardClub) {
-        boardClub.getBoardClubTags().stream() // 모임게시판에서 모임게시판 태그를 가져온다.
+        boardClub.getBoardClubTags().stream() // 수정한 모임게시글에서 태그를 가져온다.
                 .forEach(boardClubTag -> {
-                    Tag dbTag = tagService.findVerifiedTagByTagName(boardClubTag.getTag().getTagName());
-                    BoardClubTag reBuildBoardClubTag = // 수정된 모임게시판 태그
+                    Tag dbTag = tagService.findVerifiedTagByTagName(boardClubTag.getTag().getTagName()); // 수정한 모임게시글의 태그가 DB에 있는지 확인한다.
+                    BoardClubTag reBuildBoardClubTag =
                             BoardClubTag.builder()
                                     .boardClub(reBuildBoardClub)
-                                    .tag(dbTag).build();
-                    boardClubTagRepository.save(reBuildBoardClubTag);
+                                    .tag(dbTag).build(); // 수정한 모임게시글의 태그를 reBuildBoardClub에 저장한다.
+                    boardClubTagRepository.save(reBuildBoardClubTag); // 태그를 repository에 저장한다.
                 });
     }
 
