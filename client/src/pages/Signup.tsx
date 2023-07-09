@@ -25,9 +25,6 @@ const Signup = () => {
     } = useForm<Inputs>();
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
-        // console.log(data);
-        // 추후 회원가입 post api 요청 작성 필요
-        // 요청 성공 가정
         alert('회원가입 완료!');
         navigate('/');
     };
