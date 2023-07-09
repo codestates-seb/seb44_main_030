@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import ClubTag from './ClubTag';
 
 import Profile from '../../public/profile.png';
-import Views from '../../public/view.png';
-import Message from '../../public/bubble-chat.png';
+import ViewsIcon from '../../public/view.png';
+import MessageIcon from '../../public/bubble-chat.png';
+import LikeIcon from '../assets/Like.svg';
 
 export default function ClubCard() {
     return (
@@ -23,9 +24,11 @@ export default function ClubCard() {
                     <span>리노리노</span>
                 </UserInfo>
                 <ContentsInfo>
-                    <img src={Views} />
+                    {param === 'community' && <img src={LikeIcon} />}
+                    {param === 'community' && <span>120</span>}
+                    <img src={ViewsIcon} />
                     <span>120</span>
-                    <img src={Message} />
+                    <img src={MessageIcon} />
                     <span>10</span>
                 </ContentsInfo>
             </InfoContainer>

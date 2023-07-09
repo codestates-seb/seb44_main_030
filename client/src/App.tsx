@@ -10,7 +10,7 @@ const Main = loadable(() => import('./pages/Main'));
 const Signup = loadable(() => import('./pages/Signup'));
 const Login = loadable(() => import('./pages/Login'));
 const Community = loadable(() => import('./pages/Community'));
-const CommunityDetail = loadable(() => import('./pages/CommunityDetail'));
+const CommunityDetail = loadable(() => import('./pages/ContentsDetail'));
 const CommunityCreate = loadable(() => import('./pages/CommunityCreate'));
 const Club = loadable(() => import('./pages/Club'));
 const Mypage = loadable(() => import('./pages/Mypage'));

@@ -6,7 +6,8 @@ import SearchIcon from '../assets/Search.svg';
 import backgroundImg from '../assets/Community_background.png';
 import PageButton from '../components/PageButton';
 import { useNavigate } from 'react-router-dom';
-import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags} from '../assets/mockdata.ts';
+import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags } from '../assets/mockdata.ts';
+import ScrollBanner from '../components/common/ScrollBanner.tsx';
 type SearchInput = {
     Keyword: string;
 };
@@ -14,7 +15,6 @@ interface BackgroundProps {
     $image: string;
 }
 const Community = () => {
-
     //인기게시물은 useQuery 사용 시 stale time 길게 설정
 
     const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
@@ -42,7 +42,7 @@ const Community = () => {
                 return updatedPageArr;
             });
         }
-        
+
         if (e.currentTarget.innerText === '이전') {
             currPage === 1 ||
                 setPageArr((prevPageArr) => {
@@ -60,7 +60,8 @@ const Community = () => {
         setCurrPage(Number(e.currentTarget.innerText));
     };
     return (
-        <Background $image={backgroundImg}>
+        <CommunityWarp>
+            <ScrollBanner bannerImg={backgroundImg} />
             <CommunityContainer>
                 <TopSection>
                     <h2>인기게시물</h2>
@@ -115,17 +116,18 @@ const Community = () => {
                     </PageContainer>
                 </BottomSection>
             </CommunityContainer>
-        </Background>
+        </CommunityWarp>
     );
 };
 
-const Background = styled.div<BackgroundProps>`
-    background-image: url(${(props) => props.$image});
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+const CommunityWarp = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
     width: 100%;
 `;
+
 const CommunityContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -217,8 +219,8 @@ const TagSpace = styled.ul`
         }
         &:focus {
             box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
-        -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
-        -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
+            -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
+            -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
         }
     }
 
