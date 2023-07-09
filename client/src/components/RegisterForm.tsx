@@ -30,40 +30,35 @@ const RegisterForm = ({ children, onSubmit, className }: RegisterFormProps) => {
 export default RegisterForm;
 
 const SignupForm = styled.form`
-  background: linear-gradient(
-    90deg,
-    #b5f2ff 0%,
-    rgba(154, 217, 255, 0.93) 50%,
-    rgba(112, 178, 255, 0.81) 100%
-  );
-  box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.15);
-  width: 550px;
-  height: 710px;
-  border-radius: 50px;
-  border: 2px solid rgba(123, 123, 123, 0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  color: #ffffff;
-
-  > section {
-    font-size: 55px;
-    font-weight: 600;
+    background: linear-gradient(90deg, #b5f2ff 0%, rgba(154, 217, 255, 0.93) 50%, rgba(112, 178, 255, 0.81) 100%);
+    box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.15);
+    width: 550px;
+    height: 710px;
+    border-radius: 50px;
+    border: 2px solid rgba(123, 123, 123, 0.3);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    &:hover {
-      cursor: pointer;
-    }
-    >h2 {
-      margin: 0 0 0 15px;
-      font-size: 55px;
-    }
+    justify-content: center;
+    overflow: hidden;
+    color: #ffffff;
 
-    >img {
-      width: 90px;
-      height: 55px;
+    > section {
+        font-size: 55px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        &:hover {
+            cursor: pointer;
+        }
+        > h2 {
+            margin: 0 0 0 15px;
+            font-size: 55px;
+        }
+
+        > img {
+            width: 90px;
+            height: 55px;
+        }
     }
-  }
 `;
