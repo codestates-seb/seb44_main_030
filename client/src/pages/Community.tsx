@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import CommunityPost from '../components/CommunityPost';
-import ProfileImg from '../assets/ProfileImg.png';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import SearchIcon from '../assets/Search.svg';
 import backgroundImg from '../assets/Community_background.png';
 import PageButton from '../components/PageButton';
 import { useNavigate } from 'react-router-dom';
+import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags} from '../assets/mockdata.ts';
 type SearchInput = {
     Keyword: string;
 };
@@ -14,295 +14,10 @@ interface BackgroundProps {
     $image: string;
 }
 const Community = () => {
-    const mockdata = [
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나제목이길어진다면~~~~~~~~~~~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카이트서핑',
-            view: 200,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 1,
-        },
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '스쿠버다이빙',
-            view: 110,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [2, 3],
-            standardId: 2,
-        },
-        {
-            memberId: 3,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카약&카누',
-            view: 123,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: null,
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 3,
-        },
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카이트서핑',
-            view: 200,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 4,
-        },
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '스쿠버다이빙',
-            view: 110,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [2, 3],
-            standardId: 5,
-        },
-        {
-            memberId: 3,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카약&카누',
-            view: 123,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: null,
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 6,
-        },
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카이트서핑',
-            view: 200,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 7,
-        },
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '스쿠버다이빙',
-            view: 110,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [2, 3],
-            standardId: 8,
-        },
-        {
-            memberId: 3,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카약&카누',
-            view: 123,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: null,
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 9,
-        },
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카이트서핑',
-            view: 200,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 10,
-        },
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '스쿠버다이빙',
-            view: 110,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [2, 3],
-            standardId: 11,
-        },
-        {
-            memberId: 3,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카약&카누',
-            view: 123,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: null,
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 12,
-        },
-    ];
+
     //인기게시물은 useQuery 사용 시 stale time 길게 설정
-    const popularMockdata = [
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임이길어어어어',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카이트서핑',
-            view: 200,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 1,
-        },
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '스쿠버다이빙',
-            view: 110,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [2, 3],
-            standardId: 2,
-        },
-        {
-            memberId: 3,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카약&카누',
-            view: 123,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: null,
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 3,
-        },
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카이트서핑',
-            view: 200,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 4,
-        },
-        {
-            memberId: 1,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '스쿠버다이빙',
-            view: 110,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: '2023-06-16T13:42:42.528845',
-            like: 5,
-            commentCount: 3,
-            memberLiked: [2, 3],
-            standardId: 5,
-        },
-        {
-            memberId: 3,
-            memberProfileImg: ProfileImg,
-            name: '닉네임1',
-            title: '아무제목이나~~',
-            content: '가나다라마바사아자차가나다라마바사아자차가나다라마...',
-            tag: '카약&카누',
-            view: 123,
-            registeredAt: '2023-06-16T13:42:42.528845',
-            modifiedAt: null,
-            like: 5,
-            commentCount: 3,
-            memberLiked: [1, 2, 3],
-            standardId: 6,
-        },
-    ]; 
-    const tags = [
-        '전체',
-        '다이빙',
-        '스노클링',
-        '플라이보드',
-        '웨이크보드',
-        '패들보드',
-        '플라이피시',
-        '수상스키',
-        '바나나보트',
-        '카이트서핑',
-        '카약&카누',
-    ];
-    const [currTag, setCurrTag] = useState<string>(tags[0]);
+
+    const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
     const [pageArr, setPageArr] = useState<Array<number>>([1, 2, 3, 4, 5]);
     const [currPage, setCurrPage] = useState<number>(1);
     const navigate = useNavigate();
@@ -327,6 +42,7 @@ const Community = () => {
                 return updatedPageArr;
             });
         }
+        
         if (e.currentTarget.innerText === '이전') {
             currPage === 1 ||
                 setPageArr((prevPageArr) => {
@@ -349,15 +65,15 @@ const Community = () => {
                 <TopSection>
                     <h2>인기게시물</h2>
                     <PopularPostContainer>
-                        {popularMockdata.map((item) => (
+                        {CommunityPopularMockdata.map((item) => (
                             <CommunityPost key={`popular_${item.standardId}`} postdata={item} />
                         ))}
                     </PopularPostContainer>
                 </TopSection>
                 <MiddleSection>
                     <TagSpace>
-                        {tags.map((tagName, idx) => (
-                            <li key={idx} className={`${currTag === tagName}`} onClick={handleTagSelect}>
+                        {Mocktags.map((tagName, idx) => (
+                            <li key={idx} className={`${currTag === tagName}`} tabIndex={0} onClick={handleTagSelect}>
                                 {tagName}
                             </li>
                         ))}
@@ -386,7 +102,7 @@ const Community = () => {
                 </MiddleSection>
                 <BottomSection>
                     <AllPostContainer>
-                        {mockdata.map((item) => (
+                        {CommunityAllMockdata.map((item) => (
                             <CommunityPost key={`all_${item.standardId}`} postdata={item} />
                         ))}
                     </AllPostContainer>
@@ -415,14 +131,22 @@ const CommunityContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    button {
+        border: none;
+        &:active {
+            box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
+            -webkit-box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
+            -moz-box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
+        }
+    }
 `;
 const TopSection = styled.section`
     width: 1345px;
     height: 507px;
     border-radius: 15px;
-    border: 1px solid #696969;
-    background: #fff;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    // border: 1px solid #696969;
+    background-color: #fff;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -451,6 +175,8 @@ const MiddleSection = styled.section`
         border-radius: 5px;
         background-color: #3884d5;
         color: #ffffff;
+        box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
+
         &:hover {
             cursor: pointer;
             background-color: #5797dc;
@@ -466,7 +192,7 @@ const TagSpace = styled.ul`
     padding: 5px 0 5px 0;
     align-items: center;
     border-radius: 15px;
-    border: 1px solid #696969;
+    // border: 1px solid #696969;
     background: #fff;
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
     > li {
@@ -478,10 +204,24 @@ const TagSpace = styled.ul`
         list-style: none;
         white-space: nowrap;
         margin: 5px 0px 5px 5px;
+        box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+        -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
         &:hover {
             cursor: pointer;
         }
+        &:active {
+            box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
+            -webkit-box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
+            -moz-box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
+        }
+        &:focus {
+            box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
+        -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
+        -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
+        }
     }
+
     > li.true {
         background-color: #3884d5;
     }
@@ -490,6 +230,7 @@ const SearchSpace = styled.div`
     > form {
         display: flex;
         flex-direction: column;
+        align-items: center;
         > div {
             width: 400px;
             height: 40px;
@@ -498,7 +239,7 @@ const SearchSpace = styled.div`
             > input {
                 height: 100%;
                 border-radius: 15px 0 0 15px;
-                border: 1px solid #696969;
+                border: none;
                 background: #fff;
                 box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
                 padding-left: 15px;
@@ -513,7 +254,7 @@ const SearchSpace = styled.div`
 
     button {
         width: 44.5px;
-        height: 44.5px;
+        height: 43px;
         font-size: 20px;
         flex-basis: 10%;
         border-radius: 0 15px 15px 0;
@@ -521,6 +262,7 @@ const SearchSpace = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
+        box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
         &:hover {
             cursor: pointer;
             background-color: #5797dc;
@@ -557,6 +299,7 @@ const PageContainer = styled.ul`
     justify-content: center;
     > li {
         margin: 0 3px 0 3px;
+        border: none;
     }
 `;
 

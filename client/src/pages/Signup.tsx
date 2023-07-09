@@ -5,7 +5,7 @@ import backgroundImg from '../assets/Signup_background.png';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import RegisterForm from '../components/RegisterForm';
 
-type Inputs = {
+type SignupInputs = {
     Nickname: string;
     Email: string;
     Password: string;
@@ -22,9 +22,9 @@ const Signup = () => {
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm<Inputs>();
+    } = useForm<SignupInputs>({ mode: 'onBlur' });
 
-    const onSubmit: SubmitHandler<Inputs> = (data) => {
+    const onSubmit: SubmitHandler<SignupInputs> = (data) => {
         // console.log(data);
         // 추후 회원가입 post api 요청 작성 필요
         // 요청 성공 가정
@@ -63,7 +63,7 @@ const Signup = () => {
                             required: true,
                             pattern: {
                                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                                message: 'Email 주소가 올바르지 않습니다.',
+                                message: 'Email 주소 형식이 올바르지 않습니다.',
                             },
                         })}
                     />
@@ -83,7 +83,7 @@ const Signup = () => {
                             },
                             maxLength: {
                                 value: 40,
-                                message: '비밀번호는 40자를 넘기를 수 없습니다.',
+                                message: '비밀번호는 40자를 넘길 수 없습니다.',
                             },
                         })}
                     />

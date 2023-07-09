@@ -40,15 +40,15 @@ const CommunityPost = (props: CommunityPostProps) => {
         memberLiked,
         standardId,
     } = props.postdata;
-    const mockMemberId = 1; //useSelector 사용
+    const loginId = 1; //useSelector 사용
     const [likeCount, setLikeCount] = useState(like);
-    const [isLiked, setIsLiked] = useState(memberLiked.includes(mockMemberId));
+    const [isLiked, setIsLiked] = useState(memberLiked.includes(loginId));
     const navigate = useNavigate();
     //props 변경될 때 상태 최신화 위함
     useEffect(() => {
         setLikeCount(like);
-        setIsLiked(memberLiked.includes(mockMemberId));
-    }, [like, memberLiked, mockMemberId]);
+        setIsLiked(memberLiked.includes(loginId));
+    }, [like, memberLiked, loginId]);
 
     //좋아요 하트색,숫자 상태 변경 + API 요청 추가 필요
     const handleLike = useCallback(() => {
@@ -97,7 +97,9 @@ const CommunityPost = (props: CommunityPostProps) => {
                 </div>
             </LeftSection>
             <MiddleSection>
-                <h3 title={`${title}`} onClick={handleNavigateDetail}>{title}</h3>
+                <h3 title={`${title}`} onClick={handleNavigateDetail}>
+                    {title}
+                </h3>
                 {/* content 잘라서 사용할 지 잘린 채로 받을 지 결정할 것 */}
                 <p>{content}</p>
                 <div>
@@ -107,7 +109,9 @@ const CommunityPost = (props: CommunityPostProps) => {
             <RightSection>
                 <div>
                     <ProfileImgStyled src={memberProfileImg} alt="profileImage" />
-                    <div title={`${name}`} onClick={handleNavigateProfile}>{name}</div>
+                    <div title={`${name}`} onClick={handleNavigateProfile}>
+                        {name}
+                    </div>
                 </div>
                 <span>{formattedDate}</span>
             </RightSection>
@@ -116,7 +120,7 @@ const CommunityPost = (props: CommunityPostProps) => {
 };
 const PostContainer = styled.li`
     border-radius: 15px;
-    border: 1px solid #696969;
+    // border: 1px solid #696969;
     background: #fff;
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
     width: 540px;
@@ -154,11 +158,11 @@ const LeftSection = styled.div`
         }
     }
 `;
-const IconStyled = styled.img`
+export const IconStyled = styled.img`
     width: 15px;
     height: 15px;
 `;
-const LikeButton = styled.button`
+export const LikeButton = styled.button`
     padding: 0;
     border: none;
     background: none;
@@ -206,17 +210,18 @@ const RightSection = styled.div`
     justify-content: end;
     font-size: 12px;
     margin-bottom: 20px;
-    > div{
+    > div {
         display: flex;
         > div {
-        width: 90px;
-        cursor: pointer;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        &:hover {
-            color: #3884d5;
-        }}
+            width: 90px;
+            cursor: pointer;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            &:hover {
+                color: #3884d5;
+            }
+        }
     }
 `;
 export default CommunityPost;
