@@ -10,7 +10,7 @@ export default function ClubCard() {
     return (
         <CardWarp>
             <TitleContainer>
-                <span>제목을 적을겁니다. 오전 수영 모임 모집합니다 많은 관심 부탁드립니다!</span>
+                <span>제목을 적을겁니다. 오전 수영 모임 모집합니다 많은 관심 부탁드립니다!!</span>
             </TitleContainer>
             <TagContainer>
                 <ClubTag $incard={true} />
