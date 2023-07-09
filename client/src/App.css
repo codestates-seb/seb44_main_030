@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Monomaniac+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Monomaniac+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Chettan+2:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anybody:wght@100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gasoek+One&display=swap');
+@font-face {
+    font-family: 'TTWanjudaedunsancheB';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/TTWanjudaedunsancheB.woff2')
+        format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'KimjungchulGothic-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/KimjungchulGothic-Bold.woff2')
+        format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
