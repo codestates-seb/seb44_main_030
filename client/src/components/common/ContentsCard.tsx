@@ -2,13 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import ClubTag from './ClubTag';
+import ClubTag from '../ClubTag';
 
-import Profile from '../../public/profile.png';
-import ViewsIcon from '../../public/view.png';
-import MessageIcon from '../../public/bubble-chat.png';
-import LikeIcon from '../assets/Like.svg';
-import LikeFilledIcon from '../assets/Like_filled.svg';
+import Profile from '../../../public/profile.png';
+import ViewsIcon from '../../../public/view.png';
+import MessageIcon from '../../../public/bubble-chat.png';
+import LikeIcon from '../../assets/Like.svg';
+import LikeFilledIcon from '../../assets/Like_filled.svg';
 import { title } from 'process';
 
 interface CommunityPostProps {
@@ -111,7 +111,7 @@ export default function ClubCard({ communityProps }: CommunityPostProps) {
                     <span>{content}</span>
                 </ContentsContainer>
                 <TagContainer>
-                    <ClubTag $incard={true} tag={tag} />
+                    <ClubTag tag={tag} />
                 </TagContainer>
             </TitleContentsTagWarp>
             <InfoContainer>

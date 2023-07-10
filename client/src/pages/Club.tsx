@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-scroll';
-import ClubCard from '../components/ClubCard';
+import ClubCard from '../components/common/ContentsCard';
 import { useEffect, useRef, useState } from 'react';
 
 import back from '../../public/grouping 1.png';

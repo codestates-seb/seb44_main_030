@@ -8,7 +8,8 @@ import PageButton from '../components/PageButton';
 import { useNavigate } from 'react-router-dom';
 import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags } from '../assets/mockdata.ts';
 import ScrollBanner from '../components/common/ScrollBanner.tsx';
-import ClubCard from '../components/ClubCard.tsx';
+import ClubCard from '../components/common/ContentsCard.tsx';
+import ClubTag from '../components/ClubTag.tsx';
 
 type SearchInput = {
     Keyword: string;
@@ -74,9 +75,10 @@ const Community = () => {
                 <MiddleSection>
                     <TagSpace>
                         {Mocktags.map((tagName, idx) => (
-                            <li key={idx} className={`${currTag === tagName}`} tabIndex={0} onClick={handleTagSelect}>
-                                {tagName}
-                            </li>
+                            // <li key={idx} className={`${currTag === tagName}`} tabIndex={0} onClick={handleTagSelect}>
+                            //     {tagName}
+                            // </li>
+                            <ClubTag tag={tagName} onClick={handleTagSelect} currTag={currTag} />
                         ))}
                     </TagSpace>
                     <SearchSpace>
@@ -187,8 +189,8 @@ const MiddleSection = styled.section`
     }
 `;
 const TagSpace = styled.ul`
-    width: 550px;
-    height: 90px;
+    width: 600px;
+    height: 130px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
