@@ -11,6 +11,7 @@ const Login = loadable(() => import('./pages/Login'));
 const Community = loadable(() => import('./pages/Community'));
 const Club = loadable(() => import('./pages/Club'));
 const Mypage = loadable(() => import('./pages/Mypage'));
+const Map = loadable(() => import('./pages/Map'));
 
 function App() {
     const location = useLocation();
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/community" element={<Community></Community>}></Route>
                 <Route path="/club" element={<Club></Club>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
+                <Route path="/map" element={<Map />}></Route>
             </Routes>
             {!hideHeaderFooter && <Footer></Footer>}
         </div>
