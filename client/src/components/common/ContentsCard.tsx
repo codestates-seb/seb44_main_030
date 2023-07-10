@@ -87,7 +87,6 @@ export default function ContentsCard({
     const [likeCount, setLikeCount] = useState(like);
     const [isLiked, setIsLiked] = useState(memberLiked.includes(loginId));
     const navigate = useNavigate();
-    const { community, club } = useParams();
     //props 변경될 때 상태 최신화 위함
     useEffect(() => {
         setLikeCount(like);
@@ -147,7 +146,19 @@ export default function ContentsCard({
                 </UserInfo>
                 <ContentsInfo>
                     {/* {param === 'community' && <img src={LikeIcon} />}
-                        {param === 'community' && <span>{like}</span>} */}
+                    {param === 'community' && <span>{like}</span>} */}
+                    {communityProps?.like &&
+                        (isLiked ? (
+                            <>
+                                <img src={LikeFilledIcon} onClick={handleLike} />
+                                <span>{likeCount}</span>
+                            </>
+                        ) : (
+                            <>
+                                <img src={LikeIcon} onClick={handleLike} />
+                                <span>{likeCount}</span>
+                            </>
+                        ))}
                     <img src={ViewsIcon} />
                     <span>{communityProps ? communityView : clubView}</span>
                     <img src={MessageIcon} />
