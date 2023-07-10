@@ -8,7 +8,7 @@ import PageButton from '../components/PageButton';
 import { useNavigate } from 'react-router-dom';
 import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags } from '../assets/mockdata.ts';
 import ScrollBanner from '../components/common/ScrollBanner.tsx';
-import ClubCard from '../components/common/ContentsCard.tsx';
+import ContentsCard from '../components/common/ContentsCard.tsx';
 import ClubTag from '../components/ClubTag.tsx';
 
 type SearchInput = {
@@ -70,7 +70,7 @@ const Community = () => {
                     <h2>인기게시물</h2>
                     <PopularPostContainer>
                         {CommunityPopularMockdata.map((item) => (
-                            <ClubCard key={`popular_${item.standardId}`} communityProps={item} />
+                            <ContentsCard key={`popular_${item.standardId}`} communityProps={item} />
                         ))}
                     </PopularPostContainer>
                 </TopSection>
@@ -108,7 +108,7 @@ const Community = () => {
                 <BottomSection>
                     <AllPostContainer>
                         {CommunityAllMockdata.map((item) => (
-                            <ClubCard key={`all_${item.standardId}`} communityProps={item} />
+                            <ContentsCard key={`all_${item.standardId}`} communityProps={item} />
                         ))}
                     </AllPostContainer>
                     <PageContainer>
