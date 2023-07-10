@@ -28,13 +28,17 @@ public interface BoardClubMapper {
                 .build();
     }
 
-    default BoardClub boardClubPatchDtotoBoardClub(BoardClubDto.Patch requestBody, long boardClubId) {
+    default BoardClub boardClubPatchDtotoBoardClub(BoardClubDto.Patch requestBody, Long boardClubId) {
+        Member member = new Member();
+        member.setMemberId(requestBody.getMemberId());
+
         return BoardClub.builder()
                 .boardClubId(boardClubId)
                 .title(requestBody.getTitle())
                 .content(requestBody.getContent())
                 .dueDate(requestBody.getDueDate())
                 .contact(requestBody.getContact())
+                .member(member)
                 .boardClubTags(getBoardClubTagsFromTagDto(requestBody.getTags()))
                 .boardClubStatus(requestBody.getBoardClubStatus())
                 .build();
@@ -49,7 +53,7 @@ public interface BoardClubMapper {
                 .dueDate(boardClub.getDueDate())
                 .contact(boardClub.getContact())
                 .view(boardClub.getView())
-                .tags(getTagDtoFromBoardClubTag(boardClub.getBoardClubTags()))
+                .tags(getTagDtosFromBoardClubTag(boardClub.getBoardClubTags()))
                 .boardClubStatus(boardClub.getBoardClubStatus())
                 .createdAt(boardClub.getCreatedAt())
                 .modifiedAt(boardClub.getModifiedAt())
@@ -79,7 +83,7 @@ public interface BoardClubMapper {
         return boardClubTags;
     }
 
-    private static List<TagDto> getTagDtoFromBoardClubTag(List<BoardClubTag> boardClubTags) {
+    private static List<TagDto> getTagDtosFromBoardClubTag(List<BoardClubTag> boardClubTags) {
         List<TagDto> tagDtos = boardClubTags.stream()
                 .map(boardClubTag ->
                         TagDto.builder()

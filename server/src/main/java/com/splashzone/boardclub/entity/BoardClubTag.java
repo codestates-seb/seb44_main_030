@@ -14,13 +14,13 @@ import javax.persistence.*;
 public class BoardClubTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long boardClubTagId;
+    private Long boardClubTagId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "BOARD_CLUB_ID")
     private BoardClub boardClub;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "TAG_ID")
     private Tag tag;
 
@@ -36,5 +36,10 @@ public class BoardClubTag {
         if (!this.tag.getBoardClubTags().contains(this)) {
             this.tag.getBoardClubTags().add(this);
         }
+    }
+
+    public void removeTo(BoardClub boardClub, Tag tag) {
+        this.boardClub = null;
+        this.tag = null;
     }
 }

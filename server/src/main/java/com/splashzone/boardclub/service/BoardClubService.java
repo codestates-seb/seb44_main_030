@@ -6,6 +6,7 @@ import com.splashzone.boardclub.repository.BoardClubRepository;
 import com.splashzone.boardclub.repository.BoardClubTagRepository;
 import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
+import com.splashzone.member.entity.Member;
 import com.splashzone.member.service.MemberService;
 import com.splashzone.tag.entity.Tag;
 import com.splashzone.tag.service.TagService;
@@ -28,13 +29,23 @@ public class BoardClubService {
     private final TagService tagService;
 
     public BoardClub createBoardClub(BoardClub boardClub) {
-        memberService.findVerifiedMember(boardClub.getMember().getMemberId());
+        Member findMember = memberService.findVerifiedMember(boardClub.getMember().getMemberId());
 
-        BoardClub savedBoardClub = boardClubRepository.save(boardClub);
+        BoardClub reBuildBoardClub = BoardClub.builder()
+                .title(boardClub.getTitle())
+                .content(boardClub.getContent())
+                .dueDate(boardClub.getDueDate())
+                .contact(boardClub.getContact())
+                .member(findMember)
+                .build();
+
+        findMember.getBoardClubs().add(reBuildBoardClub);
+
+        bridgeTagToBoardClub(boardClub, reBuildBoardClub);
+
+        return boardClubRepository.save(reBuildBoardClub);
 
         // score 증가 로직 추가 예정
-
-        return savedBoardClub;
     }
 
     public BoardClub updateBoardClub(BoardClub boardClub) {
@@ -55,21 +66,22 @@ public class BoardClubService {
 
         findBoardClub.changeBoardClub(boardClub);
 
-        modifyTagInBoardClub(boardClub, findBoardClub);
+        deleteOriginTagInBoardClub(findBoardClub);
+        bridgeTagToBoardClub(boardClub, findBoardClub);
 
         return boardClubRepository.save(findBoardClub);
     }
 
     @Transactional(readOnly = true)
-    public BoardClub findBoardClub(long boardClubId) {
+    public BoardClub findBoardClub(Long boardClubId) {
         return findVerifiedBoardClub(boardClubId); // 댓글 조회 추가 예정
     }
 
-    public Page<BoardClub> findBoardClubs(int page, int size) {
+    public Page<BoardClub> findBoardClubs(Integer page, Integer size) {
         return boardClubRepository.findAll(PageRequest.of(page, size, Sort.by("boardClubId").descending()));
     }
 
-    public void deleteBoardClub(long boardClubId) {
+    public void deleteBoardClub(Long boardClubId) {
         BoardClub findBoardClub = findVerifiedBoardClub(boardClubId);
 
         if (findBoardClub.getBoardClubStatus() == BoardClub.BoardClubStatus.BOARD_CLUB_RECRUITING) {
@@ -79,7 +91,7 @@ public class BoardClubService {
         boardClubRepository.delete(findBoardClub);
     }
 
-    private BoardClub findVerifiedBoardClub(long boardClubId) {
+    private BoardClub findVerifiedBoardClub(Long boardClubId) {
         Optional<BoardClub> optionalBoardClub = boardClubRepository.findById(boardClubId);
 
         BoardClub findBoardClub =
@@ -89,20 +101,27 @@ public class BoardClubService {
         return findBoardClub;
     }
 
-    // 태그 삭제 메서드 추가 가능
-    private void modifyTagInBoardClub(BoardClub boardClub, BoardClub modifiedBoardClub) {
-        boardClub.getBoardClubTags().stream() // 모임게시판에서 모임게시판 태그를 가져온다.
+    private void deleteOriginTagInBoardClub(BoardClub findBoardClub) {
+        findBoardClub.getBoardClubTags().stream()
                 .forEach(boardClubTag -> {
-                    Tag dbTag = tagService.findVerifiedTagByTagName(boardClubTag.getTag().getTagName());
-                    BoardClubTag modifiedBoardClubTag = // 수정된 모임게시판 태그
-                            BoardClubTag.builder()
-                                    .boardClub(modifiedBoardClub)
-                                    .tag(dbTag).build();
-                    boardClubTagRepository.save(modifiedBoardClubTag);
+                    boardClubTag.removeTo(findBoardClub, boardClubTag.getTag());
+                    boardClubTagRepository.delete(boardClubTag);
                 });
     }
 
-    public int updateViews(long boardClubId) {
+    private void bridgeTagToBoardClub(BoardClub boardClub, BoardClub reBuildBoardClub) {
+        boardClub.getBoardClubTags().stream() // 수정한 모임게시글에서 태그를 가져온다.
+                .forEach(boardClubTag -> {
+                    Tag dbTag = tagService.findVerifiedTagByTagName(boardClubTag.getTag().getTagName()); // 수정한 모임게시글의 태그가 DB에 있는지 확인한다.
+                    BoardClubTag reBuildBoardClubTag =
+                            BoardClubTag.builder()
+                                    .boardClub(reBuildBoardClub)
+                                    .tag(dbTag).build(); // 수정한 모임게시글의 태그를 reBuildBoardClub에 저장한다.
+                    boardClubTagRepository.save(reBuildBoardClubTag); // 태그를 repository에 저장한다.
+                });
+    }
+
+    public int updateViews(Long boardClubId) {
         return boardClubRepository.updateViews(boardClubId);
     }
 }
