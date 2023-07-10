@@ -12,19 +12,21 @@ import LikeFilledIcon from '../assets/Like_filled.svg';
 import { title } from 'process';
 
 interface CommunityPostProps {
-    memberId: number;
-    memberProfileImg: string; //[작성자 프로필 이미지 소스]
-    name: string; //[작성자 닉네임]
-    title: string;
-    content: string;
-    tag: string;
-    view: number;
-    registeredAt: string;
-    modifiedAt: string | null;
-    like: number; //[게시글에 대한 좋아요 갯수]
-    commentCount: number;
-    memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
-    standardId: number; //[게시글 자체에 대한 ID]
+    communityProps: {
+        memberId: number;
+        memberProfileImg: string; //[작성자 프로필 이미지 소스]
+        name: string; //[작성자 닉네임]
+        title: string;
+        content: string;
+        tag: string;
+        view: number;
+        registeredAt: string;
+        modifiedAt: string | null;
+        like: number; //[게시글에 대한 좋아요 갯수]
+        commentCount: number;
+        memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
+        standardId: number; //[게시글 자체에 대한 ID]
+    };
 }
 
 interface ClubPostProps {
@@ -101,15 +103,17 @@ export default function ClubCard({ communityProps }: CommunityPostProps) {
 
     return (
         <CardWarp>
-            <TitleContainer>
-                <span>{title}</span>
-            </TitleContainer>
-            <ContentsContainer>
-                <span>{content}</span>
-            </ContentsContainer>
-            <TagContainer>
-                <ClubTag $incard={true} tag={tag} />
-            </TagContainer>
+            <TitleContentsTagWarp>
+                <TitleContainer>
+                    <h3>{title}</h3>
+                </TitleContainer>
+                <ContentsContainer>
+                    <span>{content}</span>
+                </ContentsContainer>
+                <TagContainer>
+                    <ClubTag $incard={true} tag={tag} />
+                </TagContainer>
+            </TitleContentsTagWarp>
             <InfoContainer>
                 <UserInfo>
                     <img src={memberProfileImg} />
@@ -131,19 +135,37 @@ export default function ClubCard({ communityProps }: CommunityPostProps) {
 const CardWarp = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: center;
     border: 1px solid #696969;
     border-radius: 2rem;
     width: 350px;
     height: 250px;
     margin: 2rem;
-    padding: 2.3rem;
+    padding: 1.7rem;
 `;
 
+const TitleContentsTagWarp = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+`;
 const TitleContainer = styled.div`
     font-size: 1.3rem;
     font-family: 'KimjungchulGothic-Bold';
     margin-bottom: 0.5rem;
+    > h3 {
+        max-width: 300px;
+        align-self: flex-start;
+        margin: 0;
+        font-size: 20px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        &:hover {
+            color: #3884d5;
+            cursor: pointer;
+        }
+    }
 `;
 const ContentsContainer = styled.div`
     margin-bottom: 0.5rem;
@@ -159,7 +181,7 @@ const InfoContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     border-top: 1px solid #696969;
-    width: 110%;
+    width: 107%;
     margin-top: 5px;
 `;
 

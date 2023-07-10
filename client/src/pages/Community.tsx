@@ -67,7 +67,7 @@ const Community = () => {
                     <h2>인기게시물</h2>
                     <PopularPostContainer>
                         {CommunityPopularMockdata.map((item) => (
-                            <CommunityPost key={`popular_${item.standardId}`} postdata={item} />
+                            <ClubCard key={`popular_${item.standardId}`} communityProps={item} />
                         ))}
                     </PopularPostContainer>
                 </TopSection>
