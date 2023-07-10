@@ -8,6 +8,8 @@ import PageButton from '../components/PageButton';
 import { useNavigate } from 'react-router-dom';
 import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags } from '../assets/mockdata.ts';
 import ScrollBanner from '../components/common/ScrollBanner.tsx';
+import ClubCard from '../components/ClubCard.tsx';
+
 type SearchInput = {
     Keyword: string;
 };
@@ -104,7 +106,7 @@ const Community = () => {
                 <BottomSection>
                     <AllPostContainer>
                         {CommunityAllMockdata.map((item) => (
-                            <CommunityPost key={`all_${item.standardId}`} postdata={item} />
+                            <ClubCard key={`all_${item.standardId}`} communityProps={item} />
                         ))}
                     </AllPostContainer>
                     <PageContainer>

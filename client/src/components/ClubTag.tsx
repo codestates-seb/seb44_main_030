@@ -3,10 +3,11 @@ import styled from 'styled-components';
 
 interface ClubTagProps {
     $incard?: boolean;
+    tag: string;
 }
 
-export default function ClubTag({ $incard = false }) {
-    return <TagWarp $incard={$incard}>바나나보트</TagWarp>;
+export default function ClubTag({ $incard = false, tag }) {
+    return <TagWarp $incard={$incard}>{tag}</TagWarp>;
 }
 
 const TagWarp = styled.span<ClubTagProps>`

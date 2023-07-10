@@ -24,22 +24,7 @@ function Club() {
                         <ClubTag />
                     </Tags>
                 </TagSection>
-                <CardSection>
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                </CardSection>
+                <CardSection></CardSection>
             </ContentContainer>
         </ClubWarp>
     );

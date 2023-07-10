@@ -7,6 +7,10 @@ body{
     box-sizing: border-box;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 `;
 
 export default Globalstyle;
