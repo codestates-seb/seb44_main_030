@@ -41,7 +41,7 @@ public class BoardClubController {
     @PatchMapping("/{club-id}")
     public ResponseEntity patchBoardClub(@PathVariable("club-id") @Positive Long boardClubId,
                                          @Valid @RequestBody BoardClubDto.Patch requestBody) {
-        requestBody.setBoardClubId(boardClubId);
+//        requestBody.setBoardClubId(boardClubId);
 
         BoardClub boardClub = boardClubService.updateBoardClub(boardClubMapper.boardClubPatchDtotoBoardClub(requestBody, boardClubId));
 
@@ -54,8 +54,7 @@ public class BoardClubController {
 
         boardClubService.updateViews(boardClubId);
 
-        return new ResponseEntity<>(
-                new SingleResponseDto<>(boardClubMapper.boardClubToBoardClubResponseDto(boardClub)), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(boardClubMapper.boardClubToBoardClubResponseDto(boardClub)), HttpStatus.OK);
     }
 
     @GetMapping

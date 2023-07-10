@@ -21,6 +21,7 @@ public class Tag {
     private Long tagId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TagName tagName;
 
     @Builder.Default

@@ -26,6 +26,7 @@ public class BoardClub extends Auditable {
     @Lob
     private String content;
 
+    @Column(nullable = false)
     private LocalDate dueDate; // 모집일이 지나면 자동으로 모집 종료되게 처리, 현재보다 이전일은 지정 못하게 처리
 
     @Column(length = 100, nullable = false)
@@ -36,7 +37,7 @@ public class BoardClub extends Auditable {
 
     @Enumerated(value = EnumType.STRING)
     @Builder.Default
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private BoardClubStatus boardClubStatus = BoardClubStatus.BOARD_CLUB_RECRUITING;
 
     @ManyToOne

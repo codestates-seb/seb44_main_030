@@ -54,6 +54,7 @@ public class BoardClubDto {
 
         private String content;
 
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate dueDate;
 
         private String contact;
