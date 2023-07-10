@@ -47,7 +47,7 @@ interface ClubPostProps {
     };
 }
 
-export default function ClubCard({ communityProps }: CommunityPostProps) {
+export default function ContentsCard({ communityProps }: CommunityPostProps) {
     const {
         memberId,
         memberProfileImg,

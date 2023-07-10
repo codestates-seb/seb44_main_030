@@ -2,11 +2,13 @@ import styled from 'styled-components';
 import { Link } from 'react-scroll';
 import ClubCard from '../components/common/ContentsCard';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import back from '../../public/grouping 1.png';
 import ClubTag from '../components/ClubTag';
-import { useNavigate } from 'react-router-dom';
 import ScrollBanner from '../components/common/ScrollBanner';
+import { ClubDummyData } from '../../public/clubMockdata.tsx';
+import ContentsCard from '../components/common/ContentsCard';
 
 function Club() {
     const navigate = useNavigate();
