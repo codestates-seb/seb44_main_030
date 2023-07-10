@@ -1,17 +1,21 @@
 import styled from 'styled-components';
 import { Link } from 'react-scroll';
 import ClubCard from '../components/common/ContentsCard';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import back from '../../public/grouping 1.png';
-import ClubTag from '../components/common/Tag.tsx';
 import ScrollBanner from '../components/common/ScrollBanner';
 import { ClubDummyData, Mocktags } from '../../public/clubMockdata.ts';
 import ContentsCard from '../components/common/ContentsCard';
+import Tag from '../components/common/Tag.tsx';
 
 function Club() {
     const navigate = useNavigate();
+    const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
+    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
+        setCurrTag(e.currentTarget.innerText);
+    }, []);
 
     return (
         <ClubWarp>
@@ -23,7 +27,9 @@ function Club() {
                         <span onClick={() => navigate(`/club/post`)}>글 쓰기</span>
                     </TagTab>
                     <Tags>
-                        <ClubTag />
+                        {Mocktags.map((tagName, idx) => (
+                            <Tag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect} />
+                        ))}
                     </Tags>
                 </TagSection>
                 <CardSection>
@@ -77,7 +83,17 @@ const TagTab = styled.div`
 `;
 
 const Tags = styled.div`
+    width: 600px;
+    height: 130px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 5px 0 5px 0;
+    align-items: center;
+    border-radius: 15px;
+    // border: 1px solid #696969;
+    background: #fff;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
 `;
 
 const CardSection = styled.div`
