@@ -34,9 +34,9 @@ public class BoardStandardController {
 
 
     @PostMapping
-    public ResponseEntity postStandard(long memberId, @Valid @RequestBody BoardStandardDto.Post postDto){
+    public ResponseEntity postStandard(@Valid @RequestBody BoardStandardDto.Post postDto){
         // TODO: 토큰 있는 경우로 수정해야됨
-        BoardStandard boardStandard = boardStandardService.createStandard(postDto, memberId);
+        BoardStandard boardStandard = boardStandardService.createStandard(boardStandardMapper.postDtoToBoardStandard(postDto));
         URI location = UriCreator.createUri(STANDARD_DEFAULT_URL, boardStandard.getStandardId());
         return ResponseEntity.created(location).build();
     }
@@ -45,14 +45,15 @@ public class BoardStandardController {
     public ResponseEntity patchStandard(@PathVariable("standard-id") long standardId,
                                         @Valid @RequestBody BoardStandardDto.Patch patchDto){
         patchDto.setStandardId(standardId);
-        boardStandardService.updateStandard(patchDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        BoardStandard boardStandard = boardStandardService.updateStandard(boardStandardMapper.patchDtoToBoardStandard(patchDto));
+
+        return new ResponseEntity<>(new SingleResponseDto<>(boardStandardMapper.boardStandardToResponseDto(boardStandard)), HttpStatus.OK);
     }
 
     @GetMapping("/{standard-id}")
     public ResponseEntity getStandard(@PathVariable("standard-id") long standardId){
         BoardStandard boardStandard = boardStandardService.selectStandard(standardId);
-        boardStandardService.increaseViews(boardStandard);
+        boardStandardService.increaseViews(standardId);
         return new ResponseEntity<>(new SingleResponseDto<>(boardStandardMapper.boardStandardToResponseDto(boardStandard)), HttpStatus.OK);
     }
 
@@ -72,7 +73,7 @@ public class BoardStandardController {
     @DeleteMapping("/{standard-id}")
     public ResponseEntity deleteStandard(@Positive @PathVariable("standard-id") long standardId){
         boardStandardService.deleteStandard(standardId);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/count")

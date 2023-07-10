@@ -1,6 +1,7 @@
 package com.splashzone.member.entity;
 
 import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.boardstandard.entity.BoardStandard;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,9 @@ public class Member {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String nickname;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -45,11 +49,16 @@ public class Member {
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private List<BoardStandard> boardStandards = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<BoardClub> boardClubs = new ArrayList<>();
 
-    public Member(String email, String name, String password) {
+    public Member(String email, String name, String password, String nickname) {
         this.email = email;
         this.name = name;
         this.password = password;
+        this.nickname = nickname;
     }
 }

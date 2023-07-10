@@ -32,8 +32,11 @@ public class MemberService {
         if (optionalMember.isPresent()) throw new ResponseStatusException(HttpStatus.CONFLICT);
 
         //TODO: email, password encrypt 과정 넣어주기!
+        member.setName(member.getName());
         member.setPassword(member.getPassword());
         member.setEmail(member.getEmail());
+        member.setBio(member.getBio());
+        member.setNickname(member.getNickname());
 
         member.setCreatedAt(LocalDateTime.now());
 
@@ -46,6 +49,7 @@ public class MemberService {
 
         //이름, 이메일 변경은 구현에서 뻄 (변경안됨)
         Optional.ofNullable(member.getBio()).ifPresent(bio -> fm.setBio(member.getBio()));
+        Optional.ofNullable(member.getNickname()).ifPresent(nickname -> fm.setNickname(member.getNickname()));
 
         return memberRepository.save(fm);
     }
