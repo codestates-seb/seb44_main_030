@@ -13,9 +13,7 @@ import ClubCard from '../components/ClubCard.tsx';
 type SearchInput = {
     Keyword: string;
 };
-interface BackgroundProps {
-    $image: string;
-}
+
 const Community = () => {
     //인기게시물은 useQuery 사용 시 stale time 길게 설정
 
@@ -135,6 +133,7 @@ const CommunityContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 1280px;
     button {
         border: none;
         &:active {
@@ -145,7 +144,7 @@ const CommunityContainer = styled.div`
     }
 `;
 const TopSection = styled.section`
-    width: 1345px;
+    width: 100%;
     height: 507px;
     border-radius: 15px;
     // border: 1px solid #696969;
@@ -166,7 +165,7 @@ const PopularPostContainer = styled.ul`
     }
 `;
 const MiddleSection = styled.section`
-    width: 1347px;
+    width: 100%;
     margin-top: 30px;
     margin-bottom: 20px;
     height: 100px;
@@ -287,7 +286,7 @@ const AllPostContainer = styled.ul`
 `;
 
 const BottomSection = styled.section`
-    height: 700px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
