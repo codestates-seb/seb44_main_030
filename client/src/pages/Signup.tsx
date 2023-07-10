@@ -89,7 +89,6 @@ const Signup = () => {
                     />
                     {errors.Password ? <span>{errors.Password.message}</span> : <span></span>}
 
-                    <label htmlFor="passwordCheckInput"></label>
                     <input
                         id="passwordCheckInput"
                         type="password"
@@ -121,32 +120,35 @@ const Background = styled.div<BackgroundProps>`
     align-items: center;
 `;
 const StyledRegisterForm = styled(RegisterForm)`
+    height: 780px;
     > div {
         display: flex;
         flex-direction: column;
 
         > label {
+            display: flex;
+            align-items: center;
             font-size: 35px;
-            font-weight: 700;
+            height: 40px;
+            font-family: 'Baloo Chettan 2', cursive;
             text-align: left;
             margin-bottom: 10px;
             margin-left: 15px;
         }
 
         > input {
-            width: 431px;
-            height: 56px;
-            border-radius: 15px;
+            font-family: 'Baloo Chettan 2', cursive;
+            font-size: 1.5rem;
+            width: 420px;
+            height: 60px;
+            border-radius: 20px;
             border: none;
-            font-size: 20px;
-            font-weight: 600;
-            text-align: left;
-            background-color: #edfcff;
-            box-sizing: border-box;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            outline: none;
             padding-left: 20px;
-            box-shadow: 0px 1px 20px -11px rgba(0, 0, 0, 0.79) inset;
-            -webkit-box-shadow: 0px 1px 20px -11px rgba(0, 0, 0, 0.79) inset;
-            -moz-box-shadow: 0px 1px 20px -11px rgba(0, 0, 0, 0.79) inset;
+            &::placeholder {
+                opacity: 0.5;
+            }
         }
         > input:focus {
             outline: none;
@@ -156,6 +158,7 @@ const StyledRegisterForm = styled(RegisterForm)`
         }
         > span {
             margin-top: 5px;
+            margin-bottom: 5px;
             padding-left: 10px;
             height: 22px;
             color: red;
@@ -171,11 +174,13 @@ const StyledRegisterForm = styled(RegisterForm)`
         border-radius: 15px;
         font-size: 35px;
         font-weight: 600;
+        font-family:'Baloo Chettan 2', cursive;
         box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
         -webkit-box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
         -moz-box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
         color: #ffffff;
-        margin-top: 10px;
+        margin-top: 5px;
+        
         &:hover {
             cursor: pointer;
             background-color: #a7cdf1;

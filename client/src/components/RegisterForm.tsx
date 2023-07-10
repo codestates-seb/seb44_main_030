@@ -1,7 +1,8 @@
-import logoImg from '../assets/Signup_Logo.png';
 import React, { ReactNode, FormEventHandler } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
+import LogoIcon from '../../public/onlyLOGO.png';
+import Logo from '../../public/SplashZoneWhite.png';
 
 interface RegisterFormProps {
     children: ReactNode;
@@ -19,8 +20,10 @@ const RegisterForm = ({ children, onSubmit, className }: RegisterFormProps) => {
     return (
         <SignupForm className={className} onSubmit={onSubmit}>
             <section onClick={handleNavigate}>
-                <img src={logoImg} />
-                <h2>SplashZone</h2>
+                <StyledLogoWarp>
+                    <StyledLogoIcon src={LogoIcon} alt="Logo Icon" />
+                    <StyledLogo src={Logo} alt="Logo" />
+                </StyledLogoWarp>
             </section>
             {children}
         </SignupForm>
@@ -33,7 +36,7 @@ const SignupForm = styled.form`
     background: linear-gradient(90deg, #b5f2ff 0%, rgba(154, 217, 255, 0.93) 50%, rgba(112, 178, 255, 0.81) 100%);
     box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.15);
     width: 550px;
-    height: 710px;
+    height: 650px;
     border-radius: 50px;
     border: 2px solid rgba(123, 123, 123, 0.3);
     display: flex;
@@ -44,10 +47,12 @@ const SignupForm = styled.form`
     color: #ffffff;
 
     > section {
+        height: 70px;
         font-size: 55px;
         font-weight: 600;
         display: flex;
         align-items: center;
+        margin-bottom: 20px;
         &:hover {
             cursor: pointer;
         }
@@ -62,3 +67,13 @@ const SignupForm = styled.form`
         }
     }
 `;
+const StyledLogoWarp = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+const StyledLogoIcon = styled.img`
+    margin-right: 10px;
+    padding-bottom: 10px;
+`;
+const StyledLogo = styled.img``;
