@@ -64,13 +64,13 @@ export default function ContentsCard({
         registeredAt,
         modifiedAt,
         like,
-        memberLiked,
+        memberLiked = [],
         standardId,
     } = communityProps || {};
 
     const {
         memberId: clubMemberId,
-        memberProfileImg: clubTitle,
+        title: clubTitle,
         content: clubContent,
         view: clubView,
         commentCount: clubCommentCount,
@@ -111,7 +111,7 @@ export default function ContentsCard({
 
     // 날짜 어떻게 받을 건지 상의 필요.(포맷팅 된 상태 or Not)
     // 날짜 포맷팅 임의로
-    const dateStr = modifiedAt || registeredAt;
+    const dateStr = modifiedAt || registeredAt || '';
     const datePart = dateStr.split('T')[0];
     const dateArr = datePart.split('-');
     const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
