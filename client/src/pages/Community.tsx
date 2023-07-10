@@ -22,9 +22,7 @@ const Community = () => {
     const [pageArr, setPageArr] = useState<Array<number>>([1, 2, 3, 4, 5]);
     const [currPage, setCurrPage] = useState<number>(1);
     const navigate = useNavigate();
-    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
-        setCurrTag(e.currentTarget.innerText);
-    }, []);
+
     const {
         register,
         handleSubmit,
@@ -53,6 +51,10 @@ const Community = () => {
                 });
         }
     };
+    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
+        setCurrTag(e.currentTarget.innerText);
+        
+    }, []);
     const handleNavigateCreate = () => {
         navigate('/community/create');
     };
@@ -78,7 +80,7 @@ const Community = () => {
                             // <li key={idx} className={`${currTag === tagName}`} tabIndex={0} onClick={handleTagSelect}>
                             //     {tagName}
                             // </li>
-                            <ClubTag tag={tagName} onClick={handleTagSelect} currTag={currTag} />
+                            <ClubTag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect}/>
                         ))}
                     </TagSpace>
                     <SearchSpace>
@@ -200,36 +202,6 @@ const TagSpace = styled.ul`
     // border: 1px solid #696969;
     background: #fff;
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-    > li {
-        font-size: 17px;
-        background-color: #696969;
-        color: #ffffff;
-        padding: 5px 9px 5px 9px;
-        border-radius: 20px;
-        list-style: none;
-        white-space: nowrap;
-        margin: 5px 0px 5px 5px;
-        box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
-        -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
-        -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
-        &:hover {
-            cursor: pointer;
-        }
-        &:active {
-            box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
-            -webkit-box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
-            -moz-box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
-        }
-        &:focus {
-            box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
-            -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
-            -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
-        }
-    }
-
-    > li.true {
-        background-color: #3884d5;
-    }
 `;
 const SearchSpace = styled.div`
     > form {
