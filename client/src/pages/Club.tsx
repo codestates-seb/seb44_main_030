@@ -34,7 +34,7 @@ function Club() {
                 </TagSection>
                 <CardSection>
                     {ClubDummyData.map((data) => {
-                        return <ContentsCard key={data.boardClubId} clubProps={data} />;
+                        return <ContentsCard key={data.boardClubId} clubProps={data} type={'club'} />;
                     })}
                 </CardSection>
             </ContentContainer>

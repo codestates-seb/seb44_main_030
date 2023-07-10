@@ -69,7 +69,7 @@ const Community = () => {
                     <h2>인기게시물</h2>
                     <PopularPostContainer>
                         {CommunityPopularMockdata.map((item) => (
-                            <ContentsCard key={`popular_${item.standardId}`} communityProps={item} />
+                            <ContentsCard key={`popular_${item.standardId}`} communityProps={item} type={'community'} />
                         ))}
                     </PopularPostContainer>
                 </TopSection>
@@ -107,7 +107,7 @@ const Community = () => {
                 <BottomSection>
                     <AllPostContainer>
                         {CommunityAllMockdata.map((item) => (
-                            <ContentsCard key={`all_${item.standardId}`} communityProps={item} />
+                            <ContentsCard key={`all_${item.standardId}`} communityProps={item} type={'community'} />
                         ))}
                     </AllPostContainer>
                     <PageContainer>

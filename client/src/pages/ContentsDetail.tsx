@@ -18,7 +18,7 @@ export interface CommentInput {
     Content: string;
 }
 
-const CommunityDetail = () => {
+const ContentsDetail = () => {
     const location = useLocation();
     const standardId = location.state; //데이터 요청 시 사용
     const mockMemberId = 1; //useSelector 사용

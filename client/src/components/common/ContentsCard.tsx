@@ -51,6 +51,7 @@ export default function ContentsCard({
     commentCount,
     communityProps,
     clubProps,
+    type,
 }: CardProps) {
     const {
         memberId: communityMemberId,
@@ -93,6 +94,14 @@ export default function ContentsCard({
         setIsLiked(memberLiked.includes(loginId));
     }, [like, memberLiked, loginId]);
 
+    const moveToDetail = () => {
+        if (type === 'communityProps') {
+            navigate(`/community/detail`);
+        } else if (type) {
+            navigate(`/club/detail`);
+        }
+    };
+
     //좋아요 하트색,숫자 상태 변경 + API 요청 추가 필요
     const handleLike = useCallback(() => {
         isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
@@ -120,10 +129,10 @@ export default function ContentsCard({
     return (
         <CardWarp>
             <TitleContentsTagWarp>
-                <TitleContainer>
+                <TitleContainer onClick={moveToDetail}>
                     <h3>{communityProps ? communityTitle : clubTitle}</h3>
                 </TitleContainer>
-                <ContentsContainer>
+                <ContentsContainer onClick={moveToDetail}>
                     <span>{communityProps ? communityContent : clubContent}</span>
                 </ContentsContainer>
                 <TagContainer>
