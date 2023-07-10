@@ -239,7 +239,6 @@ const SearchSpace = styled.div`
             width: 400px;
             height: 40px;
             display: flex;
-            box-size: border-box;
             > input {
                 height: 100%;
                 border-radius: 15px 0 0 15px;

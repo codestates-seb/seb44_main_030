@@ -117,7 +117,7 @@ export default function ClubCard({ communityProps }: CommunityPostProps) {
                 </UserInfo>
                 <ContentsInfo>
                     {/* {param === 'community' && <img src={LikeIcon} />}
-                    {param === 'community' && <span>{like}</span>} */}
+                        {param === 'community' && <span>{like}</span>} */}
                     <img src={ViewsIcon} />
                     <span>{view}</span>
                     <img src={MessageIcon} />
@@ -134,34 +134,39 @@ const CardWarp = styled.div`
     align-items: start;
     border: 1px solid #696969;
     border-radius: 2rem;
-    width: 400px;
+    width: 350px;
     height: 250px;
     margin: 2rem;
+    padding: 2.3rem;
 `;
 
 const TitleContainer = styled.div`
     font-size: 1.3rem;
     font-family: 'KimjungchulGothic-Bold';
+    margin-bottom: 0.5rem;
 `;
 const ContentsContainer = styled.div`
-    font-family: 'KimjungchulGothic-Bold';
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
 `;
 
 const TagContainer = styled.div`
     display: flex;
 `;
+
 const InfoContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-top: 1px solid #696969;
-    margin-top: 40px;
-    width: 90%;
+    width: 110%;
+    margin-top: 5px;
 `;
 
 const UserInfo = styled.div`
     display: flex;
     align-items: center;
+    padding-top: 10px;
     > img {
         width: 30px;
         height: 30px;
@@ -175,6 +180,7 @@ const UserInfo = styled.div`
 const ContentsInfo = styled.div`
     display: flex;
     align-items: center;
+    padding-top: 10px;
     > img {
         width: 30px;
         height: 30px;
