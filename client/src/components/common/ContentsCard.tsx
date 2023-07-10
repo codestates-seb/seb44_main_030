@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import ClubTag from '../ClubTag';
+import ClubTag from './Tag';
 
 import Profile from '../../../public/profile.png';
 import ViewsIcon from '../../../public/view.png';
@@ -11,58 +11,74 @@ import LikeIcon from '../../assets/Like.svg';
 import LikeFilledIcon from '../../assets/Like_filled.svg';
 import { title } from 'process';
 
-interface CommunityPostProps {
+interface PostProps {
+    memberId: number;
+    title: string;
+    content: string;
+    view: number;
+    commentCount: number;
+}
+
+interface CommunityPostProps extends PostProps {
     communityProps: {
-        memberId: number;
         memberProfileImg: string; //[작성자 프로필 이미지 소스]
         name: string; //[작성자 닉네임]
-        title: string;
-        content: string;
         tag: string;
-        view: number;
         registeredAt: string;
         modifiedAt: string | null;
         like: number; //[게시글에 대한 좋아요 갯수]
-        commentCount: number;
         memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
         standardId: number; //[게시글 자체에 대한 ID]
     };
 }
 
-interface ClubPostProps {
-    postdata: {
-        memberId: number;
-        memberProfileImg: string; //[작성자 프로필 이미지 소스]
-        name: string; //[작성자 닉네임]
-        title: string;
-        content: string;
-        tag: string;
-        view: number;
-        registeredAt: string;
-        modifiedAt: string | null;
-        like: number; //[게시글에 대한 좋아요 갯수]
-        commentCount: number;
-        memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
-        standardId: number; //[게시글 자체에 대한 ID]
+interface ClubPostProps extends PostProps {
+    clubProps: {
+        boardClubId: number;
+        tags: { tagName: string }[];
+        dueDate: string;
+        boardClubStatus: string;
     };
 }
 
-export default function ContentsCard({ communityProps }: CommunityPostProps) {
+type CardProps = CommunityPostProps | ClubPostProps;
+
+export default function ContentsCard({
+    memberId,
+    title,
+    content,
+    view,
+    commentCount,
+    communityProps,
+    clubProps,
+}: CardProps) {
     const {
-        memberId,
-        memberProfileImg,
+        memberId: communityMemberId,
+        title: communityTitle,
+        content: communityContent,
+        view: communityView,
+        commentCount: communityCommentCount,
         name,
-        title,
-        content,
+        memberProfileImg,
         tag,
-        view,
         registeredAt,
         modifiedAt,
         like,
-        commentCount,
         memberLiked,
         standardId,
-    } = communityProps;
+    } = communityProps || {};
+
+    const {
+        memberId: clubMemberId,
+        memberProfileImg: clubTitle,
+        content: clubContent,
+        view: clubView,
+        commentCount: clubCommentCount,
+        boardClubId,
+        tags,
+        dueDate,
+        boardClubStatus,
+    } = clubProps || {};
 
     // console.log(communityProps);
 
@@ -105,13 +121,14 @@ export default function ContentsCard({ communityProps }: CommunityPostProps) {
         <CardWarp>
             <TitleContentsTagWarp>
                 <TitleContainer>
-                    <h3>{title}</h3>
+                    <h3>{communityProps ? communityTitle : clubTitle}</h3>
                 </TitleContainer>
                 <ContentsContainer>
-                    <span>{content}</span>
+                    <span>{communityProps ? communityContent : clubContent}</span>
                 </ContentsContainer>
                 <TagContainer>
-                    <ClubTag tag={tag} />
+                    {communityProps && <ClubTag tag={tag} />}
+                    {clubProps && tags.map((tag) => <ClubTag key={tag.tagName} tag={tag.tagName} />)}
                 </TagContainer>
             </TitleContentsTagWarp>
             <InfoContainer>
@@ -123,9 +140,9 @@ export default function ContentsCard({ communityProps }: CommunityPostProps) {
                     {/* {param === 'community' && <img src={LikeIcon} />}
                         {param === 'community' && <span>{like}</span>} */}
                     <img src={ViewsIcon} />
-                    <span>{view}</span>
+                    <span>{communityProps ? communityView : clubView}</span>
                     <img src={MessageIcon} />
-                    <span>{commentCount}</span>
+                    <span>{communityProps ? communityCommentCount : clubCommentCount}</span>
                 </ContentsInfo>
             </InfoContainer>
         </CardWarp>

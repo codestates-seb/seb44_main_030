@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags } from '../assets/mockdata.ts';
 import ScrollBanner from '../components/common/ScrollBanner.tsx';
 import ContentsCard from '../components/common/ContentsCard.tsx';
-import ClubTag from '../components/ClubTag.tsx';
+import Tag from '../components/common/Tag.tsx';
 
 type SearchInput = {
     Keyword: string;
@@ -53,7 +53,6 @@ const Community = () => {
     };
     const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
         setCurrTag(e.currentTarget.innerText);
-        
     }, []);
     const handleNavigateCreate = () => {
         navigate('/community/create');
@@ -80,7 +79,7 @@ const Community = () => {
                             // <li key={idx} className={`${currTag === tagName}`} tabIndex={0} onClick={handleTagSelect}>
                             //     {tagName}
                             // </li>
-                            <ClubTag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect}/>
+                            <Tag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect} />
                         ))}
                     </TagSpace>
                     <SearchSpace>

@@ -7,7 +7,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-15",
     contact: "https://open.kakao.com/456",
     view: 98,
-    comment: 7,
+    commentCount: 7,
     tags: [
       {
         tagName: "CYCLING",
@@ -25,7 +25,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-10",
     contact: "https://open.kakao.com/789",
     view: 75,
-    comment: 3,
+    commentCount: 3,
     tags: [
       {
         tagName: "SOCCER",
@@ -43,7 +43,7 @@ export const ClubDummyData = [
     dueDate: "2023-07-25",
     contact: "https://open.kakao.com/012",
     view: 120,
-    comment: 10,
+    commentCount: 10,
     tags: [
       {
         tagName: "HIKING",
@@ -61,7 +61,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-05",
     contact: "https://open.kakao.com/345",
     view: 86,
-    comment: 6,
+    commentCount: 6,
     tags: [
       {
         tagName: "BASKETBALL",
@@ -79,7 +79,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-20",
     contact: "https://open.kakao.com/678",
     view: 112,
-    comment: 9,
+    commentCount: 9,
     tags: [
       {
         tagName: "BADMINTON",
@@ -97,7 +97,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-10",
     contact: "https://open.kakao.com/901",
     view: 78,
-    comment: 4,
+    commentCount: 4,
     tags: [
       {
         tagName: "TENNIS",
@@ -115,7 +115,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-05",
     contact: "https://open.kakao.com/234",
     view: 92,
-    comment: 6,
+    commentCount: 6,
     tags: [
       {
         tagName: "CHESS",
@@ -133,7 +133,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-10",
     contact: "https://open.kakao.com/890",
     view: 85,
-    comment: 5,
+    commentCount: 5,
     tags: [
       {
         tagName: "VOLLEYBALL",
@@ -151,7 +151,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-20",
     contact: "https://open.kakao.com/678",
     view: 122,
-    comment: 10,
+    commentCount: 10,
     tags: [
       {
         tagName: "CAMPING",
@@ -169,7 +169,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-15",
     contact: "https://open.kakao.com/456",
     view: 96,
-    comment: 8,
+    commentCount: 8,
     tags: [
       {
         tagName: "TABLE TENNIS",
@@ -187,7 +187,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-10",
     contact: "https://open.kakao.com/123",
     view: 80,
-    comment: 6,
+    commentCount: 6,
     tags: [
       {
         tagName: "FOOTBALL",
@@ -205,7 +205,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-05",
     contact: "https://open.kakao.com/789",
     view: 88,
-    comment: 5,
+    commentCount: 5,
     tags: [
       {
         tagName: "SQUASH",
@@ -223,7 +223,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-15",
     contact: "https://open.kakao.com/012",
     view: 102,
-    comment: 7,
+    commentCount: 7,
     tags: [
       {
         tagName: "BIKE TOUR",
@@ -241,7 +241,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-10",
     contact: "https://open.kakao.com/345",
     view: 90,
-    comment: 4,
+    commentCount: 4,
     tags: [
       {
         tagName: "YOGA",
@@ -259,7 +259,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-10",
     contact: "https://open.kakao.com/901",
     view: 79,
-    comment: 3,
+    commentCount: 3,
     tags: [
       {
         tagName: "BASEBALL",
@@ -277,7 +277,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-15",
     contact: "https://open.kakao.com/234",
     view: 84,
-    comment: 6,
+    commentCount: 6,
     tags: [
       {
         tagName: "SKATEBOARDING",
@@ -295,7 +295,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-05",
     contact: "https://open.kakao.com/567",
     view: 95,
-    comment: 7,
+    commentCount: 7,
     tags: [
       {
         tagName: "CLIMBING",
@@ -314,7 +314,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-20",
     contact: "https://open.kakao.com/012",
     view: 100,
-    comment: 8,
+    commentCount: 8,
     tags: [
       {
         tagName: "RUNNING",
@@ -333,7 +333,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-10",
     contact: "https://open.kakao.com/345",
     view: 89,
-    comment: 5,
+    commentCount: 5,
     tags: [
       {
         tagName: "BADMINTON",
@@ -355,7 +355,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-15",
     contact: "https://open.kakao.com/678",
     view: 104,
-    comment: 9,
+    commentCount: 9,
     tags: [
       {
         tagName: "SURFING",
@@ -374,7 +374,7 @@ export const ClubDummyData = [
     dueDate: "2023-08-05",
     contact: "https://open.kakao.com/901",
     view: 81,
-    comment: 4,
+    commentCount: 4,
     tags: [
       {
         tagName: "TENNIS",
@@ -387,4 +387,18 @@ export const ClubDummyData = [
     createdAt: "2023-07-03",
     modifiedAt: "2023-07-04",
   },
+];
+
+export const Mocktags: Array<string> = [
+  "전체",
+  "다이빙",
+  "스노클링",
+  "플라이보드",
+  "웨이크보드",
+  "패들보드",
+  "플라이피시",
+  "수상스키",
+  "바나나보트",
+  "카이트서핑",
+  "카약&카누",
 ];

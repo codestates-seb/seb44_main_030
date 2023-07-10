@@ -5,9 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import back from '../../public/grouping 1.png';
-import ClubTag from '../components/ClubTag';
+import ClubTag from '../components/common/Tag.tsx';
 import ScrollBanner from '../components/common/ScrollBanner';
-import { ClubDummyData } from '../../public/clubMockdata.tsx';
+import { ClubDummyData, Mocktags } from '../../public/clubMockdata.ts';
 import ContentsCard from '../components/common/ContentsCard';
 
 function Club() {
@@ -26,7 +26,11 @@ function Club() {
                         <ClubTag />
                     </Tags>
                 </TagSection>
-                <CardSection></CardSection>
+                <CardSection>
+                    {ClubDummyData.map((data) => {
+                        return <ContentsCard key={data.boardClubId} clubProps={data} />;
+                    })}
+                </CardSection>
             </ContentContainer>
         </ClubWarp>
     );
