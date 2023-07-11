@@ -95,7 +95,7 @@ export default function ContentsCard({
     }, [like, memberLiked, loginId]);
 
     const moveToDetail = () => {
-        if (type === 'communityProps') {
+        if (type === 'community') {
             navigate(`/community/detail/${standardId}`);
         } else if (type) {
             navigate(`/club/detail/${boardClubId}`);

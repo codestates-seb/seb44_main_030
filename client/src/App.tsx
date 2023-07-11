@@ -11,7 +11,8 @@ const Main = loadable(() => import('./pages/Main'));
 const Signup = loadable(() => import('./pages/Signup'));
 const Login = loadable(() => import('./pages/Login'));
 const Community = loadable(() => import('./pages/Community'));
-const ContentsDetail = loadable(() => import('./pages/ContentsDetail'));
+const CommunityDetail = loadable(() => import('./pages/CommunityDetail'));
+const ClubDetail = loadable(() => import('./pages/ClubDetail'));
 const CommunityCreate = loadable(() => import('./pages/ContentsCreate'));
 const Club = loadable(() => import('./pages/Club'));
 const Mypage = loadable(() => import('./pages/Mypage'));
@@ -32,8 +33,8 @@ function App() {
                 <Route path="/login" element={<Login></Login>}></Route>
                 <Route path="/community" element={<Community></Community>}></Route>
                 <Route path="/community/create" element={<CommunityCreate></CommunityCreate>}></Route>
-                <Route path="/community/detail/:id" element={<ContentsDetail></ContentsDetail>}></Route>
-                <Route path="/club/detail/:id" element={<ContentsDetail></ContentsDetail>}></Route>
+                <Route path="/community/detail/:id" element={<CommunityDetail></CommunityDetail>}></Route>
+                <Route path="/club/detail/:id" element={<ClubDetail></ClubDetail>}></Route>
                 <Route path="/club" element={<Club></Club>}></Route>
                 <Route path="/club/create" element={<CommunityCreate></CommunityCreate>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
