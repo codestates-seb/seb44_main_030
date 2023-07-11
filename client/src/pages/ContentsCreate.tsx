@@ -21,10 +21,9 @@ const CommunityCreate = () => {
         console.log(data);
     };
 
-
     return (
         <CreateFormContainer>
-                        <DetailInfoContainer>
+            <DetailInfoContainer>
                 {location.state === 'club' ? (
                     <form onSubmit={handleSubmitClub(onSubmitClub)}>
                         <div>
