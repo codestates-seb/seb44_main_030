@@ -17,6 +17,7 @@ interface PostProps {
     content: string;
     view: number;
     commentCount: number;
+    type: string;
 }
 
 interface CommunityPostProps extends PostProps {
@@ -103,14 +104,9 @@ export default function ContentsCard({
 
     //좋아요 하트색,숫자 상태 변경 + API 요청 추가 필요
     const handleLike = useCallback(() => {
-        isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
-        setIsLiked((prev) => !prev);
+        isLiked ? setLikeCount((prev: number) => prev - 1) : setLikeCount((prev: number) => prev + 1);
+        setIsLiked((prev: boolean) => !prev);
     }, [isLiked]);
-
-    //게시글 상세페이지로 이동
-    const handleNavigateDetail = useCallback(() => {
-        navigate(`/community/detail`, { state: standardId });
-    }, [standardId]);
 
     //프로필 페이지로 이동
     const handleNavigateProfile = useCallback(() => {
@@ -136,7 +132,8 @@ export default function ContentsCard({
                 </ContentsContainer>
                 <TagContainer>
                     {communityProps && <ClubTag tag={tag} />}
-                    {clubProps && tags.map((tag) => <ClubTag key={tag.tagName} tag={tag.tagName} />)}
+                    {clubProps &&
+                        tags.map((tag: { tagName: string }) => <ClubTag key={tag.tagName} tag={tag.tagName} />)}
                 </TagContainer>
             </TitleContentsTagWarp>
             <InfoContainer>
@@ -145,8 +142,6 @@ export default function ContentsCard({
                     <span>{name}</span>
                 </UserInfo>
                 <ContentsInfo>
-                    {/* {param === 'community' && <img src={LikeIcon} />}
-                    {param === 'community' && <span>{like}</span>} */}
                     {communityProps?.like &&
                         (isLiked ? (
                             <>

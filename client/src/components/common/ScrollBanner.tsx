@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-scroll';
 
-export default function ScrollBanner({ bannerImg }) {
+export default function ScrollBanner({ bannerImg }:{bannerImg:string}) {
     const rollBannerRef = useRef<HTMLDivElement | null>(null);
     const [isRollBannerInViewPort, setIsRollBannerInViewPort] = useState<boolean>(true);
 

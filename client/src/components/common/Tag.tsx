@@ -4,7 +4,7 @@ import styled from 'styled-components';
 interface ClubTagProps {
     tag: string;
     $isSelected?: boolean;
-    onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+    onClick?: (event: React.MouseEvent<HTMLLIElement>) => void;
 }
 
 export default function Tag({ tag, $isSelected, onClick }: ClubTagProps) {
@@ -15,7 +15,7 @@ export default function Tag({ tag, $isSelected, onClick }: ClubTagProps) {
     );
 }
 
-const TagWarp = styled.span<ClubTagProps>`
+const TagWarp = styled.li<ClubTagProps>`
     display: flex;
     align-items: center;
     justify-content: center;
