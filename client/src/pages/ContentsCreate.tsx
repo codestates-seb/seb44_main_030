@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import { Mocktags } from '../assets/mockdata.ts';
-import { useForm } from 'react-hook-form';
 
 const CommunityCreate = () => {
     const location = useLocation();
@@ -11,7 +10,6 @@ const CommunityCreate = () => {
     const { register: registerCommunity, handleSubmit: handleSubmitCommunity } = useForm();
     const onSubmitClub = (data) => console.log(data);
     const onSubmitCommunity = (data) => console.log(data);
-
 
     const {
         register,
