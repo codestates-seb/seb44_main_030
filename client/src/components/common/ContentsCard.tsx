@@ -17,6 +17,7 @@ interface PostProps {
     content: string;
     view: number;
     commentCount: number;
+    type: string;
 }
 
 interface CommunityPostProps extends PostProps {
@@ -96,7 +97,7 @@ export default function ContentsCard({
     const moveToDetail = () => {
         if (type === 'communityProps') {
             navigate(`/community/detail`);
-        } else if (type) {
+        } else if (type === 'club') {
             navigate(`/club/detail`);
         }
     };

@@ -151,7 +151,7 @@ const ContentsDetail = () => {
     );
 };
 
-export default CommunityDetail;
+export default ContentsDetail;
 
 const Background = styled.div<BackgroundProps>`
     * {
