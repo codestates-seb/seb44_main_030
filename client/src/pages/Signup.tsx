@@ -5,7 +5,7 @@ import backgroundImg from '../assets/Signup_background.png';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import RegisterForm from '../components/RegisterForm';
 
-type Inputs = {
+type SignupInputs = {
     Nickname: string;
     Email: string;
     Password: string;
@@ -22,9 +22,9 @@ const Signup = () => {
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm<Inputs>();
+    } = useForm<SignupInputs>({ mode: 'onBlur' });
 
-    const onSubmit: SubmitHandler<Inputs> = (data) => {
+    const onSubmit: SubmitHandler<SignupInputs> = (data) => {
         // console.log(data);
         // 추후 회원가입 post api 요청 작성 필요
         // 요청 성공 가정
@@ -63,7 +63,7 @@ const Signup = () => {
                             required: true,
                             pattern: {
                                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                                message: 'Email 주소가 올바르지 않습니다.',
+                                message: 'Email 주소 형식이 올바르지 않습니다.',
                             },
                         })}
                     />
@@ -83,7 +83,7 @@ const Signup = () => {
                             },
                             maxLength: {
                                 value: 40,
-                                message: '비밀번호는 40자를 넘기를 수 없습니다.',
+                                message: '비밀번호는 40자를 넘길 수 없습니다.',
                             },
                         })}
                     />
@@ -121,84 +121,83 @@ const Background = styled.div<BackgroundProps>`
     align-items: center;
 `;
 const StyledRegisterForm = styled(RegisterForm)`
-  > div {
-    display: flex;
-    flex-direction: column;
+    > div {
+        display: flex;
+        flex-direction: column;
 
-    > label {
-      font-size: 35px;
-      font-weight: 700;
-      text-align: left;
-      margin-bottom: 10px;
-      margin-left: 15px;
-    }
+        > label {
+            font-size: 35px;
+            font-weight: 700;
+            text-align: left;
+            margin-bottom: 10px;
+            margin-left: 15px;
+        }
 
-    > input {
-      width: 431px;
-      height: 56px;
-      border-radius: 15px;
-      border: none;
-      font-size: 20px;
-      font-weight: 600;
-      text-align: left;
-      background-color: #edfcff;
-      box-sizing: border-box;
-      padding-left: 20px;
-      box-shadow: 0px 1px 20px -11px rgba(0, 0, 0, 0.79) inset;
-      -webkit-box-shadow: 0px 1px 20px -11px rgba(0, 0, 0, 0.79) inset;
-      -moz-box-shadow: 0px 1px 20px -11px rgba(0, 0, 0, 0.79) inset;
-    }
-    > input:focus {
-      outline: none;
-    }
-    > input::placeholder {
-      color: #d5d9da;
-    }
-    > span {
-      margin-top:5px;
-      padding-left: 10px;
-      height: 22px;
-      color: red;
-    }
-  }
-  
-
-  > button {
-    border: none;
-    outline: 0;
-    width: 431px;
-    height: 56px;
-    background-color: #95c5f2;
-    border-radius: 15px;
-    font-size: 35px;
-    font-weight: 600;
-    box-shadow: 0px 1px 20px -7px rgba(0,0,0,0.79);
-    -webkit-box-shadow: 0px 1px 20px -7px rgba(0,0,0,0.79);
-    -moz-box-shadow: 0px 1px 20px -7px rgba(0,0,0,0.79);
-    color: #ffffff;
-    margin-top: 10px;
-    &:hover {
-      cursor: pointer;
-      background-color: #A7CDF1;
+        > input {
+            width: 431px;
+            height: 56px;
+            border-radius: 15px;
+            border: none;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: left;
+            background-color: #edfcff;
+            box-sizing: border-box;
+            padding-left: 20px;
+            box-shadow: 0px 1px 20px -11px rgba(0, 0, 0, 0.79) inset;
+            -webkit-box-shadow: 0px 1px 20px -11px rgba(0, 0, 0, 0.79) inset;
+            -moz-box-shadow: 0px 1px 20px -11px rgba(0, 0, 0, 0.79) inset;
+        }
+        > input:focus {
+            outline: none;
+        }
+        > input::placeholder {
+            color: #d5d9da;
+        }
+        > span {
+            margin-top: 5px;
+            padding-left: 10px;
+            height: 22px;
+            color: red;
+        }
     }
 
-    &:focus {
-      background-color: #95c5f2;
-    }
-  }
+    > button {
+        border: none;
+        outline: 0;
+        width: 431px;
+        height: 56px;
+        background-color: #95c5f2;
+        border-radius: 15px;
+        font-size: 35px;
+        font-weight: 600;
+        box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
+        -webkit-box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
+        -moz-box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
+        color: #ffffff;
+        margin-top: 10px;
+        &:hover {
+            cursor: pointer;
+            background-color: #a7cdf1;
+        }
 
-  > section {
-    font-size: 55px;
-    font-weight: 600;
-    display: flex;
-
-    >h2 {
-      margin-left: 10px;
+        &:focus {
+            background-color: #95c5f2;
+        }
     }
 
-    >img {
-      width: 90px,
-      height: 55px,
+    > section {
+        font-size: 55px;
+        font-weight: 600;
+        display: flex;
+
+        > h2 {
+            margin-left: 10px;
+        }
+
+        > img {
+            width: 90px;
+            height: 55px;
+        }
     }
-  }
 `;
