@@ -167,7 +167,7 @@ const Background = styled.div<BackgroundProps>`
     justify-content: center;
 `;
 const PostContainer = styled.div`
-    width: 1000px;
+    width: 1200px;
     border-radius: 15px;
     border: none;
     box-sizing: border-box;
