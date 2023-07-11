@@ -1,5 +1,16 @@
 import React from 'react';
+import styled from 'styled-components';
+
 const CommunityCreate = () => {
-    return <div>커뮤니티 글 작성 페이지 입니다.</div>;
+    return (
+        <CreateFormContainer>
+            <DetailInfoContainer></DetailInfoContainer>
+            <FormContainer></FormContainer>
+        </CreateFormContainer>
+    );
 };
 export default CommunityCreate;
+
+const CreateFormContainer = styled.div``;
+const DetailInfoContainer = styled.div``;
+const FormContainer = styled.div``;
