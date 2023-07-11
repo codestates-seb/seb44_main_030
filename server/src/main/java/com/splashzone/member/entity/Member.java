@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 public class Member {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long memberId;
 
     @Column(name = "NAME", nullable = false)
@@ -44,8 +44,26 @@ public class Member {
     @Column(name = "TERMINATED_AT", nullable = true)
     private LocalDateTime terminatedAt;
 
-    @Column(name = "ISTERMINATED", nullable = false)
-    private boolean isTerminated;
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "MEMBER_STATUS", length = 20, nullable = false)
+    private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
+
+    public enum MemberStatus{
+        MEMBER_ACTIVE("활동중"),
+        MEMBER_SLEEP("휴면 상태"),
+        MEMBER_QUIT("탈퇴 상태");
+
+        @Getter
+        private String status;
+
+        MemberStatus(String status) {
+            this.status = status;
+        }
+    }
+    public enum MemberRole {
+        ROLE_USER,
+        ROLE_ADMIN
+    }
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 public class BoardStandard extends Auditable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long standardId;
 
     @Column(name = "TITLE", nullable = false)
