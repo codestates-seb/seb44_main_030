@@ -388,6 +388,26 @@ export const ClubDummyData = [
     modifiedAt: "2023-07-04",
   },
 ];
+export const ClubDetailMockData = 
+  {
+    boardClubId: 2,
+    memberId: 2,
+    title: "자전거 동호회 모집합니다!",
+    content: "서울지역에서 함께 자전거 타실 분을 찾습니다. 주로 주말에 활동합니다.",
+    dueDate: "2023-08-15",
+    contact: "https://open.kakao.com/456",
+    view: 98,
+    commentCount: 7,
+    tags: [
+      {
+        tagName: "CYCLING",
+      },
+    ],
+    boardClubStatus: "BOARD_CLUB_RECRUITING",
+    createdAt: "2023-07-05",
+    modifiedAt: "2023-07-06",
+  };
+
 
 export const Mocktags: Array<string> = [
   "전체",
