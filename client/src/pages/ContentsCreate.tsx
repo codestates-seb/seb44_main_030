@@ -85,8 +85,7 @@ const CommunityCreate = () => {
             </DetailInfoContainer>
             <FormContainer onSubmit={handleSubmit(onSubmit)}>
                 <Title>
-                    <label>제목</label>
-                    <input
+                    <Input
                         placeholder="글 제목을 입력해주세요"
                         {...register('title', {
                             required: '제목을 입력해주세요',
@@ -97,8 +96,7 @@ const CommunityCreate = () => {
                     {errors.title && <span>{errors.title.message}</span>}
                 </Title>
                 <Content>
-                    <label>내용</label>
-                    <textarea
+                    <TextArea
                         placeholder="모임에 대해 소개해주세요!"
                         {...register('content', {
                             required: '내용을 입력해주세요',
@@ -133,14 +131,30 @@ const Title = styled.div`
     box-sizing: border-box;
     background: #fff;
     margin: 60px 0 10px 0;
-    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.1);
 `;
 const Content = styled.div`
-    width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1200px;
+    min-height: 600px;
     border-radius: 15px;
     border: none;
     box-sizing: border-box;
     background: #fff;
-    padding: 80px 120px 80px 120px;
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+`;
+const Input = styled.input`
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 20px;
+`;
+const TextArea = styled.textarea`
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 20px;
 `;
