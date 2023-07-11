@@ -13,7 +13,7 @@ public class MemberDto {
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private Long memberId;
+        private long memberId;
         private String name;
         private String email;
         private String nickname;

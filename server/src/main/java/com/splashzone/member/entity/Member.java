@@ -20,30 +20,31 @@ public class Member {
     @GeneratedValue
     private long memberId;
 
-    @Column(nullable = false)
+    @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "NICKNAME", nullable = false)
     private String nickname;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "PASSWORD", nullable = false, length = 100)
     private String password;
 
 //    @Column(nullable = false)
 //    private Image;
 
-    @Column(nullable = true)
+    @Column(name = "BIO", nullable = true)
     private String bio;
 
-    @Column(nullable = false)
+    @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "TERMINATED_AT", nullable = true)
     private LocalDateTime terminatedAt;
 
-    @Column(nullable = false)
+    @Column(name = "ISTERMINATED", nullable = false)
     private boolean isTerminated;
 
     @Builder.Default
@@ -56,4 +57,7 @@ public class Member {
         this.password = password;
         this.nickname = nickname;
     }
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 }

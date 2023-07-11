@@ -19,19 +19,19 @@ public class BoardStandard extends Auditable {
     @GeneratedValue
     private long standardId;
 
-    @Column(nullable = false)
+    @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(name = "CONTENT", nullable = false)
     private String content;
 
-    @Column(columnDefinition = "integer default 0", nullable = false)
+    @Column(name = "VIEW", nullable = false, columnDefinition = "integer default 0")
     private int view;
 
     //TODO tagId mapping,likeCount 추가 해야됨!!
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
 

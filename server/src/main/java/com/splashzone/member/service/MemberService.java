@@ -1,5 +1,6 @@
 package com.splashzone.member.service;
 
+import com.splashzone.auth.util.CustomAuthorityUtils;
 import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
 import com.splashzone.member.entity.Member;
@@ -10,33 +11,46 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomAuthorityUtils authorityUtils;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomAuthorityUtils authorityUtils) {
         this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authorityUtils = authorityUtils;
     }
 
     public Member createMember(Member member) {
         Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
         if (optionalMember.isPresent()) throw new ResponseStatusException(HttpStatus.CONFLICT);
 
-        //TODO: email, password encrypt 과정 넣어주기!
+        String encryptedPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encryptedPassword);
+
+        List<String> roles = authorityUtils.createRoles(member.getEmail());
+        member.setRoles(roles);
+
+
         member.setName(member.getName());
         member.setPassword(member.getPassword());
         member.setEmail(member.getEmail());
         member.setBio(member.getBio());
         member.setNickname(member.getNickname());
+        member.setTerminated(false);
 
         member.setCreatedAt(LocalDateTime.now());
 
