@@ -1,21 +1,29 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import { Mocktags } from '../assets/mockdata.ts';
+import { Calendar } from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const CommunityCreate = () => {
     const location = useLocation();
-
+    const [date, setDate] = useState(new Date());
+    const [showCalendar, setShowCalendar] = useState(false);
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors },
     } = useForm();
 
     const onSubmit = (data: string) => {
         console.log(data);
     };
+
+    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+        date.getDate(),
+    ).padStart(2, '0')}`;
 
     return (
         <CreateFormContainer>
@@ -25,10 +33,11 @@ const CommunityCreate = () => {
                         <>
                             <div>
                                 <label htmlFor="recuruitingNumber">모집인원</label>
-                                <select {...registerClub('recuruitingNumber')} id="recuruitingNumber">
-                                    {['1명', '2명', '3명', '4명', '5명 이상'].map((tagName, idx) => (
-                                        <option key={idx} value={tagName}>
-                                            {tagName}
+                                <select {...register('recuruitingNumber')} id="recuruitingNumber">
+                                    <option value="">선택</option>
+                                    {['1명', '2명', '3명', '4명', '5명 이상'].map((item, idx) => (
+                                        <option key={idx} value={item}>
+                                            {item}
                                         </option>
                                     ))}
                                 </select>
@@ -37,20 +46,20 @@ const CommunityCreate = () => {
                                 <label htmlFor="meetingDay">모임 일자</label>
                                 {/* 직접입력 */}
                                 <input
-                                    {...registerClub('meetingDay')}
+                                    {...register('meetingDay')}
                                     id="meetingDayInput"
                                     placeholder="모임 일자를 입력합니다."
                                 />
                                 {/* 달력 드롭다운: react-calendar */}
-                                <input
-                                    {...registerClub('meetingDay')}
+                                {/* <input
+                                    {...register('meetingDay')}
                                     id="meetingDayCalendar"
                                     placeholder="캘린더가 떠야합니다"
-                                />
+                                /> */}
                             </div>
                             <div>
                                 <label htmlFor="contactRoute">연락 방법</label>
-                                <select {...registerClub('contactRoute')} id="contactRoute">
+                                <select {...register('contactRoute')} id="contactRoute">
                                     {['카카오톡', '이메일', '구글폼'].map((routeName, idx) => (
                                         <option key={idx} value={routeName}>
                                             {routeName}
@@ -59,12 +68,36 @@ const CommunityCreate = () => {
                                 </select>
                             </div>
                             <div>
-                                <label htmlFor="closeDay">모집 마감일</label>
                                 {/* 달력 드롭다운 : react-calendar*/}
+                                <label htmlFor="closeDay">모집 마감일</label>
+                                <input
+                                    {...register('closeDay')}
+                                    id="closeDay"
+                                    type="text"
+                                    onClick={() => setShowCalendar(!showCalendar)}
+                                    value={formattedDate}
+                                    readOnly
+                                />
+                                {showCalendar && (
+                                    <Controller
+                                        control={control}
+                                        name="date"
+                                        render={({ field }) => (
+                                            <Calendar
+                                                onChange={(date) => {
+                                                    setDate(date);
+                                                    setShowCalendar(false);
+                                                    field.onChange(date);
+                                                }}
+                                                value={date}
+                                            />
+                                        )}
+                                    />
+                                )}
                             </div>
                             <div>
                                 <label htmlFor="clubTag">모집 활동</label>
-                                <select {...registerClub('clubTag')} id="clubTag">
+                                <select {...register('clubTag')} id="clubTag">
                                     {Mocktags.map((tagName, idx) => (
                                         <option key={idx} value={tagName}>
                                             {tagName}
@@ -76,7 +109,7 @@ const CommunityCreate = () => {
                     ) : (
                         <>
                             <label htmlFor="communityTag">게시글 종류</label>
-                            <input {...registerCommunity('communityTag')} id="communityTag"></input>
+                            <input {...register('communityTag')} id="communityTag"></input>
                         </>
                     )}
                 </DetailInfoContainer>
