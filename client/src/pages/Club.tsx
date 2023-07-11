@@ -24,7 +24,7 @@ function Club() {
                 <TagSection>
                     <TagTab>
                         <span>카테고리</span>
-                        <span onClick={() => navigate(`/club/post`)}>글 쓰기</span>
+                        <span onClick={() => navigate(`/club/create`, { state: 'club' })}>글 쓰기</span>
                     </TagTab>
                     <Tags>
                         {Mocktags.map((tagName, idx) => (

@@ -33,7 +33,7 @@ function App() {
                 <Route path="/community/detail/:id" element={<ContentsDetail></ContentsDetail>}></Route>
                 <Route path="/club/detail/:id" element={<ContentsDetail></ContentsDetail>}></Route>
                 <Route path="/club" element={<Club></Club>}></Route>
-                <Route path="/club/create" element={<ClubPost></ClubPost>}></Route>
+                <Route path="/club/create" element={<CommunityCreate></CommunityCreate>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
             </Routes>
             {!hideHeaderFooter && <Footer></Footer>}
