@@ -1,101 +1,41 @@
 import styled from 'styled-components';
 import { Link } from 'react-scroll';
-import ClubCard from '../components/ClubCard';
-import { useEffect, useRef, useState } from 'react';
-
-import back from '../../public/grouping 1.png';
-import ClubTag from '../components/ClubTag';
+import ClubCard from '../components/common/ContentsCard';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import back from '../../public/grouping 1.png';
+import ScrollBanner from '../components/common/ScrollBanner';
+import { ClubDummyData, Mocktags } from '../../public/clubMockdata.ts';
+import ContentsCard from '../components/common/ContentsCard';
+import Tag from '../components/common/Tag.tsx';
+
 function Club() {
-    const rollBannerRef = useRef<HTMLDivElement | null>(null);
-    const [isRollBannerInViewPort, setIsRollBannerInViewPort] = useState<boolean>(true);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const onScroll = () => {
-            const scrollPosition = window.scrollY;
-            if (scrollPosition <= 0) {
-                setIsRollBannerInViewPort(true);
-            }
-        };
-        window.addEventListener('scroll', onScroll);
-
-        return () => {
-            window.removeEventListener('scroll', onScroll);
-        };
-    }, []);
-
-    useEffect(() => {
-        const rollBannerRefValue = rollBannerRef.current;
-
-        const observerCallback = (entries: IntersectionObserverEntry[]) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    console.log('RollBanner is now in viewport');
-                    setIsRollBannerInViewPort(true);
-                } else {
-                    console.log('RollBanner is now out of viewport');
-                    setIsRollBannerInViewPort(false);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(observerCallback, {
-            threshold: 0.0,
-        });
-
-        if (rollBannerRefValue) {
-            observer.observe(rollBannerRefValue);
-        }
-
-        return () => {
-            if (rollBannerRefValue) {
-                observer.unobserve(rollBannerRefValue);
-            }
-        };
+    const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
+    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+        setCurrTag(e.currentTarget.innerText);
     }, []);
 
     return (
         <ClubWarp>
-            <Link activeClass="active" to="ContentContainer" spy={true} smooth={true} offset={0} duration={500}>
-                <RollBanner ref={rollBannerRef} $inView={isRollBannerInViewPort}>
-                    <SwiperContainer>
-                        <SwiperWarp>
-                            <img src={back} />
-                        </SwiperWarp>
-                        <SwiperPageTab>
-                            <ArrowLeft />
-                            <ArrowRight />
-                        </SwiperPageTab>
-                    </SwiperContainer>
-                </RollBanner>
-            </Link>
+            <ScrollBanner bannerImg={back} />
             <ContentContainer>
                 <TagSection>
                     <TagTab>
                         <span>카테고리</span>
-                        <span onClick={() => navigate(`/club/post`)}>글 쓰기</span>
+                        <span onClick={() => navigate(`/club/create`, { state: 'club' })}>글 쓰기</span>
                     </TagTab>
                     <Tags>
-                        <ClubTag />
+                        {Mocktags.map((tagName, idx) => (
+                            <Tag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect} />
+                        ))}
                     </Tags>
                 </TagSection>
                 <CardSection>
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
-                    <ClubCard />
+                    {ClubDummyData.map((data) => {
+                        return <ContentsCard key={data.boardClubId} clubProps={data} type={'club'} />;
+                    })}
                 </CardSection>
             </ContentContainer>
         </ClubWarp>
@@ -110,66 +50,6 @@ const ClubWarp = styled.div`
     align-items: center;
     background-color: #ffffff;
     width: 100%;
-`;
-
-const RollBanner = styled.div<{ $inView: boolean }>`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-color: #4f4d4d;
-    position: relative;
-    transform: translateY(${({ $inView }) => ($inView ? '0' : '-100%')});
-    transition: transform 0.5s ease-in-out;
-`;
-
-const SwiperContainer = styled.div`
-    position: relative;
-    width: 100%;
-    height: 100%;
-`;
-
-const SwiperWarp = styled.div`
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    width: 100%;
-    height: 100%;
-
-    > img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-`;
-
-const SwiperPageTab = styled.div`
-    display: flex;
-    position: absolute;
-    width: 100%;
-    top: 0;
-    bottom: 0;
-    align-items: center;
-    justify-content: space-between;
-`;
-
-const Arrow = styled.span`
-    color: white;
-    font-size: 2em;
-    cursor: pointer;
-`;
-
-const ArrowLeft = styled(Arrow)`
-    &:before {
-        content: '◀';
-    }
-`;
-
-const ArrowRight = styled(Arrow)`
-    &:after {
-        content: '▶';
-    }
 `;
 
 const ContentContainer = styled.div`
@@ -203,7 +83,17 @@ const TagTab = styled.div`
 `;
 
 const Tags = styled.div`
+    width: 600px;
+    height: 130px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 5px 0 5px 0;
+    align-items: center;
+    border-radius: 15px;
+    // border: 1px solid #696969;
+    background: #fff;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
 `;
 
 const CardSection = styled.div`

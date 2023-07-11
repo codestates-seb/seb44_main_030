@@ -6,24 +6,23 @@ import SearchIcon from '../assets/Search.svg';
 import backgroundImg from '../assets/Community_background.png';
 import PageButton from '../components/PageButton';
 import { useNavigate } from 'react-router-dom';
-import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags} from '../assets/mockdata.ts';
+import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags } from '../assets/mockdata.ts';
+import ScrollBanner from '../components/common/ScrollBanner.tsx';
+import ContentsCard from '../components/common/ContentsCard.tsx';
+import Tag from '../components/common/Tag.tsx';
+
 type SearchInput = {
     Keyword: string;
 };
-interface BackgroundProps {
-    $image: string;
-}
-const Community = () => {
 
+const Community = () => {
     //인기게시물은 useQuery 사용 시 stale time 길게 설정
 
     const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
     const [pageArr, setPageArr] = useState<Array<number>>([1, 2, 3, 4, 5]);
     const [currPage, setCurrPage] = useState<number>(1);
     const navigate = useNavigate();
-    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
-        setCurrTag(e.currentTarget.innerText);
-    }, []);
+
     const {
         register,
         handleSubmit,
@@ -42,7 +41,7 @@ const Community = () => {
                 return updatedPageArr;
             });
         }
-        
+
         if (e.currentTarget.innerText === '이전') {
             currPage === 1 ||
                 setPageArr((prevPageArr) => {
@@ -52,30 +51,35 @@ const Community = () => {
                 });
         }
     };
+    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
+        setCurrTag(e.currentTarget.innerText);
+    }, []);
     const handleNavigateCreate = () => {
-        navigate('/community/create');
+        navigate('/community/create',{ state: 'community'});
     };
     const handleCurrPage = (e: React.MouseEvent<HTMLLIElement>) => {
         console.log(Number(e.currentTarget.innerText));
         setCurrPage(Number(e.currentTarget.innerText));
     };
     return (
-        <Background $image={backgroundImg}>
+        <CommunityWarp>
+            <ScrollBanner bannerImg={backgroundImg} />
             <CommunityContainer>
                 <TopSection>
                     <h2>인기게시물</h2>
                     <PopularPostContainer>
                         {CommunityPopularMockdata.map((item) => (
-                            <CommunityPost key={`popular_${item.standardId}`} postdata={item} />
+                            <ContentsCard key={`popular_${item.standardId}`} communityProps={item} type={'community'} />
                         ))}
                     </PopularPostContainer>
                 </TopSection>
                 <MiddleSection>
                     <TagSpace>
                         {Mocktags.map((tagName, idx) => (
-                            <li key={idx} className={`${currTag === tagName}`} tabIndex={0} onClick={handleTagSelect}>
-                                {tagName}
-                            </li>
+                            // <li key={idx} className={`${currTag === tagName}`} tabIndex={0} onClick={handleTagSelect}>
+                            //     {tagName}
+                            // </li>
+                            <Tag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect} />
                         ))}
                     </TagSpace>
                     <SearchSpace>
@@ -103,7 +107,7 @@ const Community = () => {
                 <BottomSection>
                     <AllPostContainer>
                         {CommunityAllMockdata.map((item) => (
-                            <CommunityPost key={`all_${item.standardId}`} postdata={item} />
+                            <ContentsCard key={`all_${item.standardId}`} communityProps={item} type={'community'} />
                         ))}
                     </AllPostContainer>
                     <PageContainer>
@@ -115,22 +119,24 @@ const Community = () => {
                     </PageContainer>
                 </BottomSection>
             </CommunityContainer>
-        </Background>
+        </CommunityWarp>
     );
 };
 
-const Background = styled.div<BackgroundProps>`
-    background-image: url(${(props) => props.$image});
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+const CommunityWarp = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
     width: 100%;
 `;
+
 const CommunityContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 1280px;
     button {
         border: none;
         &:active {
@@ -141,7 +147,7 @@ const CommunityContainer = styled.div`
     }
 `;
 const TopSection = styled.section`
-    width: 1345px;
+    width: 100%;
     height: 507px;
     border-radius: 15px;
     // border: 1px solid #696969;
@@ -162,7 +168,7 @@ const PopularPostContainer = styled.ul`
     }
 `;
 const MiddleSection = styled.section`
-    width: 1347px;
+    width: 100%;
     margin-top: 30px;
     margin-bottom: 20px;
     height: 100px;
@@ -184,8 +190,8 @@ const MiddleSection = styled.section`
     }
 `;
 const TagSpace = styled.ul`
-    width: 550px;
-    height: 90px;
+    width: 600px;
+    height: 130px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -195,36 +201,6 @@ const TagSpace = styled.ul`
     // border: 1px solid #696969;
     background: #fff;
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-    > li {
-        font-size: 17px;
-        background-color: #696969;
-        color: #ffffff;
-        padding: 5px 9px 5px 9px;
-        border-radius: 20px;
-        list-style: none;
-        white-space: nowrap;
-        margin: 5px 0px 5px 5px;
-        box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
-        -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
-        -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75);
-        &:hover {
-            cursor: pointer;
-        }
-        &:active {
-            box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
-            -webkit-box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
-            -moz-box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
-        }
-        &:focus {
-            box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
-        -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
-        -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.75) inset;
-        }
-    }
-
-    > li.true {
-        background-color: #3884d5;
-    }
 `;
 const SearchSpace = styled.div`
     > form {
@@ -235,7 +211,6 @@ const SearchSpace = styled.div`
             width: 400px;
             height: 40px;
             display: flex;
-            box-size: border-box;
             > input {
                 height: 100%;
                 border-radius: 15px 0 0 15px;
@@ -284,7 +259,7 @@ const AllPostContainer = styled.ul`
 `;
 
 const BottomSection = styled.section`
-    height: 700px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;

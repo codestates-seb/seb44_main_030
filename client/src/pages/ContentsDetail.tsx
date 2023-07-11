@@ -18,7 +18,7 @@ export interface CommentInput {
     Content: string;
 }
 
-const CommunityDetail = () => {
+const ContentsDetail = () => {
     const location = useLocation();
     const standardId = location.state; //데이터 요청 시 사용
     const mockMemberId = 1; //useSelector 사용
@@ -151,7 +151,7 @@ const CommunityDetail = () => {
     );
 };
 
-export default CommunityDetail;
+export default ContentsDetail;
 
 const Background = styled.div<BackgroundProps>`
     * {
@@ -167,7 +167,7 @@ const Background = styled.div<BackgroundProps>`
     justify-content: center;
 `;
 const PostContainer = styled.div`
-    width: 1000px;
+    width: 1200px;
     border-radius: 15px;
     border: none;
     box-sizing: border-box;
