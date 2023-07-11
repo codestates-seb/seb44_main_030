@@ -45,7 +45,7 @@ public class BoardClub extends Auditable {
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BoardClubTag> boardClubTags = new ArrayList<>();
 
     public enum BoardClubStatus {
@@ -61,7 +61,7 @@ public class BoardClub extends Auditable {
         }
     }
 
-    public void changeBoardClub(BoardClub boardClub) {
+    public void changeBoardClub(BoardClub boardClub, List<BoardClubTag> clubTags) {
         if (!boardClub.getTitle().isEmpty()) {
             this.title = boardClub.getTitle();
         }
@@ -77,6 +77,9 @@ public class BoardClub extends Auditable {
         if (boardClub.getBoardClubStatus() != null) {
             this.boardClubStatus = boardClub.getBoardClubStatus();
         }
+
+        this.boardClubTags.clear();
+        this.boardClubTags.addAll(clubTags);
     }
 
     public void changeBoardClubStatus(BoardClubStatus boardClubStatus) {
