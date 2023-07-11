@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { Mocktags } from '../assets/mockdata.ts';
 import { Calendar } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { type } from 'os';
 
 const CommunityCreate = () => {
     const location = useLocation();
@@ -28,11 +29,12 @@ const CommunityCreate = () => {
     return (
         <CreateFormContainer>
             <FormContainer onSubmit={handleSubmit(onSubmit)}>
-                <DetailInfoContainer>
-                    {location.state === 'club' ? (
-                        <>
-                            <div>
-                                <label htmlFor="recuruitingNumber">모집인원</label>
+                {location.state === 'club' ? (
+                    <DetailInfoContainer>
+                        <DetailInfoTitle>모임의 기본 정보를 입력해주세요</DetailInfoTitle>
+                        <TagContainer>
+                            <TagWarp>
+                                <TagCartegory htmlFor="recuruitingNumber">모집인원</TagCartegory>
                                 <select {...register('recuruitingNumber')} id="recuruitingNumber">
                                     <option value="">선택</option>
                                     {['1명', '2명', '3명', '4명', '5명 이상'].map((item, idx) => (
@@ -41,24 +43,9 @@ const CommunityCreate = () => {
                                         </option>
                                     ))}
                                 </select>
-                            </div>
-                            <div>
-                                <label htmlFor="meetingDay">모임 일자</label>
-                                {/* 직접입력 */}
-                                <input
-                                    {...register('meetingDay')}
-                                    id="meetingDayInput"
-                                    placeholder="모임 일자를 입력합니다."
-                                />
-                                {/* 달력 드롭다운: react-calendar */}
-                                {/* <input
-                                    {...register('meetingDay')}
-                                    id="meetingDayCalendar"
-                                    placeholder="캘린더가 떠야합니다"
-                                /> */}
-                            </div>
-                            <div>
-                                <label htmlFor="contactRoute">연락 방법</label>
+                            </TagWarp>
+                            <TagWarp>
+                                <TagCartegory htmlFor="contactRoute">연락 방법</TagCartegory>
                                 <select {...register('contactRoute')} id="contactRoute">
                                     {['카카오톡', '이메일', '구글폼'].map((routeName, idx) => (
                                         <option key={idx} value={routeName}>
@@ -66,10 +53,21 @@ const CommunityCreate = () => {
                                         </option>
                                     ))}
                                 </select>
-                            </div>
-                            <div>
+                                <input {...register('contact')} type="text" />
+                            </TagWarp>
+                            <TagWarp>
+                                <TagCartegory htmlFor="clubTag">모집 활동</TagCartegory>
+                                <select {...register('clubTag')} id="clubTag">
+                                    {Mocktags.map((tagName, idx) => (
+                                        <option key={idx} value={tagName}>
+                                            {tagName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </TagWarp>
+                            <TagWarp>
                                 {/* 달력 드롭다운 : react-calendar*/}
-                                <label htmlFor="closeDay">모집 마감일</label>
+                                <TagCartegory htmlFor="closeDay">모집 마감일</TagCartegory>
                                 <input
                                     {...register('closeDay')}
                                     id="closeDay"
@@ -94,9 +92,20 @@ const CommunityCreate = () => {
                                         )}
                                     />
                                 )}
-                            </div>
-                            <div>
-                                <label htmlFor="clubTag">모집 활동</label>
+                            </TagWarp>
+                        </TagContainer>
+                    </DetailInfoContainer>
+                ) : (
+                    <></>
+                )}
+                <DetailContentContainer>
+                    {location.state === 'club' ? (
+                        <TitleText>모임에 대해서 소개해주세요!</TitleText>
+                    ) : (
+                        <>
+                            <TitleText>모두가 당신의 이야기를 듣고 싶어합니다!</TitleText>
+                            <TagWarp>
+                                <TagCartegory htmlFor="communityTag">카테고리</TagCartegory>
                                 <select {...register('clubTag')} id="clubTag">
                                     {Mocktags.map((tagName, idx) => (
                                         <option key={idx} value={tagName}>
@@ -104,16 +113,9 @@ const CommunityCreate = () => {
                                         </option>
                                     ))}
                                 </select>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <label htmlFor="communityTag">게시글 종류</label>
-                            <input {...register('communityTag')} id="communityTag"></input>
+                            </TagWarp>
                         </>
                     )}
-                </DetailInfoContainer>
-                <DetailContentContainer>
                     <Title>
                         <Input
                             placeholder="글 제목을 입력해주세요"
@@ -123,7 +125,7 @@ const CommunityCreate = () => {
                                 maxLength: { value: 20, message: '20자 이내로 입력해주세요' },
                             })}
                         />
-                        {errors.title && <span>{errors.title.message}</span>}
+                        {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
                     </Title>
                     <Content>
                         <TextArea
@@ -136,8 +138,10 @@ const CommunityCreate = () => {
                         />
                         {errors.title && <ErrorMessage>{errors.content.message}</ErrorMessage>}
                     </Content>
-                    <button>취소</button>
-                    <button type="submit">글 등록</button>
+                    <ButtonWarp>
+                        <button>취소</button>
+                        <button type="submit">글 등록</button>
+                    </ButtonWarp>
                 </DetailContentContainer>
             </FormContainer>
         </CreateFormContainer>
@@ -152,9 +156,41 @@ const CreateFormContainer = styled.div`
     align-items: center;
     justify-content: center;
 `;
-const DetailInfoContainer = styled.div``;
+const DetailInfoContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+const DetailInfoTitle = styled.div`
+    font-family: 'TTWanjudaedunsancheB', sans-serif;
+    font-size: 2.3rem;
+    color: rgba(56, 132, 213, 1);
+    padding: 20px 0 20px 10px;
+`;
+
 const DetailContentContainer = styled.div``;
 const FormContainer = styled.form``;
+
+const TitleText = styled.div`
+    font-family: 'TTWanjudaedunsancheB', sans-serif;
+    font-size: 2.3rem;
+    color: rgba(56, 132, 213, 1);
+    padding: 20px 0 20px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+`;
+const TagWarp = styled.div`
+    display: flex;
+    align-items: center;
+    padding: 30px 20px 30px 20px;
+`;
+const TagContainer = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+`;
+const TagCartegory = styled.div`
+    font-family: 'TTWanjudaedunsancheB', sans-serif;
+    font-size: 1.6rem;
+    margin-right: 20px;
+`;
 const Title = styled.div`
     max-width: 1200px;
     height: 60px;
@@ -162,7 +198,7 @@ const Title = styled.div`
     border: none;
     box-sizing: border-box;
     background: #fff;
-    margin: 60px 0 10px 0;
+    margin: 20px 0 10px 0;
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.1);
 `;
 const Content = styled.div`
@@ -183,7 +219,6 @@ const InputContainer = styled.div`
 `;
 const ErrorMessage = styled.span`
     position: absolute;
-
     color: red;
     font-size: 12px;
 `;
@@ -193,6 +228,8 @@ const Input = styled.input`
     border: none;
     padding: 20px;
     outline: none;
+    border-radius: 15px;
+    resize: none;
 `;
 const TextArea = styled.textarea`
     box-sizing: border-box;
@@ -201,4 +238,27 @@ const TextArea = styled.textarea`
     border: none;
     padding: 20px;
     outline: none;
+    border-radius: 15px;
+    resize: none;
+`;
+const ButtonWarp = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 0 50px;
+
+    > button {
+        padding: 10px 20px 10px 20px;
+        margin-left: 20px;
+        border-radius: 15px;
+        outline: none;
+        background-color: rgba(56, 132, 213, 1);
+        border: 2px solid white;
+        color: white;
+        font-size: 1.1rem;
+        cursor: pointer;
+
+        :hover {
+            background-color: rgba(172, 212, 255, 0.7); // 밝은 색으로 변경
+        }
+    }
 `;
