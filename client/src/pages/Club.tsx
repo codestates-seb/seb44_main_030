@@ -13,7 +13,7 @@ import Tag from '../components/common/Tag.tsx';
 function Club() {
     const navigate = useNavigate();
     const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
-    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
+    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
         setCurrTag(e.currentTarget.innerText);
     }, []);
 

@@ -30,8 +30,8 @@ function App() {
                 <Route path="/login" element={<Login></Login>}></Route>
                 <Route path="/community" element={<Community></Community>}></Route>
                 <Route path="/community/create" element={<CommunityCreate></CommunityCreate>}></Route>
-                <Route path="/community/detail" element={<ContentsDetail></ContentsDetail>}></Route>
-                <Route path="/club/detail" element={<ContentsDetail></ContentsDetail>}></Route>
+                <Route path="/community/detail/:id" element={<ContentsDetail></ContentsDetail>}></Route>
+                <Route path="/club/detail/:id" element={<ContentsDetail></ContentsDetail>}></Route>
                 <Route path="/club" element={<Club></Club>}></Route>
                 <Route path="/club/create" element={<ClubPost></ClubPost>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
