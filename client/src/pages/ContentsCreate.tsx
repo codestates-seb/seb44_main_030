@@ -82,8 +82,7 @@ const CommunityCreate = () => {
                 </DetailInfoContainer>
                 <DetailContentContainer>
                     <Title>
-                        <label>제목</label>
-                        <input
+                        <Input
                             placeholder="글 제목을 입력해주세요"
                             {...register('title', {
                                 required: '제목을 입력해주세요',
@@ -94,8 +93,7 @@ const CommunityCreate = () => {
                         {errors.title && <span>{errors.title.message}</span>}
                     </Title>
                     <Content>
-                        <label>내용</label>
-                        <textarea
+                        <TextArea
                             placeholder="모임에 대해 소개해주세요!"
                             {...register('content', {
                                 required: '내용을 입력해주세요',
@@ -103,7 +101,7 @@ const CommunityCreate = () => {
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
                         />
-                        {errors.title && <span>{errors.content.message}</span>}
+                        {errors.title && <ErrorMessage>{errors.content.message}</ErrorMessage>}
                     </Content>
                     <button>취소</button>
                     <button type="submit">글 등록</button>
@@ -125,7 +123,7 @@ const DetailInfoContainer = styled.div``;
 const DetailContentContainer = styled.div``;
 const FormContainer = styled.form``;
 const Title = styled.div`
-    width: 1200px;
+    max-width: 1200px;
     height: 60px;
     border-radius: 15px;
     border: none;
@@ -146,16 +144,28 @@ const Content = styled.div`
     background: #fff;
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
 `;
+const InputContainer = styled.div`
+    position: relative;
+    width: 100%;
+`;
+const ErrorMessage = styled.span`
+    position: absolute;
+
+    color: red;
+    font-size: 12px;
+`;
+
 const Input = styled.input`
     width: 100%;
-    height: 100%;
     border: none;
     padding: 20px;
+    outline: none;
 `;
 const TextArea = styled.textarea`
     box-sizing: border-box;
-    width: 100%;
-    height: 100%;
+    width: 1200px;
+    height: 600px;
     border: none;
     padding: 20px;
+    outline: none;
 `;
