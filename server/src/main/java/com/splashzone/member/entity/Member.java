@@ -1,5 +1,6 @@
 package com.splashzone.member.entity;
 
+import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import lombok.*;
 
@@ -68,6 +69,10 @@ public class Member {
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<BoardStandard> boardStandards = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private List<BoardClub> boardClubs = new ArrayList<>();
 
     public Member(String email, String name, String password, String nickname) {
         this.email = email;

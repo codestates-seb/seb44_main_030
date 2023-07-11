@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.Query;
 public interface BoardClubRepository extends JpaRepository<BoardClub, Long> {
     @Modifying
     @Query("UPDATE BoardClub c SET c.view = c.view + 1 WHERE c.boardClubId = :boardClubId")
-    int updateViews(long boardClubId);
+    int updateViews(Long boardClubId);
 }
