@@ -55,7 +55,7 @@ const Community = () => {
         setCurrTag(e.currentTarget.innerText);
     }, []);
     const handleNavigateCreate = () => {
-        navigate('/community/create');
+        navigate('/community/create',{ state: 'community'});
     };
     const handleCurrPage = (e: React.MouseEvent<HTMLLIElement>) => {
         console.log(Number(e.currentTarget.innerText));
