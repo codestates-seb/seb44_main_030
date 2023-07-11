@@ -3,11 +3,12 @@ import { RootState } from '../store/store';
 import { Info } from '../types/info';
 import Marker from './common/Marker';
 import { setSelectionInstance } from '../store/selectinfo';
+import InfoWindow from './common/InfoWindow';
 
 const MarkersContainer = () => {
     const dispatch = useDispatch();
     const map = useSelector((state: RootState) => state.counter.mapInstance);
-    const infos = useSelector((state: RootState) => state.info);
+    const infos = useSelector((state: RootState) => state.info.infoInstance);
     const selection = useSelector((state: RootState) => state.selection.selection);
     if (!map || !infos) return null;
     return (
@@ -34,6 +35,7 @@ const MarkersContainer = () => {
                     }}
                 />
             )}
+            <InfoWindow map={map} selectInfo={selection} />
         </div>
     );
 };

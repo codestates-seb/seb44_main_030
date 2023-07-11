@@ -22,6 +22,10 @@ const Marker = ({ map, position, content, onClick }: MarkerProps) => {
                     content,
                 },
             });
+            // const bounds =new naver.maps.LatLngBounds(
+            //     new naver.maps.LatLng(0,0),
+            //     new naver.maps.LatLng(0,0)
+            // )
         }
 
         if (onClick) {

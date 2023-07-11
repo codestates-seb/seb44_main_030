@@ -4,6 +4,7 @@ import Header from './components/header';
 import Footer from './components/Footer';
 import Globalstyle from './GlobalStyle';
 import './App.css';
+import Fetching from './pages/fetching';
 
 const Main = loadable(() => import('./pages/Main'));
 const Signup = loadable(() => import('./pages/Signup'));
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/club" element={<Club></Club>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
                 <Route path="/map" element={<Map />}></Route>
+                <Route path="/test" element={<Fetching />} />
             </Routes>
             {!hideHeaderFooter && <Footer></Footer>}
         </div>
