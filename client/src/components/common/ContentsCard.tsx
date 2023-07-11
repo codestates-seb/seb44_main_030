@@ -96,9 +96,9 @@ export default function ContentsCard({
 
     const moveToDetail = () => {
         if (type === 'communityProps') {
-            navigate(`/community/detail`);
+            navigate(`/community/detail/${standardId}`);
         } else if (type) {
-            navigate(`/club/detail`);
+            navigate(`/club/detail/${boardClubId}`);
         }
     };
 
@@ -139,7 +139,7 @@ export default function ContentsCard({
             <InfoContainer>
                 <UserInfo>
                     <img src={memberProfileImg} />
-                    <span>{name}</span>
+                    <span onClick={handleNavigateProfile}>{name}</span>
                 </UserInfo>
                 <ContentsInfo>
                     {communityProps?.like &&
