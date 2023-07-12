@@ -1,6 +1,6 @@
 package com.splashzone.member.service;
 
-import com.splashzone.auth.util.CustomAuthorityUtils;
+import com.splashzone.auth.utils.CustomAuthorityUtils;
 import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
 import com.splashzone.member.entity.Member;
