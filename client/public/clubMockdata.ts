@@ -1,3 +1,5 @@
+import ProfileImg from "../src/assets/ProfileImg.png";
+
 export const ClubDummyData = [
   {
     boardClubId: 2,
@@ -388,26 +390,24 @@ export const ClubDummyData = [
     modifiedAt: "2023-07-04",
   },
 ];
-export const ClubDetailMockData = 
-  {
-    boardClubId: 2,
-    memberId: 2,
-    title: "자전거 동호회 모집합니다!",
-    content: "서울지역에서 함께 자전거 타실 분을 찾습니다. 주로 주말에 활동합니다.",
-    dueDate: "2023-08-15",
-    contact: "https://open.kakao.com/456",
-    view: 98,
-    commentCount: 7,
-    tags: [
-      {
-        tagName: "CYCLING",
-      },
-    ],
-    boardClubStatus: "BOARD_CLUB_RECRUITING",
-    createdAt: "2023-07-05",
-    modifiedAt: "2023-07-06",
-  };
-
+export const ClubDetailMockData = {
+  boardClubId: 2,
+  memberId: 2,
+  title: "자전거 동호회 모집합니다!",
+  content: "서울지역에서 함께 자전거 타실 분을 찾습니다. 주로 주말에 활동합니다.",
+  dueDate: "2023-08-15",
+  contact: "https://open.kakao.com/456",
+  view: 98,
+  commentCount: 7,
+  tags: [
+    {
+      tagName: "CYCLING",
+    },
+  ],
+  boardClubStatus: "BOARD_CLUB_RECRUITING",
+  createdAt: "2023-07-05",
+  modifiedAt: "2023-07-06",
+};
 
 export const Mocktags: Array<string> = [
   "전체",
@@ -421,4 +421,52 @@ export const Mocktags: Array<string> = [
   "바나나보트",
   "카이트서핑",
   "카약&카누",
+];
+
+export const CommunityPopularMockdata = [
+  {
+    memberId: 1,
+    memberProfileImg: ProfileImg,
+    name: "닉네임이길어어어어",
+    title: "아무제목이나~~",
+    content: "가나다라마바사아자차가나다라마바사아자차가나다라마...",
+    tag: "카이트서핑",
+    view: 200,
+    registeredAt: "2023-06-16T13:42:42.528845",
+    modifiedAt: "2023-06-16T13:42:42.528845",
+    like: 5,
+    commentCount: 3,
+    memberLiked: [1, 2, 3],
+    standardId: 1,
+  },
+  {
+    memberId: 1,
+    memberProfileImg: ProfileImg,
+    name: "닉네임1",
+    title: "아무제목이나~~",
+    content: "가나다라마바사아자차가나다라마바사아자차가나다라마...",
+    tag: "스쿠버다이빙",
+    view: 110,
+    registeredAt: "2023-06-16T13:42:42.528845",
+    modifiedAt: "2023-06-16T13:42:42.528845",
+    like: 5,
+    commentCount: 3,
+    memberLiked: [2, 3],
+    standardId: 2,
+  },
+  {
+    memberId: 3,
+    memberProfileImg: ProfileImg,
+    name: "닉네임1",
+    title: "아무제목이나~~",
+    content: "가나다라마바사아자차가나다라마바사아자차가나다라마...",
+    tag: "카약&카누",
+    view: 123,
+    registeredAt: "2023-06-16T13:42:42.528845",
+    modifiedAt: null,
+    like: 5,
+    commentCount: 3,
+    memberLiked: [1, 2, 3],
+    standardId: 3,
+  },
 ];

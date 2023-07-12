@@ -1,14 +1,15 @@
 import styled from 'styled-components';
-import { Link } from 'react-scroll';
-import ClubCard from '../components/common/ContentsCard';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 import back from '../../public/grouping 1.png';
 import ScrollBanner from '../components/common/ScrollBanner';
 import { ClubDummyData, Mocktags } from '../../public/clubMockdata.ts';
 import ContentsCard from '../components/common/ContentsCard';
 import Tag from '../components/common/Tag.tsx';
+import TagSearchSection from '../components/common/TagSearchSection.tsx';
+import PopularContentsSection from '../components/common/PopularContentsSection.tsx';
 
 function Club() {
     const navigate = useNavigate();
@@ -16,12 +17,14 @@ function Club() {
     const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
         setCurrTag(e.currentTarget.innerText);
     }, []);
-
+    const handleNavigateCreate = () => {
+        navigate('/club/create', { state: 'club' });
+    };
     return (
-        <ClubWarp>
+        <ClubWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ScrollBanner bannerImg={back} />
             <ContentContainer>
-                <TagSection>
+                {/* <TagSection>
                     <TagTab>
                         <span>카테고리</span>
                         <span onClick={() => navigate(`/club/create`, { state: 'club' })}>글 쓰기</span>
@@ -31,7 +34,9 @@ function Club() {
                             <Tag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect} />
                         ))}
                     </Tags>
-                </TagSection>
+                </TagSection> */}
+                <PopularContentsSection />
+                <TagSearchSection handleNavigateCreate={handleNavigateCreate} />
                 <CardSection>
                     {ClubDummyData.map((data) => {
                         return <ContentsCard key={data.boardClubId} clubProps={data} type={'club'} />;
@@ -44,12 +49,13 @@ function Club() {
 
 export default Club;
 
-const ClubWarp = styled.div`
+const ClubWarp = styled(motion.div)`
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #ffffff;
     width: 100%;
+    background: linear-gradient(to right, #f8fcff, #f8fbff);
 `;
 
 const ContentContainer = styled.div`
@@ -57,8 +63,7 @@ const ContentContainer = styled.div`
     flex-direction: column;
     width: 100%;
     max-width: 1280px;
-    margin: 2rem auto;
-    margin-bottom: 7rem;
+    margin: 7rem;
     padding-top: 5vh;
 `;
 
@@ -69,7 +74,6 @@ const TagSection = styled.div`
     width: 100%;
     height: 50%;
     margin: 0 auto;
-    margin-bottom: 5rem;
     padding: 2rem;
 `;
 
@@ -88,7 +92,7 @@ const Tags = styled.div`
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 5px 0 5px 0;
+    padding: 15px 0 15px 0;
     align-items: center;
     border-radius: 15px;
     // border: 1px solid #696969;
@@ -96,9 +100,9 @@ const Tags = styled.div`
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
 `;
 
-const CardSection = styled.div`
+const CardSection = styled.section`
     display: grid;
-    grid-template-columns: repeat(3, 420px);
+    grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: 330px;
     flex-grow: 1;
     width: 100%;

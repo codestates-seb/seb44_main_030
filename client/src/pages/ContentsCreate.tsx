@@ -6,6 +6,7 @@ import { Mocktags } from '../assets/mockdata.ts';
 import { Calendar } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { type } from 'os';
+import { motion } from 'framer-motion';
 
 const CommunityCreate = () => {
     const location = useLocation();
@@ -27,7 +28,7 @@ const CommunityCreate = () => {
     ).padStart(2, '0')}`;
 
     return (
-        <CreateFormContainer>
+        <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <FormContainer onSubmit={handleSubmit(onSubmit)}>
                 {location.state === 'club' ? (
                     <DetailInfoContainer>
@@ -77,20 +78,22 @@ const CommunityCreate = () => {
                                     readOnly
                                 />
                                 {showCalendar && (
-                                    <Controller
-                                        control={control}
-                                        name="date"
-                                        render={({ field }) => (
-                                            <Calendar
-                                                onChange={(date) => {
-                                                    setDate(date);
-                                                    setShowCalendar(false);
-                                                    field.onChange(date);
-                                                }}
-                                                value={date}
-                                            />
-                                        )}
-                                    />
+                                    <CalendarContainer>
+                                        <Controller
+                                            control={control}
+                                            name="date"
+                                            render={({ field }) => (
+                                                <Calendar
+                                                    onChange={(date) => {
+                                                        setDate(date);
+                                                        setShowCalendar(false);
+                                                        field.onChange(date);
+                                                    }}
+                                                    value={date}
+                                                />
+                                            )}
+                                        />
+                                    </CalendarContainer>
                                 )}
                             </TagWarp>
                         </TagContainer>
@@ -150,11 +153,12 @@ const CommunityCreate = () => {
 
 export default CommunityCreate;
 
-const CreateFormContainer = styled.div`
+const CreateFormContainer = styled(motion.div)`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-top: 25px;
 `;
 const DetailInfoContainer = styled.div`
     display: flex;
@@ -162,9 +166,10 @@ const DetailInfoContainer = styled.div`
 `;
 const DetailInfoTitle = styled.div`
     font-family: 'TTWanjudaedunsancheB', sans-serif;
-    font-size: 2.3rem;
+    font-size: 1.8rem;
     color: rgba(56, 132, 213, 1);
     padding: 20px 0 20px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const DetailContentContainer = styled.div``;
@@ -172,7 +177,7 @@ const FormContainer = styled.form``;
 
 const TitleText = styled.div`
     font-family: 'TTWanjudaedunsancheB', sans-serif;
-    font-size: 2.3rem;
+    font-size: 1.8rem;
     color: rgba(56, 132, 213, 1);
     padding: 20px 0 20px 10px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -181,6 +186,27 @@ const TagWarp = styled.div`
     display: flex;
     align-items: center;
     padding: 30px 20px 30px 20px;
+
+    > select {
+        padding: 7px;
+        background-color: white;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        outline: none;
+        border-radius: 7px;
+        resize: none;
+        box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1px;
+    }
+    > input {
+        padding: 8px;
+        background-color: white;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        outline: none;
+        border-radius: 7px;
+        resize: none;
+        box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.1);
+        margin: 0 0 1px 10px;
+    }
 `;
 const TagContainer = styled.div`
     display: grid;
@@ -261,4 +287,11 @@ const ButtonWarp = styled.div`
             background-color: rgba(172, 212, 255, 0.7); // 밝은 색으로 변경
         }
     }
+`;
+
+const CalendarContainer = styled.div`
+    position: absolute;
+    z-index: 1000;
+    top: 35.5%;
+    left: 51%;
 `;

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import ClubTag from './Tag';
+import Tag from './Tag';
 
 import Profile from '../../../public/profile.png';
 import ViewsIcon from '../../../public/view.png';
@@ -131,14 +131,16 @@ export default function ContentsCard({
                     <span>{communityProps ? communityContent : clubContent}</span>
                 </ContentsContainer>
                 <TagContainer>
-                    {communityProps && <ClubTag tag={tag} />}
+                    {communityProps && <Tag tag={tag} className="tag-component" />}
                     {clubProps &&
-                        tags.map((tag: { tagName: string }) => <ClubTag key={tag.tagName} tag={tag.tagName} />)}
+                        tags.map((tag: { tagName: string }) => (
+                            <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />
+                        ))}
                 </TagContainer>
             </TitleContentsTagWarp>
             <InfoContainer>
                 <UserInfo>
-                    <img src={memberProfileImg} />
+                    <img src={memberProfileImg} className="user-icon" />
                     <span onClick={handleNavigateProfile}>{name}</span>
                 </UserInfo>
                 <ContentsInfo>
@@ -164,16 +166,49 @@ export default function ContentsCard({
     );
 }
 
+const borderAnimation = keyframes`
+  0% {
+    border: none;
+  }
+  100% {
+    border: 1px solid #d0d0d0;
+  }
+`;
+
 const CardWarp = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid #696969;
+    background-color: white;
+    border: 1px solid #d0d0d0;
     border-radius: 2rem;
-    width: 350px;
-    height: 250px;
+    width: 360px;
+    height: 270px;
     margin: 2rem;
     padding: 1.7rem;
+    transition: 0.3s;
+    box-shadow: 0 0 10px rgba(145, 145, 145, 0.3);
+
+    &:hover {
+        border: 3px solid rgba(226, 240, 254, 0.8);
+        background-color: rgba(56, 132, 213, 1);
+        transform: scale(1.1);
+        box-shadow: 0 5px 15px #bccbf9;
+        color: #ffffff;
+
+        *:not(.user-icon) {
+            color: #ffffff;
+        }
+        .tag-component {
+            border-color: #ffffff;
+        }
+        img.user-icon {
+            filter: none;
+        }
+        img:not(.user-icon) {
+            filter: invert(1);
+        }
+    }
 `;
 
 const TitleContentsTagWarp = styled.div`
@@ -194,7 +229,7 @@ const TitleContainer = styled.div`
         overflow: hidden;
         white-space: nowrap;
         &:hover {
-            color: #3884d5;
+            color: #c1daf5;
             cursor: pointer;
         }
     }
@@ -202,6 +237,7 @@ const TitleContainer = styled.div`
 const ContentsContainer = styled.div`
     margin-bottom: 0.5rem;
     font-size: 1rem;
+    margin-bottom: 1rem;
 `;
 
 const TagContainer = styled.div`
@@ -214,7 +250,10 @@ const InfoContainer = styled.div`
     justify-content: space-between;
     border-top: 1px solid #696969;
     width: 107%;
-    margin-top: 5px;
+    margin-top: 1rem;
+    padding:10px 2px 0 2px;
+    ${CardWarp}:hover & {
+        border-top: 1px solid #ffffff;
 `;
 
 const UserInfo = styled.div`

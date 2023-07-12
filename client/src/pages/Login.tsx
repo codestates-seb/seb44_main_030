@@ -1,6 +1,8 @@
+import React from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 import LoginBG from '../../public/login.png';
 import RegisterForm from '../components/RegisterForm';
@@ -24,7 +26,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     return (
-        <StyledCover>
+        <motion.StyledCover initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <StyledBackgroundImg>
                 <StyledRegisterForm onSubmit={handleSubmit(onSubmit)}>
                     <div className="forLabel">
@@ -35,7 +37,7 @@ const Login = () => {
                         type="email"
                         placeholder="enter your e-mail address"
                         {...register('email', {
-                            required: true,
+                            required: '아이디를 입력해주세요!',
                             pattern: {
                                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                                 message: 'Email 주소 형식이 올바르지 않습니다.',
@@ -66,7 +68,7 @@ const Login = () => {
                     </SmallButtonContainer>
                 </StyledRegisterForm>
             </StyledBackgroundImg>
-        </StyledCover>
+        </motion.StyledCover>
     );
 };
 
@@ -142,7 +144,7 @@ const StyledButton = styled.button`
     -webkit-box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
     -moz-box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
     color: #ffffff;
-    margin-top: 5px;
+    margin-top: 15px;
     font-family: 'Baloo Chettan 2', cursive;
     &:hover {
         cursor: pointer;
@@ -159,6 +161,6 @@ const SmallButtonContainer = styled.div`
 `;
 const SmallButton = styled(StyledButton)<{ type?: string }>`
     font-size: ${(props) => (props.type === 'small' ? '1.1rem' : '1.5rem')};
-    width: 210px;
+    width: 205px;
     margin: 10px;
 `;

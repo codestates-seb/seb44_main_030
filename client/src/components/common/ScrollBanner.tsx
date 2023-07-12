@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-scroll';
 
-export default function ScrollBanner({ bannerImg }:{bannerImg:string}) {
+export default function ScrollBanner({ bannerImg }: { bannerImg: string }) {
     const rollBannerRef = useRef<HTMLDivElement | null>(null);
     const [isRollBannerInViewPort, setIsRollBannerInViewPort] = useState<boolean>(true);
 
@@ -52,7 +52,15 @@ export default function ScrollBanner({ bannerImg }:{bannerImg:string}) {
     }, []);
 
     return (
-        <Link activeClass="active" to="ContentContainer" spy={true} smooth={true} offset={0} duration={500}>
+        <Link
+            activeClass="active"
+            to="ContentContainer"
+            spy={true}
+            smooth={true}
+            offset={0}
+            duration={500}
+            className="data-scroll"
+        >
             <RollBanner ref={rollBannerRef} $inView={isRollBannerInViewPort}>
                 <SwiperContainer>
                     <SwiperWarp>
@@ -76,8 +84,9 @@ const RollBanner = styled.div<{ $inView: boolean }>`
     width: 100vw;
     background-color: #4f4d4d;
     position: relative;
-    transform: translateY(${({ $inView }) => ($inView ? '0' : '-100%')});
-    transition: transform 0.5s ease-in-out;
+    opacity: ${({ $inView }) => ($inView ? '1' : '0')};
+    visibility: ${({ $inView }) => ($inView ? 'visible' : 'hidden')};
+    transition: opacity 1s ease, visibility 1s ease;
 `;
 
 const SwiperContainer = styled.div`

@@ -2,17 +2,21 @@ import React from 'react';
 import styled from 'styled-components';
 interface PageButtonProps {
     data: {
-        value: string|number;
+        value: string | number;
         currPage: number;
-    }
+    };
     onClick: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 }
 interface PageButtonStyledProps {
     $isCurrPage: boolean;
 }
 const PageButton = ({ data, onClick }: PageButtonProps) => {
-    const {value, currPage} = data;
-    return <PageButtonStyled onClick={onClick} $isCurrPage={currPage===value}>{value}</PageButtonStyled>;
+    const { value, currPage } = data;
+    return (
+        <PageButtonStyled onClick={onClick} $isCurrPage={currPage === value}>
+            {value}
+        </PageButtonStyled>
+    );
 };
 
 export default PageButton;
@@ -22,8 +26,8 @@ const PageButtonStyled = styled.li<PageButtonStyledProps>`
     height: 40px;
     border-radius: 15px;
     border: 1px solid #696969;
-    background-color: ${(props) => props.$isCurrPage ? '#3884D5' : '#fff'};
-    color: ${(props) => props.$isCurrPage ? '#ffffff' : '#000000'};
+    background-color: ${(props) => (props.$isCurrPage ? '#3884D5' : '#fff')};
+    color: ${(props) => (props.$isCurrPage ? '#ffffff' : '#000000')};
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
     display: flex;
     align-items: center;

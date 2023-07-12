@@ -9,9 +9,9 @@ interface ClubTagProps {
 interface TagWarpStyledProps {
     $isSelected?: boolean;
 }
-export default function Tag({ tag, $isSelected, onClick }: ClubTagProps) {
+export default function Tag({ tag, $isSelected, onClick, className }: ClubTagProps) {
     return (
-        <TagWarp $isSelected={$isSelected} onClick={onClick}>
+        <TagWarp $isSelected={$isSelected} onClick={onClick} className={className}>
             {tag}
         </TagWarp>
     );

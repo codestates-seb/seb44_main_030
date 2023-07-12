@@ -10,6 +10,7 @@ import CommentIcon from '../assets/Comment.svg';
 import { IconStyled, LikeButton } from '../components/CommunityPost.tsx';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import Comment from '../components/Comment.tsx';
+
 interface BackgroundProps {
     $image: string;
 }

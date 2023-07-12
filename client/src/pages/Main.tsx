@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import Splashzone from '../../public/Splashzone.png';
 import dummy from '../../public/dummy.png';
+import { motion } from 'framer-motion';
 
 const Main = () => {
     return (
-        <div style={{ width: '100%' }}>
+        <motion.div style={{ width: '100%' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <StyledMain>
                 <StyledContent>물위에서의 재미와 도전 그리고 열정을 공유하는</StyledContent>
                 <StyledImg src={Splashzone}></StyledImg>
@@ -15,7 +16,7 @@ const Main = () => {
                     <Clubcomponent></Clubcomponent>
                 </Clubform>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
@@ -23,7 +24,7 @@ export default Main;
 
 const Clubcomponent = () => {
     return (
-        <StyledClub>
+        <StyledClub initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <img src={dummy}></img>
             <div style={{ borderBottom: '1px solid black' }}>같이 수영하실분 찾아요!</div>
             <div style={{ display: 'flex', gap: '10px' }}>

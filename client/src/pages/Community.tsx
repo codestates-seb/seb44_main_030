@@ -10,6 +10,8 @@ import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags } from '../ass
 import ScrollBanner from '../components/common/ScrollBanner.tsx';
 import ContentsCard from '../components/common/ContentsCard.tsx';
 import Tag from '../components/common/Tag.tsx';
+import PopularContentsSection from '../components/common/PopularContentsSection.tsx';
+import TagSearchSection from '../components/common/TagSearchSection.tsx';
 
 type SearchInput = {
     Keyword: string;
@@ -51,11 +53,8 @@ const Community = () => {
                 });
         }
     };
-    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
-        setCurrTag(e.currentTarget.innerText);
-    }, []);
     const handleNavigateCreate = () => {
-        navigate('/community/create',{ state: 'community'});
+        navigate('/community/create', { state: 'community' });
     };
     const handleCurrPage = (e: React.MouseEvent<HTMLLIElement>) => {
         console.log(Number(e.currentTarget.innerText));
@@ -65,45 +64,13 @@ const Community = () => {
         <CommunityWarp>
             <ScrollBanner bannerImg={backgroundImg} />
             <CommunityContainer>
-                <TopSection>
-                    <h2>인기게시물</h2>
-                    <PopularPostContainer>
-                        {CommunityPopularMockdata.map((item) => (
-                            <ContentsCard key={`popular_${item.standardId}`} communityProps={item} type={'community'} />
-                        ))}
-                    </PopularPostContainer>
-                </TopSection>
-                <MiddleSection>
-                    <TagSpace>
-                        {Mocktags.map((tagName, idx) => (
-                            // <li key={idx} className={`${currTag === tagName}`} tabIndex={0} onClick={handleTagSelect}>
-                            //     {tagName}
-                            // </li>
-                            <Tag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect} />
-                        ))}
-                    </TagSpace>
-                    <SearchSpace>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <label htmlFor="searchInput" />
-                            <div>
-                                <input
-                                    id="searchInput"
-                                    type="text"
-                                    placeholder="Search..."
-                                    {...register('Keyword', {
-                                        required: true,
-                                        validate: (value) => value.trim().length >= 2 || '두 글자 이상 입력해주세요',
-                                    })}
-                                />
-                                {/* {errors.Keyword ? <span>{errors.Keyword.message}</span> : <span></span>} 모달로 대체 */}
-                                <button>
-                                    <img src={SearchIcon} alt="searchIcon" />
-                                </button>
-                            </div>
-                        </form>
-                    </SearchSpace>
-                    <button onClick={handleNavigateCreate}>글 작성</button>
-                </MiddleSection>
+                <PopularContentsSection />
+                <TagSearchSection
+                    currTag={currTag}
+                    setCurrTag={setCurrTag}
+                    onSubmit={onSubmit}
+                    handleNavigateCreate={handleNavigateCreate}
+                />
                 <BottomSection>
                     <AllPostContainer>
                         {CommunityAllMockdata.map((item) => (
@@ -129,6 +96,8 @@ const CommunityWarp = styled.div`
     align-items: center;
     background-color: #ffffff;
     width: 100%;
+    background: linear-gradient(to right, #f8fcff, #f8fbff);
+    margin-bottom: 40px;
 `;
 
 const CommunityContainer = styled.div`
@@ -136,6 +105,7 @@ const CommunityContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
     max-width: 1280px;
     button {
         border: none;
@@ -167,98 +137,27 @@ const PopularPostContainer = styled.ul`
         margin: 0 20px 20px 20px;
     }
 `;
-const MiddleSection = styled.section`
-    width: 100%;
-    margin-top: 30px;
-    margin-bottom: 20px;
-    height: 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    > button {
-        width: 60px;
-        height: 45px;
-        border-radius: 5px;
-        background-color: #3884d5;
-        color: #ffffff;
-        box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
 
-        &:hover {
-            cursor: pointer;
-            background-color: #5797dc;
-        }
-    }
-`;
-const TagSpace = styled.ul`
-    width: 600px;
-    height: 130px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 5px 0 5px 0;
-    align-items: center;
-    border-radius: 15px;
-    // border: 1px solid #696969;
-    background: #fff;
-    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-`;
-const SearchSpace = styled.div`
-    > form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        > div {
-            width: 400px;
-            height: 40px;
-            display: flex;
-            > input {
-                height: 100%;
-                border-radius: 15px 0 0 15px;
-                border: none;
-                background: #fff;
-                box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-                padding-left: 15px;
-                font-size: 20px;
-                flex-basis: 90%;
-                &:focus {
-                    outline: solid 2px #3884d5;
-                }
-            }
-        }
-    }
-
-    button {
-        width: 44.5px;
-        height: 43px;
-        font-size: 20px;
-        flex-basis: 10%;
-        border-radius: 0 15px 15px 0;
-        background-color: #3884d5;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-        &:hover {
-            cursor: pointer;
-            background-color: #5797dc;
-        }
-        > img {
-            width: 30px;
-            height: 30px;
-        }
-    }
-`;
 const AllPostContainer = styled.ul`
-    display: flex;
-    justify-content: center;
     padding: 0;
-    flex-wrap: wrap;
-    > li {
-        margin: 0 20px 20px 20px;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 330px;
+    flex-grow: 1;
+    width: 100%;
+    height: 50%;
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(1, 1fr);
     }
 `;
 
 const BottomSection = styled.section`
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -267,6 +166,7 @@ const BottomSection = styled.section`
 `;
 
 const PageContainer = styled.ul`
+    padding: 0;
     width: 385px;
     height: 60px;
     display: flex;
