@@ -1,6 +1,8 @@
 package com.splashzone.auth.config;
 
 import com.splashzone.auth.filter.JwtAuthenticationFilter;
+import com.splashzone.auth.handler.MemberAuthenticationFailureHandler;
+import com.splashzone.auth.handler.MemberAuthenticationSuccessHandler;
 import com.splashzone.auth.jwt.JwtTokenizer;
 import com.splashzone.auth.util.CustomAuthorityUtils;
 import com.splashzone.member.service.MemberService;
@@ -75,6 +77,8 @@ public class SecurityConfiguration {
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
             jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
             builder.addFilter(jwtAuthenticationFilter);
         }
