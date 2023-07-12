@@ -45,22 +45,25 @@ public class Member {
     @Column(name = "TERMINATED_AT", nullable = true)
     private LocalDateTime terminatedAt;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "MEMBER_STATUS", length = 20, nullable = false)
-    private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
+    @Column(name = "IS_TERMINATED", nullable = true)
+    private boolean isTerminated;
 
-    public enum MemberStatus{
-        MEMBER_ACTIVE("활동중"),
-        MEMBER_SLEEP("휴면 상태"),
-        MEMBER_QUIT("탈퇴 상태");
+//    @Enumerated(value = EnumType.STRING)
+//    @Column(name = "MEMBER_STATUS", length = 20, nullable = false)
+//    private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
 
-        @Getter
-        private String status;
-
-        MemberStatus(String status) {
-            this.status = status;
-        }
-    }
+//    public enum MemberStatus{
+//        MEMBER_ACTIVE("활동중"),
+//        MEMBER_SLEEP("휴면 상태"),
+//        MEMBER_QUIT("탈퇴 상태");
+//
+//        @Getter
+//        private String status;
+//
+//        MemberStatus(String status) {
+//            this.status = status;
+//        }
+//    }
     public enum MemberRole {
         ROLE_USER,
         ROLE_ADMIN
