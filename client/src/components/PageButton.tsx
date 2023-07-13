@@ -3,7 +3,7 @@ import styled from 'styled-components';
 interface PageButtonProps {
     data: {
         value: string | number;
-        currPage: number;
+        page: number;
     };
     onClick: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 }
@@ -11,9 +11,9 @@ interface PageButtonStyledProps {
     $isCurrPage: boolean;
 }
 const PageButton = ({ data, onClick }: PageButtonProps) => {
-    const { value, currPage } = data;
+    const { value, page } = data;
     return (
-        <PageButtonStyled onClick={onClick} $isCurrPage={currPage === value}>
+        <PageButtonStyled onClick={onClick} $isCurrPage={page === value}>
             {value}
         </PageButtonStyled>
     );

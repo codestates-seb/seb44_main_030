@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import CommunityPost from '../components/CommunityPost';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import SearchIcon from '../assets/Search.svg';
 import backgroundImg from '../assets/Community_background.png';
 import PageButton from '../components/PageButton';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags } from '../assets/mockdata.ts';
 import ScrollBanner from '../components/common/ScrollBanner.tsx';
 import ContentsCard from '../components/common/ContentsCard.tsx';
@@ -20,37 +20,49 @@ type SearchInput = {
 
 const Community = () => {
     //인기게시물은 useQuery 사용 시 stale time 길게 설정
-
+    const { page } = useParams();
     const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
     const [pageArr, setPageArr] = useState<Array<number>>([1, 2, 3, 4, 5]);
-    const [currPage, setCurrPage] = useState<number>(1);
     const navigate = useNavigate();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<SearchInput>();
-    // const keywordWatched = watch("Keyword")
     const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
         //검색 api 요청 추가, Query key로 currTag, searchKeyword, currPage 넣기.
         console.log(data);
     }, []);
+
+    // const {
+    //     isLoading,
+    //     error,
+    //     data: CommunityTotalData,
+    //   } = useQuery(
+    //     ["community", query],
+    //     ({ pageParam = null }) => {
+    //       console.log("Fetching data");
+    //       return youtube.search(query, pageParam);
+    //     },
+    //     {
+    //       getNextPageParam: (lastPage, allPages) =>{
+    //         console.log(lastPage)//lastPage는 이전에 받은 데이터를 가리킨다.
+    //         return lastPage.nextPageToken || undefined},
+    //     }
+    //   );
+    useEffect(() => {
+        navigate(`/community/${pageArr[0]}`);
+    }, [pageArr]);
+
     const handlePageList = (e: React.MouseEvent<HTMLLIElement>) => {
         if (e.currentTarget.innerText === '다음') {
-            setPageArr((prevPageArr) => {
-                const updatedPageArr = [...prevPageArr].map((el) => el + 5);
-                setCurrPage(updatedPageArr[0]);
-                return updatedPageArr;
+            setPageArr((prev) => {
+                const nextPageArr = [...prev].map((el) => el + 5);
+                return [...nextPageArr];
             });
         }
 
         if (e.currentTarget.innerText === '이전') {
-            currPage === 1 ||
-                setPageArr((prevPageArr) => {
-                    const updatedPageArr = [...prevPageArr].map((el) => el - 5);
-                    setCurrPage(updatedPageArr[0]);
-                    return updatedPageArr;
+            page === 1 ||
+                setPageArr((prev) => {
+                    const prevPageArr = [...prev].map((el) => el - 5);
+                    return [...prevPageArr];
                 });
         }
     };
@@ -58,9 +70,10 @@ const Community = () => {
         navigate('/community/create', { state: 'community' });
     };
     const handleCurrPage = (e: React.MouseEvent<HTMLLIElement>) => {
-        console.log(Number(e.currentTarget.innerText));
-        setCurrPage(Number(e.currentTarget.innerText));
+        const clickedPageNum = Number(e.currentTarget.innerText);
+        navigate(`/community/${clickedPageNum}`);
     };
+    console.log(page);
     return (
         <CommunityWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ScrollBanner bannerImg={backgroundImg} />
@@ -79,11 +92,11 @@ const Community = () => {
                         ))}
                     </AllPostContainer>
                     <PageContainer>
-                        <PageButton onClick={handlePageList} data={{ value: '이전', currPage }} />
+                        <PageButton onClick={handlePageList} data={{ value: '이전', page }} />
                         {pageArr.map((value, idx) => (
-                            <PageButton key={idx} onClick={handleCurrPage} data={{ value, currPage }} />
+                            <PageButton key={idx} onClick={handleCurrPage} data={{ value, page }} />
                         ))}
-                        <PageButton onClick={handlePageList} data={{ value: '다음', currPage }} />
+                        <PageButton onClick={handlePageList} data={{ value: '다음', page }} />
                     </PageContainer>
                 </BottomSection>
             </CommunityContainer>
