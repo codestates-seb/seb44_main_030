@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Tag from './Tag';
@@ -165,15 +165,6 @@ export default function ContentsCard({
         </CardWarp>
     );
 }
-
-const borderAnimation = keyframes`
-  0% {
-    border: none;
-  }
-  100% {
-    border: 1px solid #d0d0d0;
-  }
-`;
 
 const CardWarp = styled.div`
     display: flex;

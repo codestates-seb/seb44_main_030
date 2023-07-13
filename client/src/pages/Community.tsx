@@ -12,6 +12,7 @@ import ContentsCard from '../components/common/ContentsCard.tsx';
 import Tag from '../components/common/Tag.tsx';
 import PopularContentsSection from '../components/common/PopularContentsSection.tsx';
 import TagSearchSection from '../components/common/TagSearchSection.tsx';
+import { motion } from 'framer-motion';
 
 type SearchInput = {
     Keyword: string;
@@ -61,7 +62,7 @@ const Community = () => {
         setCurrPage(Number(e.currentTarget.innerText));
     };
     return (
-        <CommunityWarp>
+        <CommunityWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ScrollBanner bannerImg={backgroundImg} />
             <CommunityContainer>
                 <PopularContentsSection />
@@ -90,7 +91,9 @@ const Community = () => {
     );
 };
 
-const CommunityWarp = styled.div`
+export default Community;
+
+const CommunityWarp = styled(motion.div)`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -114,27 +117,6 @@ const CommunityContainer = styled.div`
             -webkit-box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
             -moz-box-shadow: 0px -1px 9px 0px rgba(0, 0, 0, 0.75) inset;
         }
-    }
-`;
-const TopSection = styled.section`
-    width: 100%;
-    height: 507px;
-    border-radius: 15px;
-    // border: 1px solid #696969;
-    background-color: #fff;
-    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
-`;
-const PopularPostContainer = styled.ul`
-    display: flex;
-    justify-content: center;
-    padding: 0;
-    flex-wrap: wrap;
-    > li {
-        margin: 0 20px 20px 20px;
     }
 `;
 
@@ -177,5 +159,3 @@ const PageContainer = styled.ul`
         border: none;
     }
 `;
-
-export default Community;

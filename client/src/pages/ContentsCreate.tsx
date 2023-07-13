@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
@@ -26,6 +26,10 @@ const CommunityCreate = () => {
     const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
         date.getDate(),
     ).padStart(2, '0')}`;
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -239,10 +243,6 @@ const Content = styled.div`
     background: #fff;
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
 `;
-const InputContainer = styled.div`
-    position: relative;
-    width: 100%;
-`;
 const ErrorMessage = styled.span`
     position: absolute;
     color: red;
@@ -256,6 +256,9 @@ const Input = styled.input`
     outline: none;
     border-radius: 15px;
     resize: none;
+    &:focus {
+        outline: solid 3px #3884d5;
+    }
 `;
 const TextArea = styled.textarea`
     box-sizing: border-box;
@@ -266,6 +269,9 @@ const TextArea = styled.textarea`
     outline: none;
     border-radius: 15px;
     resize: none;
+    &:focus {
+        outline: solid 3px #3884d5;
+    }
 `;
 const ButtonWarp = styled.div`
     display: flex;

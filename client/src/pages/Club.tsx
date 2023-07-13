@@ -1,42 +1,42 @@
 import styled from 'styled-components';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SubmitHandler } from 'react-hook-form';
 import { motion } from 'framer-motion';
 
+import BackgroundImg from '../assets/oceanbeach.png';
 import back from '../../public/grouping 1.png';
 import ScrollBanner from '../components/common/ScrollBanner';
 import { ClubDummyData, Mocktags } from '../../public/clubMockdata.ts';
 import ContentsCard from '../components/common/ContentsCard';
-import Tag from '../components/common/Tag.tsx';
 import TagSearchSection from '../components/common/TagSearchSection.tsx';
 import PopularContentsSection from '../components/common/PopularContentsSection.tsx';
+
+type SearchInput = {
+    Keyword: string;
+};
 
 function Club() {
     const navigate = useNavigate();
     const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
-    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-        setCurrTag(e.currentTarget.innerText);
+    const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
+        //검색 api 요청 추가, Query key로 currTag, searchKeyword, currPage 넣기.
+        console.log(data);
     }, []);
     const handleNavigateCreate = () => {
         navigate('/club/create', { state: 'club' });
     };
     return (
         <ClubWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <ScrollBanner bannerImg={back} />
+            <ScrollBanner bannerImg={BackgroundImg} />
             <ContentContainer>
-                {/* <TagSection>
-                    <TagTab>
-                        <span>카테고리</span>
-                        <span onClick={() => navigate(`/club/create`, { state: 'club' })}>글 쓰기</span>
-                    </TagTab>
-                    <Tags>
-                        {Mocktags.map((tagName, idx) => (
-                            <Tag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect} />
-                        ))}
-                    </Tags>
-                </TagSection> */}
                 <PopularContentsSection />
-                <TagSearchSection handleNavigateCreate={handleNavigateCreate} />
+                <TagSearchSection
+                    handleNavigateCreate={handleNavigateCreate}
+                    currTag={currTag}
+                    setCurrTag={setCurrTag}
+                    onSubmit={onSubmit}
+                />
                 <CardSection>
                     {ClubDummyData.map((data) => {
                         return <ContentsCard key={data.boardClubId} clubProps={data} type={'club'} />;
@@ -65,39 +65,6 @@ const ContentContainer = styled.div`
     max-width: 1280px;
     margin: 7rem;
     padding-top: 5vh;
-`;
-
-const TagSection = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-    height: 50%;
-    margin: 0 auto;
-    padding: 2rem;
-`;
-
-const TagTab = styled.div`
-    display: flex;
-    justify-content: space-between;
-    font-family: 'TTWanjudaedunsancheB', sans-serif;
-    font-size: 2.5rem;
-    font-weight: bold;
-    padding: 2rem;
-`;
-
-const Tags = styled.div`
-    width: 600px;
-    height: 130px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 15px 0 15px 0;
-    align-items: center;
-    border-radius: 15px;
-    // border: 1px solid #696969;
-    background: #fff;
-    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
 `;
 
 const CardSection = styled.section`

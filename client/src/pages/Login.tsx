@@ -26,7 +26,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     return (
-        <motion.StyledCover initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <StyledCover initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <StyledBackgroundImg>
                 <StyledRegisterForm onSubmit={handleSubmit(onSubmit)}>
                     <div className="forLabel">
@@ -68,13 +68,13 @@ const Login = () => {
                     </SmallButtonContainer>
                 </StyledRegisterForm>
             </StyledBackgroundImg>
-        </motion.StyledCover>
+        </StyledCover>
     );
 };
 
 export default Login;
 
-const StyledCover = styled.div`
+const StyledCover = styled(motion.div)`
     background-color: white;
     background-size: cover;
     height: 100vh;

@@ -2,9 +2,7 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import loadable from '@loadable/component';
 import { AnimatePresence } from 'framer-motion';
-
 import Fetching from '../../pages/fetching';
-import ClubPost from '../../pages/ClubPost';
 
 const Main = loadable(() => import('../../pages/Main'));
 const Signup = loadable(() => import('../../pages/Signup'));

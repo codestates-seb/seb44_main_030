@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import backgroundImg from '../assets/Community_background.png';
@@ -54,6 +54,10 @@ const CommunityDetail = () => {
     const handleNavigateProfile = useCallback(() => {
         navigate(`/mypage`, { state: memberId });
     }, [memberId]);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const dateStr = modifiedAt || registeredAt;
     const datePart = dateStr.split('T')[0];
