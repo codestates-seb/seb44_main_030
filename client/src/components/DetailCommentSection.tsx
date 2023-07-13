@@ -5,7 +5,19 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 export interface CommentInput {
     Content: string;
 }
-const DetailCommentSection = ({comment}:{comment:string[]}) => {
+interface Comment {
+    memberId: number;
+    name: string;
+    memberProfileImg: string;
+    content: string;
+    registeredAt: string;
+    modifiedAt: string | null;
+}
+
+interface DetailCommentSectionProps {
+    comment: Comment[];
+}
+const DetailCommentSection = ({ comment }: DetailCommentSectionProps ) => {
     const { register, handleSubmit, reset } = useForm<CommentInput>({ mode: 'onSubmit' });
     const onSubmit: SubmitHandler<CommentInput> = (data) => {
         // console.log(data);

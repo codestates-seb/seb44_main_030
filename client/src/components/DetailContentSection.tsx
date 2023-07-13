@@ -6,7 +6,7 @@ import LikeFilledIcon from '../assets/Like_filled.svg';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
 
-const DetailContentSection = ({ view, memberLiked, content, commentCount, handleLike, isLiked, likeCount }) => {
+const DetailContentSection = ({ view, content, commentCount, handleLike, isLiked, likeCount }) => {
     const mockMemberId = 1;
 
     const navigate = useNavigate();
