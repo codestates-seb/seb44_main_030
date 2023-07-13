@@ -13,6 +13,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        id:
+          new_generator_mappings: false
     defer-datasource-initialization: true
   mvc:
     pathmatch:
@@ -26,6 +28,9 @@ logging:
       springframework:
         orm:
           jpa: DEBUG
+      hibernate:
+        SQL: DEBUG
+        type: trace
 server:
   servlet:
     encoding:
