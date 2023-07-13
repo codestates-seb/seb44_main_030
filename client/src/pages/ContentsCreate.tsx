@@ -8,6 +8,16 @@ import 'react-calendar/dist/Calendar.css';
 import { type } from 'os';
 import { motion } from 'framer-motion';
 
+type FormData = {
+    recuruitingNumber: string;
+    contactRoute: string;
+    contact: string;
+    clubTag: string;
+    closeDay: string;
+    title: string;
+    content: string;
+  };
+
 const CommunityCreate = () => {
     const location = useLocation();
     const [date, setDate] = useState(new Date());
@@ -17,9 +27,9 @@ const CommunityCreate = () => {
         handleSubmit,
         control,
         formState: { errors },
-    } = useForm();
+    } = useForm<FormData>();
 
-    const onSubmit = (data: string) => {
+    const onSubmit = (data: FormData) => {
         console.log(data);
     };
 
@@ -128,7 +138,7 @@ const CommunityCreate = () => {
                                 maxLength: { value: 20, message: '20자 이내로 입력해주세요' },
                             })}
                         />
-                        {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
+                        {errors.title && <ErrorMessage>{errors?.title.message}</ErrorMessage>}
                     </Title>
                     <Content>
                         <TextArea
@@ -139,7 +149,7 @@ const CommunityCreate = () => {
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
                         />
-                        {errors.title && <ErrorMessage>{errors.content.message}</ErrorMessage>}
+                        {errors.title && <ErrorMessage>{errors?.content.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
                         <button>취소</button>
@@ -212,7 +222,7 @@ const TagContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
 `;
-const TagCartegory = styled.div`
+const TagCartegory = styled.label`
     font-family: 'TTWanjudaedunsancheB', sans-serif;
     font-size: 1.6rem;
     margin-right: 20px;
@@ -239,10 +249,7 @@ const Content = styled.div`
     background: #fff;
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
 `;
-const InputContainer = styled.div`
-    position: relative;
-    width: 100%;
-`;
+
 const ErrorMessage = styled.span`
     position: absolute;
     color: red;

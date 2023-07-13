@@ -46,7 +46,7 @@ const CommunityDetail = () => {
     }, [isLiked]);
 
     const hanldeNavigatePrev = useCallback(() => {
-        navigate('/community');
+        navigate(-1);
         //이동했을 때, 이전 페이지 상태(스크롤위치, 페이지번호, 태그상태)를 유지해야한다.
         //router기능 이용하거나, redux에 저장해서 구현할 것.
     }, []);
@@ -83,7 +83,6 @@ const CommunityDetail = () => {
                 <DetailContentSection
                     commentCount={commentCount}
                     view={view}
-                    like={memberLiked}
                     content={content}
                     handleLike={handleLike}
                     isLiked={isLiked}
@@ -176,52 +175,4 @@ const TitleSection = styled.section`
         }
     }
     border-bottom: 1px solid #d9d9d9;
-`;
-const ContentSection = styled.section`
-    > h1 {
-        font-size: 20px;
-        font-weight: 600;
-    }
-    > div {
-        display: flex;
-        align-items: center;
-        justify-content: end;
-        margin-right: 10px;
-        > div {
-            margin: 0 5px 0 5px;
-            display: flex;
-            align-items: center;
-            > button {
-                display: flex;
-                align-items: center;
-            }
-            img {
-                margin-right: 3px;
-            }
-            color: #696969;
-            font-size: 14px;
-        }
-    }
-    > p {
-        line-height: 25px;
-    }
-    padding-bottom: 15px;
-    border-bottom: 1px solid #d9d9d9;
-`;
-const EditContainer = styled.div`
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    > button {
-        font-weight: 600;
-
-        background: none;
-        border: none;
-        color: #696969;
-        padding: 0 5px 0 0;
-        &:hover {
-            color: #3884d5;
-            cursor: pointer;
-        }
-    }
 `;
