@@ -1,17 +1,16 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
 import backgroundImg from '../assets/Community_background.png';
 import { CommunityDetailMockdata } from '../assets/mockdata.ts';
-import LikeIcon from '../assets/Like.svg';
-import LikeFilledIcon from '../assets/Like_filled.svg';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
 import { IconStyled, LikeButton } from '../components/CommunityPost.tsx';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import Comment from '../components/Comment.tsx';
 import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
-import { ClubBoardData } from '../types/ClubData.ts';
 
 interface BackgroundProps {
     $image: string;
@@ -70,19 +69,21 @@ const ClubDetail = () => {
     // const dateArr = datePart.split('-');
     // const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
     // const formattedDate = modifiedAt ? `${newDateStr} (수정됨)` : newDateStr;
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
-        <Background $image={backgroundImg}>
+        <Background $image={backgroundImg} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <PostContainer>
                 <TitleSection>
                     <button onClick={hanldeNavigatePrev}>목록</button>
                     <h1>{title}</h1>
                     <div>
-                        {/* <div>
+                        <div>
                             <h3>관련태그: </h3>
-                            {tags.map((tag) => (
-                                <span className="tag">{tag.tagName}</span>
-                            ))}
-                        </div> */}
+                            {tags && tags.map((tag) => <span className="tag">{tag.tagName}</span>)}
+                        </div>
                         {/* <div>
                             <span className="date">{formattedDate}</span>
                             <img src={memberProfileImg} />
@@ -139,7 +140,7 @@ const ClubDetail = () => {
 
 export default ClubDetail;
 
-const Background = styled.div<BackgroundProps>`
+const Background = styled(motion.div)<BackgroundProps>`
     * {
         box-sizing: border-box;
     }
