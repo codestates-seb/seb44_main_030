@@ -1,32 +1,52 @@
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import LikeIcon from '../assets/Like.svg';
 import LikeFilledIcon from '../assets/Like_filled.svg';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
-
-const DetailContentSection = ({ view, content, commentCount, handleLike, isLiked, likeCount }) => {
+import axios from 'axios';
+import { useMutation } from '@tanstack/react-query';
+import { useDeletePost } from '../api/useDeletePost';
+type CommunityDetailProps = {
+    view: number;
+    content: string;
+    commentCount: number;
+    handleLike: () => void;
+    isLiked: boolean;
+    likeCount: number;
+    memberId: number;
+    standardId: number;
+};
+const DetailContentSection = ({
+    view,
+    content,
+    commentCount,
+    handleLike,
+    isLiked,
+    likeCount,
+    memberId,
+    standardId,
+}) => {
+    const postId = standardId; //club데이터일 때는 clubId
+    const { handleDeletePost, boardType } = useDeletePost(postId);
     const mockMemberId = 1;
-
     const navigate = useNavigate();
     const handleEdit = useCallback(() => {
-        navigate('/community/create');
-    }, []);
-    const handleDelete = useCallback(() => {
-        alert('게시글을 삭제합니다.');
-        // 게시글 삭제 API 요청
-    }, []);
-
+        const boardTypeParam = boardType === 'standards' ? 'community' : 'club';
+        navigate(`/${boardTypeParam}/create`);
+    }, [boardType]);
     return (
         <ContentSection>
             <h1>내용</h1>
             <p>{content}</p>
             <div>
-                <EditContainer>
-                    <button onClick={handleEdit}>수정</button>
-                    <button onClick={handleDelete}>삭제</button>
-                </EditContainer>
+                {memberId === mockMemberId && (
+                    <EditContainer>
+                        <button onClick={handleEdit}>수정</button>
+                        <button onClick={handleDeletePost}>삭제</button>
+                    </EditContainer>
+                )}
                 <div>
                     <img src={ViewIcon} alt="ViewCount" />
                     {view}

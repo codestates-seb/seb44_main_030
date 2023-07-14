@@ -43,7 +43,7 @@ const DetailCommentSection = ({ comment }: DetailCommentSectionProps ) => {
                 </form>
             </CreateCommentSpace>
             <div>
-                {comment.map((commentData) => (
+                {comment?.map((commentData) => (
                     <Comment commentData={commentData} />
                 ))}
             </div>

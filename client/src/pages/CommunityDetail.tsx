@@ -6,6 +6,7 @@ import { CommunityDetailMockdata } from '../assets/mockdata.ts';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import DetailContentSection from '../components/DetailContentSection.tsx';
 import axios from 'axios';
+import { CommunityPostData } from '../types/CommunityTypes.ts';
 type BackgroundProps = {
     $image: string;
 };
@@ -18,83 +19,83 @@ const CommunityDetail = () => {
     const { standardId } = useParams();
     const mockMemberId = 1; //useSelector 사용
     const navigate = useNavigate();
-    const {
-        memberId,
-        memberProfileImg,
-        name,
-        title,
-        content,
-        tag,
-        view,
-        like,
-        memberLiked,
-        comment,
-        registeredAt,
-        modifiedAt,
-    } = CommunityDetailMockdata;
-    const [likeCount, setLikeCount] = useState(like); //실제 구현 시 데이터 받고나서 데이터 설정할 것.
-    const [isLiked, setIsLiked] = useState(memberLiked?.includes(mockMemberId)); //실제 구현 시 데이터 받고나서 데이터 설정할 것.
-    const [commentCount, setCommentCount] = useState(comment.length);
 
+    const [detailData, setDetailData] = useState<CommunityPostData>({
+        standardId: 0,
+        title: '',
+        content: '',
+        view: 0,
+        createdAt: '',
+        modifiedAt: '',
+        member: { memberId: 0, name: '', email: '', nickname: '', bio: '' },
+    });
+    const [isLoading, setIsLoading] = useState(false);
     const getCommunityDetailData = async () => {
-        const response = axios.get(`${import.meta.env.VITE_KEY}/standard/${standardId}`);
-        console.log(response);
-    }
+        setIsLoading(true);
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_KEY}/standards/${standardId}`);
+            setDetailData(response.data.data);
+        } catch (error) {
+            console.error('Failed to fetch data:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         getCommunityDetailData();
     }, []);
 
-    const handleLike = useCallback(() => {
-        isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
-        setIsLiked((prev) => !prev);
-    }, [isLiked]);
+    // const handleLike = useCallback(() => {
+    //     isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
+    //     setIsLiked((prev) => !prev);
+    // }, [isLiked]);
 
     const hanldeNavigatePrev = useCallback(() => {
         navigate(-1);
     }, []);
 
     const handleNavigateProfile = useCallback(() => {
-        navigate(`/mypage`, { state: memberId });
-    }, [memberId]);
+        navigate(`/mypage`);
+    }, [detailData?.memberId]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
-    const dateStr = modifiedAt || registeredAt;
-    const datePart = dateStr.split('T')[0];
-    const dateArr = datePart.split('-');
-    const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
-    const formattedDate = modifiedAt ? `${newDateStr} (수정됨)` : newDateStr;
+    if (isLoading) {
+        return <div>로딩중...</div>;
+    }
     return (
         <Background $image={backgroundImg}>
             <PostContainer>
                 <TitleSection>
                     <button onClick={hanldeNavigatePrev}>목록</button>
-                    <h1>{title}</h1>
+                    <h1>{detailData?.title}</h1>
                     <div>
                         <div>
                             <h3>관련태그: </h3>
-                            <span className="tag">{tag}</span>{' '}
+                            <span className="tag">{/* {tag} */}</span>{' '}
                         </div>
                         <div>
-                            <span className="date">{formattedDate}</span>
-                            <img src={memberProfileImg} />
+                            <span className="date">{detailData?.createdAt}</span>
+                            {/* <img src={memberProfileImg} /> */}
                             <span className="name" onClick={handleNavigateProfile}>
-                                {name}
+                                {detailData?.name}
                             </span>
                         </div>
                     </div>
                 </TitleSection>
                 <DetailContentSection
-                    commentCount={commentCount}
-                    view={view}
-                    content={content}
-                    handleLike={handleLike}
-                    isLiked={isLiked}
-                    likeCount={likeCount}
+                    commentCount={detailData?.commentCount}
+                    view={detailData?.view}
+                    content={detailData?.content}
+                    handleLike={detailData?.handleLike}
+                    isLiked={detailData?.isLiked}
+                    likeCount={detailData?.likeCount}
+                    memberId={detailData?.member?.memberId}
+                    standardId={detailData?.standardId}
                 />
-                <DetailCommentSection comment={comment} />
+                <DetailCommentSection comment={detailData?.comment} />
             </PostContainer>
         </Background>
     );

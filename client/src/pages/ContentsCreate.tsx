@@ -153,7 +153,7 @@ const CommunityCreate = () => {
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
                         />
-                        {errors.title && <ErrorMessage>{errors?.content.message}</ErrorMessage>}
+                        {errors.title && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
                         <button>취소</button>
