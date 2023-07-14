@@ -4,8 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import backgroundImg from '../assets/Community_background.png';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import DetailContentSection from '../components/DetailContentSection.tsx';
-import axios from 'axios';
-import { CommunityPostData } from '../types/CommunityTypes.ts';
 import { Loading } from '../components/Lodaing.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { getDetailCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
@@ -17,8 +15,14 @@ export type CommentInput = {
     Content: string;
 };
 
+type RouteParams = {
+    standardId: string;
+};
 const CommunityDetail = () => {
-    const { standardId } = useParams();
+    const { standardId } = useParams<RouteParams>();
+    if (!standardId) {
+        throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
+    }
     const mockMemberId = 1; //useSelector 사용
     const navigate = useNavigate();
 
@@ -55,6 +59,10 @@ const CommunityDetail = () => {
     }, []);
     if (isLoading) {
         return <Loading />;
+    }
+    if (errorData) {
+        console.log(errorData);
+        return <div>게시글을 불러올 수 없습니다.</div>
     }
     return (
         <Background $image={backgroundImg}>

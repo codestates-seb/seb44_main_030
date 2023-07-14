@@ -18,7 +18,7 @@ export const getTotalCommunityPost = async (page:number,size:number) => {
 
 // page/CommunityDetail.tsx 에서 게시글 상세 조회 시 사용
 
-export const getDetailCommunityPost = async (standardId:number) => {
+export const getDetailCommunityPost = async (standardId:string) => {
     const response = await axios.get(`${import.meta.env.VITE_KEY}/standards/${standardId}`);
     return response.data.data;
 };
