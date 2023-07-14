@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Splashzone from '../../public/Splashzone.png';
-import dummy from '../../public/dummy.png';
+import ClubCard from '../components/ClubCard';
+import CommunityPost from '../components/CommunityPost';
 
 const Main = () => {
     return (
@@ -9,31 +10,20 @@ const Main = () => {
                 <StyledContent>물위에서의 재미와 도전 그리고 열정을 공유하는</StyledContent>
                 <StyledImg src={Splashzone}></StyledImg>
             </StyledMain>
-            <div style={{ marginTop: '10px;' }}>
-                인기있는모임
-                <Clubform>
-                    <Clubcomponent></Clubcomponent>
-                </Clubform>
-            </div>
+
+            <CardSection>
+                <ClubCard />
+                <ClubCard />
+                <ClubCard />
+                <ClubCard />
+                <ClubCard />
+                <ClubCard />
+            </CardSection>
         </div>
     );
 };
 
 export default Main;
-
-const Clubcomponent = () => {
-    return (
-        <StyledClub>
-            <img src={dummy}></img>
-            <div style={{ borderBottom: '1px solid black' }}>같이 수영하실분 찾아요!</div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-                <Styledtag>지역</Styledtag>
-                <Styledtag>수영</Styledtag>
-            </div>
-            <div>👁‍🗨129 🤍 15 💬 4</div>
-        </StyledClub>
-    );
-};
 
 const StyledMain = styled.div`
     background-image: url('../../public/image 2.png');
@@ -58,29 +48,19 @@ const StyledImg = styled.img`
     margin-top: 250px;
 `;
 
-const Clubform = styled.div`
+const CardSection = styled.div`
     width: 100%;
-    height: 400px;
-    border: 1px solid black;
-    border-radius: 15px;
-    padding: 40px;
-    box-sizing: border-box;
-`;
+    display: grid;
+    grid-template-columns: repeat(3, 420px);
+    grid-auto-rows: 330px;
+    flex-grow: 1;
+    width: 100%;
+    height: 50%;
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
-const StyledClub = styled.div`
-    width: 293px;
-    height: 287px;
-    border-radius: 15px;
-    border: 1px solid black;
-    padding: 10px;
-`;
-
-const Styledtag = styled.div`
-    width: 38px;
-    height: 23px;
-    border-radius: 10px;
-    font-size: 1rem;
-    color: white;
-    background-color: rgba(56, 132, 213, 1);
-    margin-top: 10px;
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
 `;

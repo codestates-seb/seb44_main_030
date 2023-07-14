@@ -4,11 +4,8 @@ import Header from './components/header';
 import Footer from './components/Footer';
 import Globalstyle from './GlobalStyle';
 import './App.css';
-<<<<<<< HEAD
-import Fetching from './pages/fetching';
-=======
 import ClubPost from './pages/ClubPost';
->>>>>>> c75ef0b4b5e413258482bafb795c8f2eaddf9474
+import { Loading } from './components/Lodaing';
 
 const Main = loadable(() => import('./pages/Main'));
 const Signup = loadable(() => import('./pages/Signup'));
@@ -28,7 +25,7 @@ function App() {
         <div>
             <Globalstyle />
             {!hideHeaderFooter && <Header></Header>}
-            {!hideHeaderFooter && <div style={{ paddingTop: '85px' }}></div>}
+            {!hideHeaderFooter && <div style={{ paddingTop: '80px' }}></div>}
             <Routes>
                 <Route path="/" element={<Main></Main>}></Route>
                 <Route path="/signup" element={<Signup></Signup>}></Route>
@@ -40,7 +37,7 @@ function App() {
                 <Route path="/club/post" element={<ClubPost></ClubPost>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
                 <Route path="/map" element={<Map />}></Route>
-                <Route path="/test" element={<Fetching />} />
+                <Route path="/test" element={<Loading></Loading>} />
             </Routes>
             {!hideHeaderFooter && <Footer></Footer>}
         </div>

@@ -14,6 +14,7 @@ interface MarkerProps {
 const Marker = ({ map, position, content, onClick }: MarkerProps) => {
     useEffect(() => {
         let marker: naver.maps.Marker | null = null;
+
         if (map) {
             marker = new naver.maps.Marker({
                 map,
@@ -30,6 +31,7 @@ const Marker = ({ map, position, content, onClick }: MarkerProps) => {
 
         if (onClick) {
             naver.maps.Event.addListener(marker, 'click', onClick);
+
             map.panTo(position);
         }
 
