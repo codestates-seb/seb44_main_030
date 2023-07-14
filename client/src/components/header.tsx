@@ -88,18 +88,21 @@ const Modal = ({ setIsLogIn }: Props) => {
 const StyledHeader = styled.div`
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 80px;
+    align-items: center;
+    justify-content: end;
     width: 100vw;
     font-size: 1.5rem;
-    height: 80px;
+    height: 85px;
     color: white;
     background-color: rgba(56, 132, 213, 1);
     div {
-        padding-top: 15px;
+        padding-top: 0px;
     }
 
     :nth-child(2) {
         font-family: 'Monomaniac One', sans-serif;
-        grid-column: 9 / 10;
+        grid-column: 8 / 9;
         cursor: pointer;
     }
     :nth-child(2):hover {
