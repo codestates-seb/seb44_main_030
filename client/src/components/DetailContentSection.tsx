@@ -8,16 +8,18 @@ import CommentIcon from '../assets/Comment.svg';
 import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import { useDeletePost } from '../api/useDeletePost';
-type CommunityDetailProps = {
+type DetailProps = {
     view: number;
     content: string;
     commentCount: number;
-    handleLike: () => void;
-    isLiked: boolean;
-    likeCount: number;
     memberId: number;
-    standardId: number;
+    clubId?: number;
+    standardId?: number;
+    likeCount?: number;
+    handleLike?: () => void;
+    isLiked?: boolean;
 };
+
 const DetailContentSection = ({
     view,
     content,
@@ -27,8 +29,12 @@ const DetailContentSection = ({
     likeCount,
     memberId,
     standardId,
-}) => {
-    const postId = standardId; //club데이터일 때는 clubId
+    clubId,
+}: DetailProps) => {
+    const postId = standardId || clubId; //club데이터일 때는 clubId
+    if(!postId) {
+        throw new Error("해당 게시글에 대한 ID가 존재하지 않습니다.");
+      }
     const { handleDeletePost, boardType } = useDeletePost(postId);
     const mockMemberId = 1;
     const navigate = useNavigate();
@@ -51,16 +57,18 @@ const DetailContentSection = ({
                     <img src={ViewIcon} alt="ViewCount" />
                     {view}
                 </div>
-                <div>
-                    <LikeButton onClick={handleLike}>
-                        {isLiked ? (
-                            <img src={LikeFilledIcon} alt="LikeFilled" />
-                        ) : (
-                            <img src={LikeIcon} alt="LikeNotFilled" />
-                        )}
-                    </LikeButton>
-                    {likeCount}
-                </div>
+                {boardType === 'standards' && (
+                    <div>
+                        <LikeButton onClick={handleLike}>
+                            {isLiked ? (
+                                <img src={LikeFilledIcon} alt="LikeFilled" />
+                            ) : (
+                                <img src={LikeIcon} alt="LikeNotFilled" />
+                            )}
+                        </LikeButton>
+                        {likeCount}
+                    </div>
+                )}
                 <div>
                     <img src={CommentIcon} alt="CommentCount" />
                     {commentCount}
