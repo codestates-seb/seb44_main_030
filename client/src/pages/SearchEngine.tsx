@@ -1,9 +1,9 @@
 import axios from 'axios';
+import styled from 'styled-components';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setInfoInstance } from '../store/info';
 import Wrapper from '../components/style/Wrapper';
-import SearchResult from '../components/style/SearchResult';
 import { RootState } from '../store/store';
 
 interface SearchResponse {
@@ -50,17 +50,27 @@ const SearchEngine = () => {
     };
 
     return (
-        <Wrapper width="300px" height="20px">
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Searchbox>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
                 <input
+                    style={{ height: '20px' }}
                     onChange={(e) => {
                         setKeyword(e.target.value);
                     }}
                 ></input>
                 <button onClick={onClickHandler}>Search</button>
             </div>
-        </Wrapper>
+        </Searchbox>
     );
 };
+
+const Searchbox = styled.div`
+    width: 300px;
+    height: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);
+    background-color: white;
+`;
 
 export default SearchEngine;
