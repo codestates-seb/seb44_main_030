@@ -10,6 +10,9 @@ const MarkersContainer = () => {
     const map = useSelector((state: RootState) => state.counter.mapInstance);
     const infos = useSelector((state: RootState) => state.info.infoInstance);
     const selection = useSelector((state: RootState) => state.selection.selection);
+    const submitHandler = () => {
+        console.log('제출됨');
+    };
     if (!map || !infos) return null;
     return (
         <div>
@@ -35,7 +38,7 @@ const MarkersContainer = () => {
                     }}
                 />
             )}
-            <InfoWindow map={map} selectInfo={selection} />
+            <InfoWindow map={map} selectInfo={selection} onSubmit={submitHandler} />
         </div>
     );
 };

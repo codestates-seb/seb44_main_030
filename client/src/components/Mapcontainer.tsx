@@ -14,7 +14,7 @@ const MapContainer = () => {
         });
     };
 
-    return <Map width="50%" height="400px" initMap={initMap} />;
+    return <Map width="100%" height="600px" initMap={initMap} />;
 };
 
 export default MapContainer;
