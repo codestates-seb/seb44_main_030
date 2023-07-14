@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import Splashzone from '../../public/Splashzone.png';
-import ClubCard from '../components/ClubCard';
+import ClubCard from '../../components/ClubCard';
 import CommunityPost from '../components/CommunityPost';
 import { motion } from 'framer-motion';
+import ContentsCard from '../components/common/ContentsCard';
 
 const Main = () => {
     return (
@@ -13,14 +14,13 @@ const Main = () => {
             </StyledMain>
 
             <CardSection>
-                <ClubCard />
-                <ClubCard />
-                <ClubCard />
-                <ClubCard />
-                <ClubCard />
-                <ClubCard />
+                <ContentsCard />
+                <ContentsCard />
+                <ContentsCard />
+                <ContentsCard />
+                <ContentsCard />
             </CardSection>
-        </div>
+        </motion.div>
     );
 };
 
