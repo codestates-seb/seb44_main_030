@@ -19,6 +19,7 @@ const StyledBlock = styled.div<WrapperProps>`
     background-color: ${(props) => props.color || 'white'};
     padding: 10px;
     margin-top: 20px;
+    position: relative;
 `;
 
 const Block = ({ width, height, children, color }: WrapperProps) => {

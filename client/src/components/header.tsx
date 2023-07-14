@@ -88,14 +88,14 @@ const Modal = ({ setIsLogIn }: Props) => {
 const StyledHeader = styled.div`
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    padding: 20px;
-    height: 40px;
     width: 100vw;
+    height: 0px;
     font-size: 1.5rem;
+    height: 80px;
     color: white;
     background-color: rgba(56, 132, 213, 1);
     div {
-        padding-top: 2px;
+        padding-top: 15px;
     }
 
     :nth-child(2) {
@@ -127,8 +127,8 @@ const StyledHeader = styled.div`
 
 const StyledImg = styled.img`
     grid-column: 3 / 4;
-    margin-top: -30px;
     cursor: pointer;
+    height: 70px;
 `;
 
 const StyledModal = styled.div`
