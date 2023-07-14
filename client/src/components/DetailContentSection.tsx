@@ -1,13 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import LikeIcon from '../assets/Like.svg';
 import LikeFilledIcon from '../assets/Like_filled.svg';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
-import axios from 'axios';
-import { useMutation } from '@tanstack/react-query';
-import { useDeletePost } from '../api/useDeletePost';
+import { useDeletePost } from '../api/useMutationPost';
+
 type DetailProps = {
     view: number;
     content: string;
@@ -40,7 +39,7 @@ const DetailContentSection = ({
     const navigate = useNavigate();
     const handleEdit = useCallback(() => {
         const boardTypeParam = boardType === 'standards' ? 'community' : 'club';
-        navigate(`/${boardTypeParam}/create`);
+        navigate(`/${boardTypeParam}/create`,{state: 'EditMode'});
     }, [boardType]);
     return (
         <ContentSection>

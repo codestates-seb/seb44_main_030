@@ -2,6 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {useCallback} from 'react';
+
+//DetailContentSection.tsx 에서 게시글 삭제 기능에 사용
 export function useDeletePost(postId:number) {
     const navigate = useNavigate();
     const location = useLocation();

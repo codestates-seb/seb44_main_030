@@ -7,6 +7,7 @@ import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import DetailContentSection from '../components/DetailContentSection.tsx';
 import axios from 'axios';
 import { CommunityPostData } from '../types/CommunityTypes.ts';
+import { Loading } from '../components/Lodaing.tsx';
 type BackgroundProps = {
     $image: string;
 };
@@ -62,8 +63,8 @@ const CommunityDetail = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-    if (isLoading) {
-        return <div>로딩중...</div>;
+    if (isLoading || !detailData.standardId) {
+        return <Loading/>;
     }
     return (
         <Background $image={backgroundImg}>
@@ -94,6 +95,7 @@ const CommunityDetail = () => {
                     likeCount={detailData?.likeCount}
                     memberId={detailData?.member?.memberId}
                     standardId={detailData?.standardId}
+                    clubId={detailData?.clubId}
                 />
                 <DetailCommentSection comment={detailData?.comment} />
             </PostContainer>
