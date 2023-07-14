@@ -12,7 +12,7 @@ import TagSearchSection from '../components/common/TagSearchSection.tsx';
 import { motion } from 'framer-motion';
 import { getTotalCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
 import { useQuery } from '@tanstack/react-query';
-import {CommunityPostData} from '../types/CommunityTypes.ts';
+import { CommunityPostData } from '../types/CommunityTypes.ts';
 type SearchInput = {
     Keyword: string;
 };
@@ -36,17 +36,26 @@ const Community = () => {
         isLoading,
         error: errorData,
         data: allCommunityData,
-    } = useQuery(['community', page], () => {
-        console.log(`${page}페이지의 데이터를 가져옵니다.`);
-        return getTotalCommunityPost(page, size);
-    });
+    } = useQuery(
+        ['community', page],
+        () => {
+            console.log(`${page}페이지의 데이터를 가져옵니다.`);
+            return getTotalCommunityPost(page, size);
+        },
+        {
+            staleTime: 10000, // 10초
+        },
+    );
 
     useEffect(() => {
         if (allCommunityData) {
             const totalPageNum = allCommunityData.pageInfo.totalPages;
             const totalPageArr = [...Array(totalPageNum).keys()].map((x) => x + 1);
             const firstPageNum = Math.floor((page - 1) / PAGE_COUNT) * PAGE_COUNT + 1; //page가 1~5일 때는 1
-            const lastPageNum = totalPageNum > Math.ceil(page / PAGE_COUNT) * PAGE_COUNT ? Math.ceil(page / PAGE_COUNT) * PAGE_COUNT : totalPageNum; //page가 1~5일 때는 5
+            const lastPageNum =
+                totalPageNum > Math.ceil(page / PAGE_COUNT) * PAGE_COUNT
+                    ? Math.ceil(page / PAGE_COUNT) * PAGE_COUNT
+                    : totalPageNum; //page가 1~5일 때는 5
             setTotalPageArr(totalPageArr);
             setPageArr([...totalPageArr.slice(firstPageNum - 1, lastPageNum)]);
         }
@@ -64,7 +73,7 @@ const Community = () => {
             navigate(`/community/${pageArr[0] - PAGE_COUNT}`);
         }
     };
-    
+
     const handleNavigateCreate = () => {
         navigate('/community/create', { state: 'community' });
     };
@@ -78,9 +87,9 @@ const Community = () => {
         return <div>로딩중..!</div>;
     }
     if (errorData) {
-        return <div>에러발생..!</div>
+        return <div>에러발생..!</div>;
     }
-    console.log(allCommunityData, 'asdfasdfsadf');
+
     return (
         <CommunityWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ScrollBanner bannerImg={backgroundImg} />
@@ -94,7 +103,7 @@ const Community = () => {
                 />
                 <BottomSection>
                     <AllPostContainer>
-                        {allCommunityData?.postData.map((item:CommunityPostData) => (
+                        {allCommunityData?.postData.map((item: CommunityPostData) => (
                             <ContentsCard key={`all_${item.standardId}`} communityProps={item} type={'community'} />
                         ))}
                     </AllPostContainer>
