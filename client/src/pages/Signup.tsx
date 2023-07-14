@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import backgroundImg from '../assets/Signup_background.png';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import RegisterForm from '../components/RegisterForm';
+import { motion } from 'framer-motion';
 
 type SignupInputs = {
     Nickname: string;
@@ -35,7 +36,12 @@ const Signup = () => {
 
     const password = watch('Password', '');
     return (
-        <Background $image={backgroundImg}>
+        <MotionBackground
+            $image={backgroundImg}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+        >
             <StyledRegisterForm onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <label htmlFor="nicknameInput">Nickname</label>
@@ -102,13 +108,13 @@ const Signup = () => {
                 </div>
                 <button type="submit">Sign up</button>
             </StyledRegisterForm>
-        </Background>
+        </MotionBackground>
     );
 };
 
 export default Signup;
 
-const Background = styled.div<BackgroundProps>`
+const MotionBackground = styled(motion.div)<BackgroundProps>`
     background-image: url(${(props) => props.$image});
     background-size: cover;
     background-position: center center;
@@ -174,13 +180,13 @@ const StyledRegisterForm = styled(RegisterForm)`
         border-radius: 15px;
         font-size: 35px;
         font-weight: 600;
-        font-family:'Baloo Chettan 2', cursive;
+        font-family: 'Baloo Chettan 2', cursive;
         box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
         -webkit-box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
         -moz-box-shadow: 0px 1px 20px -7px rgba(0, 0, 0, 0.79);
         color: #ffffff;
         margin-top: 5px;
-        
+
         &:hover {
             cursor: pointer;
             background-color: #a7cdf1;

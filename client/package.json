@@ -16,6 +16,7 @@
     "@types/loadable__component": "^5.13.4",
     "@types/navermaps": "^3.6.5",
     "axios": "^1.4.0",
+    "framer-motion": "^10.12.18",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-calendar": "^4.3.0",

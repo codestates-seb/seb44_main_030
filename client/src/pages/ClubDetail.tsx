@@ -1,15 +1,17 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
 import backgroundImg from '../assets/Community_background.png';
 import { CommunityDetailMockdata } from '../assets/mockdata.ts';
-import LikeIcon from '../assets/Like.svg';
-import LikeFilledIcon from '../assets/Like_filled.svg';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
 import { IconStyled, LikeButton } from '../components/CommunityPost.tsx';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import Comment from '../components/Comment.tsx';
+import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
+
 interface BackgroundProps {
     $image: string;
 }
@@ -18,32 +20,27 @@ export interface CommentInput {
     Content: string;
 }
 
-const ContentsDetail = () => {
+const ClubDetail = () => {
+    const { boardClubId } = useParams<{ boardClubId: string }>();
+    const numberBoardClubId = boardClubId ? Number(boardClubId) : 0;
+    const { status, data: clubDetail, error } = useClubBoardDetail(numberBoardClubId);
+    console.log(numberBoardClubId);
+    console.log(status);
+    console.log(clubDetail && clubDetail.data);
+
+    let boardClubStatus, contact, content, createdAt, dueDate, memberId, modifiedAt, tags, title, view;
+
+    if (clubDetail && clubDetail.data) {
+        ({ boardClubStatus, contact, content, createdAt, dueDate, memberId, modifiedAt, tags, title, view } =
+            clubDetail.data);
+    }
+
     const location = useLocation();
-    const standardId = location.state; //데이터 요청 시 사용
-    const mockMemberId = 1; //useSelector 사용
     const navigate = useNavigate();
-    const {
-        memberId,
-        memberProfileImg,
-        name,
-        title,
-        content,
-        tag,
-        view,
-        like,
-        memberLiked,
-        comment,
-        registeredAt,
-        modifiedAt,
-    } = CommunityDetailMockdata;
-    const [likeCount, setLikeCount] = useState(like); //실제 구현 시 데이터 받고나서 데이터 설정할 것.
-    const [isLiked, setIsLiked] = useState(memberLiked.includes(mockMemberId)); //실제 구현 시 데이터 받고나서 데이터 설정할 것.
-    const [commentCount, setCommentCount] = useState(comment.length);
 
+    // const [commentCount, setCommentCount] = useState(comment.length);
     const { register, handleSubmit, reset } = useForm<CommentInput>({ mode: 'onSubmit' });
-
-    const onSubmit: SubmitHandler<CommentInput> = (data) => {
+    const onSubmit: SubmitHandler<CommentInput> = (data: CommentInput) => {
         // console.log(data);
         // 댓글 작성 post api 요청
         reset();
@@ -55,10 +52,6 @@ const ContentsDetail = () => {
         //이동했을 때, 이전 페이지 상태(스크롤위치, 페이지번호, 태그상태)를 유지해야한다.
         //router기능 이용하거나, redux에 저장해서 구현할 것.
     }, []);
-    const handleLike = useCallback(() => {
-        isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
-        setIsLiked((prev) => !prev);
-    }, [isLiked]);
     const handleNavigateProfile = useCallback(() => {
         navigate(`/mypage`, { state: memberId });
     }, [memberId]);
@@ -71,13 +64,17 @@ const ContentsDetail = () => {
     }, []);
     // 날짜 어떻게 받을 건지 상의 필요.(포맷팅 된 상태 or Not)
     // 날짜 포맷팅 임의로
-    const dateStr = modifiedAt || registeredAt;
-    const datePart = dateStr.split('T')[0];
-    const dateArr = datePart.split('-');
-    const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
-    const formattedDate = modifiedAt ? `${newDateStr} (수정됨)` : newDateStr;
+    // const dateStr = modifiedAt || createdAt;
+    // const datePart = dateStr.split('T')[0];
+    // const dateArr = datePart.split('-');
+    // const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
+    // const formattedDate = modifiedAt ? `${newDateStr} (수정됨)` : newDateStr;
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
-        <Background $image={backgroundImg}>
+        <Background $image={backgroundImg} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <PostContainer>
                 <TitleSection>
                     <button onClick={hanldeNavigatePrev}>목록</button>
@@ -85,15 +82,15 @@ const ContentsDetail = () => {
                     <div>
                         <div>
                             <h3>관련태그: </h3>
-                            <span className="tag">{tag}</span>{' '}
+                            {tags && tags.map((tag) => <span className="tag">{tag.tagName}</span>)}
                         </div>
-                        <div>
+                        {/* <div>
                             <span className="date">{formattedDate}</span>
                             <img src={memberProfileImg} />
                             <span className="name" onClick={handleNavigateProfile}>
                                 {name}
                             </span>
-                        </div>
+                        </div> */}
                     </div>
                 </TitleSection>
                 <ContentSection>
@@ -109,18 +106,8 @@ const ContentsDetail = () => {
                             {view}
                         </div>
                         <div>
-                            <LikeButton onClick={handleLike}>
-                                {isLiked ? (
-                                    <IconStyled src={LikeFilledIcon} alt="LikeFilled" />
-                                ) : (
-                                    <IconStyled src={LikeIcon} alt="LikeNotFilled" />
-                                )}
-                            </LikeButton>
-                            {likeCount}
-                        </div>
-                        <div>
                             <IconStyled src={CommentIcon} alt="CommentCount" />
-                            {commentCount}
+                            {/* {commentCount} */}
                         </div>
                     </div>
                 </ContentSection>
@@ -140,20 +127,20 @@ const ContentsDetail = () => {
                             </div>
                         </form>
                     </CreateCommentSpace>
-                    <div>
+                    {/* <div>
                         {comment.map((commentData) => (
                             <Comment commentData={commentData} />
                         ))}
-                    </div>
+                    </div> */}
                 </CommentSection>
             </PostContainer>
         </Background>
     );
 };
 
-export default ContentsDetail;
+export default ClubDetail;
 
-const Background = styled.div<BackgroundProps>`
+const Background = styled(motion.div)<BackgroundProps>`
     * {
         box-sizing: border-box;
     }
@@ -293,9 +280,9 @@ const CreateCommentSpace = styled.div`
         justify-content: center;
         flex-direction: column;
         align-items: center;
-        width: 750px;
+        width: 960px;
         > div {
-            width: 750px;
+            width: 960px;
             display: flex;
             justify-content: end;
         }
@@ -305,7 +292,7 @@ const CreateCommentSpace = styled.div`
         font-weight: 600;
     }
     textarea {
-        width: 750px;
+        width: 960px;
         height: 100px;
         display: flex;
         align-items: start;

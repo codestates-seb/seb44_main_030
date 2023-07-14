@@ -268,6 +268,7 @@ export interface CommunityDetailData {
     comment: Array<commentData>;
     registeredAt: string;
     modifiedAt: string | null;
+    standardId: number;
 }
 export const CommunityDetailMockdata = {
     memberId: 1,

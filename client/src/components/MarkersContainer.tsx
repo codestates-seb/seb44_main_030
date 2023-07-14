@@ -2,8 +2,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
 import { Info } from '../types/info';
 import Marker from './common/Marker';
-import { setSelectionInstance } from '../store/selectinfo';
 import InfoWindow from './common/InfoWindow';
+import { setSelectionInstance } from '../store/selectinfo';
 
 const MarkersContainer = () => {
     const dispatch = useDispatch();

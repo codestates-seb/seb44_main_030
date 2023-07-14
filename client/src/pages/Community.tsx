@@ -1,121 +1,118 @@
-import React, { useState, useCallback } from 'react';
-import CommunityPost from '../components/CommunityPost';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import SearchIcon from '../assets/Search.svg';
 import backgroundImg from '../assets/Community_background.png';
 import PageButton from '../components/PageButton';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags } from '../assets/mockdata.ts';
 import ScrollBanner from '../components/common/ScrollBanner.tsx';
 import ContentsCard from '../components/common/ContentsCard.tsx';
-import Tag from '../components/common/Tag.tsx';
-
+import PopularContentsSection from '../components/common/PopularContentsSection.tsx';
+import TagSearchSection from '../components/common/TagSearchSection.tsx';
+import { motion } from 'framer-motion';
+import { getTotalCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
+import { useQuery } from '@tanstack/react-query';
+import { CommunityPostData } from '../types/CommunityTypes.ts';
 type SearchInput = {
     Keyword: string;
 };
+const PAGE_COUNT = 5;
 
 const Community = () => {
-    //인기게시물은 useQuery 사용 시 stale time 길게 설정
-
+    const { page: pageStr } = useParams();
+    const page = Number(pageStr);
+    const [size, setSize] = useState<number>(6);
     const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
-    const [pageArr, setPageArr] = useState<Array<number>>([1, 2, 3, 4, 5]);
-    const [currPage, setCurrPage] = useState<number>(1);
+    const [totalPageArr, setTotalPageArr] = useState<Array<number>>([]);
+    const [pageArr, setPageArr] = useState<Array<number>>([]);
     const navigate = useNavigate();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<SearchInput>();
-    // const keywordWatched = watch("Keyword")
     const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
         //검색 api 요청 추가, Query key로 currTag, searchKeyword, currPage 넣기.
         console.log(data);
     }, []);
+
+    const {
+        isLoading,
+        error: errorData,
+        data: allCommunityData,
+    } = useQuery(
+        ['community', page],
+        () => {
+            console.log(`${page}페이지의 데이터를 가져옵니다.`);
+            return getTotalCommunityPost(page, size);
+        },
+        {
+            staleTime: 10000, // 10초
+        },
+    );
+
+    useEffect(() => {
+        if (allCommunityData) {
+            const totalPageNum = allCommunityData.pageInfo.totalPages;
+            const totalPageArr = [...Array(totalPageNum).keys()].map((x) => x + 1);
+            const firstPageNum = Math.floor((page - 1) / PAGE_COUNT) * PAGE_COUNT + 1; //page가 1~5일 때는 1
+            const lastPageNum =
+                totalPageNum > Math.ceil(page / PAGE_COUNT) * PAGE_COUNT
+                    ? Math.ceil(page / PAGE_COUNT) * PAGE_COUNT
+                    : totalPageNum; //page가 1~5일 때는 5
+            setTotalPageArr(totalPageArr);
+            setPageArr([...totalPageArr.slice(firstPageNum - 1, lastPageNum)]);
+        }
+    }, [allCommunityData, page]);
+
     const handlePageList = (e: React.MouseEvent<HTMLLIElement>) => {
-        if (e.currentTarget.innerText === '다음') {
-            setPageArr((prevPageArr) => {
-                const updatedPageArr = [...prevPageArr].map((el) => el + 5);
-                setCurrPage(updatedPageArr[0]);
-                return updatedPageArr;
-            });
+        if (
+            e.currentTarget.innerText === '다음' &&
+            pageArr[pageArr.length - 1] !== totalPageArr[totalPageArr.length - 1]
+        ) {
+            navigate(`/community/${pageArr[pageArr.length - 1] + 1}`);
         }
 
-        if (e.currentTarget.innerText === '이전') {
-            currPage === 1 ||
-                setPageArr((prevPageArr) => {
-                    const updatedPageArr = [...prevPageArr].map((el) => el - 5);
-                    setCurrPage(updatedPageArr[0]);
-                    return updatedPageArr;
-                });
+        if (e.currentTarget.innerText === '이전' && !pageArr.includes(1)) {
+            navigate(`/community/${pageArr[0] - PAGE_COUNT}`);
         }
     };
-    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
-        setCurrTag(e.currentTarget.innerText);
-    }, []);
+
     const handleNavigateCreate = () => {
-        navigate('/community/create',{ state: 'community'});
+        navigate('/community/create', { state: 'community' });
     };
+
     const handleCurrPage = (e: React.MouseEvent<HTMLLIElement>) => {
-        console.log(Number(e.currentTarget.innerText));
-        setCurrPage(Number(e.currentTarget.innerText));
+        const clickedPageNum = Number(e.currentTarget.innerText);
+        navigate(`/community/${clickedPageNum}`);
     };
+
+    if (isLoading) {
+        return <div>로딩중..!</div>;
+    }
+    if (errorData) {
+        return <div>에러발생..!</div>;
+    }
+
     return (
-        <CommunityWarp>
+        <CommunityWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ScrollBanner bannerImg={backgroundImg} />
             <CommunityContainer>
-                <TopSection>
-                    <h2>인기게시물</h2>
-                    <PopularPostContainer>
-                        {CommunityPopularMockdata.map((item) => (
-                            <ContentsCard key={`popular_${item.standardId}`} communityProps={item} type={'community'} />
-                        ))}
-                    </PopularPostContainer>
-                </TopSection>
-                <MiddleSection>
-                    <TagSpace>
-                        {Mocktags.map((tagName, idx) => (
-                            // <li key={idx} className={`${currTag === tagName}`} tabIndex={0} onClick={handleTagSelect}>
-                            //     {tagName}
-                            // </li>
-                            <Tag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect} />
-                        ))}
-                    </TagSpace>
-                    <SearchSpace>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <label htmlFor="searchInput" />
-                            <div>
-                                <input
-                                    id="searchInput"
-                                    type="text"
-                                    placeholder="Search..."
-                                    {...register('Keyword', {
-                                        required: true,
-                                        validate: (value) => value.trim().length >= 2 || '두 글자 이상 입력해주세요',
-                                    })}
-                                />
-                                {/* {errors.Keyword ? <span>{errors.Keyword.message}</span> : <span></span>} 모달로 대체 */}
-                                <button>
-                                    <img src={SearchIcon} alt="searchIcon" />
-                                </button>
-                            </div>
-                        </form>
-                    </SearchSpace>
-                    <button onClick={handleNavigateCreate}>글 작성</button>
-                </MiddleSection>
+                <PopularContentsSection />
+                <TagSearchSection
+                    currTag={currTag}
+                    setCurrTag={setCurrTag}
+                    onSubmit={onSubmit}
+                    handleNavigateCreate={handleNavigateCreate}
+                />
                 <BottomSection>
                     <AllPostContainer>
-                        {CommunityAllMockdata.map((item) => (
+                        {allCommunityData?.postData.map((item: CommunityPostData) => (
                             <ContentsCard key={`all_${item.standardId}`} communityProps={item} type={'community'} />
                         ))}
                     </AllPostContainer>
                     <PageContainer>
-                        <PageButton onClick={handlePageList} data={{ value: '이전', currPage }} />
+                        <PageButton onClick={handlePageList} data={{ value: '이전', page }} />
                         {pageArr.map((value, idx) => (
-                            <PageButton key={idx} onClick={handleCurrPage} data={{ value, currPage }} />
+                            <PageButton key={idx} onClick={handleCurrPage} data={{ value, page }} />
                         ))}
-                        <PageButton onClick={handlePageList} data={{ value: '다음', currPage }} />
+                        <PageButton onClick={handlePageList} data={{ value: '다음', page }} />
                     </PageContainer>
                 </BottomSection>
             </CommunityContainer>
@@ -123,12 +120,16 @@ const Community = () => {
     );
 };
 
-const CommunityWarp = styled.div`
+export default Community;
+
+const CommunityWarp = styled(motion.div)`
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #ffffff;
     width: 100%;
+    background: linear-gradient(to right, #f8fcff, #f8fbff);
+    margin-bottom: 40px;
 `;
 
 const CommunityContainer = styled.div`
@@ -136,6 +137,7 @@ const CommunityContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
     max-width: 1280px;
     button {
         border: none;
@@ -146,119 +148,27 @@ const CommunityContainer = styled.div`
         }
     }
 `;
-const TopSection = styled.section`
-    width: 100%;
-    height: 507px;
-    border-radius: 15px;
-    // border: 1px solid #696969;
-    background-color: #fff;
-    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
-`;
-const PopularPostContainer = styled.ul`
-    display: flex;
-    justify-content: center;
-    padding: 0;
-    flex-wrap: wrap;
-    > li {
-        margin: 0 20px 20px 20px;
-    }
-`;
-const MiddleSection = styled.section`
-    width: 100%;
-    margin-top: 30px;
-    margin-bottom: 20px;
-    height: 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    > button {
-        width: 60px;
-        height: 45px;
-        border-radius: 5px;
-        background-color: #3884d5;
-        color: #ffffff;
-        box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
 
-        &:hover {
-            cursor: pointer;
-            background-color: #5797dc;
-        }
-    }
-`;
-const TagSpace = styled.ul`
-    width: 600px;
-    height: 130px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 5px 0 5px 0;
-    align-items: center;
-    border-radius: 15px;
-    // border: 1px solid #696969;
-    background: #fff;
-    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-`;
-const SearchSpace = styled.div`
-    > form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        > div {
-            width: 400px;
-            height: 40px;
-            display: flex;
-            > input {
-                height: 100%;
-                border-radius: 15px 0 0 15px;
-                border: none;
-                background: #fff;
-                box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-                padding-left: 15px;
-                font-size: 20px;
-                flex-basis: 90%;
-                &:focus {
-                    outline: solid 2px #3884d5;
-                }
-            }
-        }
-    }
-
-    button {
-        width: 44.5px;
-        height: 43px;
-        font-size: 20px;
-        flex-basis: 10%;
-        border-radius: 0 15px 15px 0;
-        background-color: #3884d5;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-        &:hover {
-            cursor: pointer;
-            background-color: #5797dc;
-        }
-        > img {
-            width: 30px;
-            height: 30px;
-        }
-    }
-`;
 const AllPostContainer = styled.ul`
-    display: flex;
-    justify-content: center;
     padding: 0;
-    flex-wrap: wrap;
-    > li {
-        margin: 0 20px 20px 20px;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 330px;
+    flex-grow: 1;
+    width: 100%;
+    height: 50%;
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(1, 1fr);
     }
 `;
 
 const BottomSection = styled.section`
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -267,6 +177,7 @@ const BottomSection = styled.section`
 `;
 
 const PageContainer = styled.ul`
+    padding: 0;
     width: 385px;
     height: 60px;
     display: flex;
@@ -277,5 +188,3 @@ const PageContainer = styled.ul`
         border: none;
     }
 `;
-
-export default Community;

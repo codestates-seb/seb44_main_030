@@ -1,41 +1,90 @@
 import styled from 'styled-components';
-import { Link } from 'react-scroll';
-import ClubCard from '../components/common/ContentsCard';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SubmitHandler } from 'react-hook-form';
+import { motion } from 'framer-motion';
 
-import back from '../../public/grouping 1.png';
+import BackgroundImg from '../assets/oceanbeach.png';
 import ScrollBanner from '../components/common/ScrollBanner';
 import { ClubDummyData, Mocktags } from '../../public/clubMockdata.ts';
 import ContentsCard from '../components/common/ContentsCard';
-import Tag from '../components/common/Tag.tsx';
+import TagSearchSection from '../components/common/TagSearchSection.tsx';
+import PopularContentsSection from '../components/common/PopularContentsSection.tsx';
+import useClubBoardData from '../api/ClubApi/ClubDataHooks.ts';
+import { ClubBoardData } from '../types/ClubData.ts';
+
+type SearchInput = {
+    Keyword: string;
+};
 
 function Club() {
-    const navigate = useNavigate();
     const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
-    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-        setCurrTag(e.currentTarget.innerText);
+    const navigate = useNavigate();
+
+    const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
+        //검색 api 요청 추가, Query key로 currTag, searchKeyword, currPage 넣기.
+        console.log(data);
     }, []);
 
+    const handleNavigateCreate = () => {
+        navigate('/club/create', { state: 'club' });
+    };
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+    const { status, data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } = useClubBoardData();
+    console.log(data);
+
+    useEffect(() => {
+        let fetching = false;
+        const onScroll = async () => {
+            const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
+
+            if (!fetching && scrollHeight - scrollTop <= clientHeight) {
+                fetching = true;
+                console.log('fetching more data, hasNextPage:', hasNextPage);
+                if (hasNextPage) await fetchNextPage();
+                fetching = false;
+            }
+        };
+
+        document.addEventListener('scroll', onScroll);
+        return () => {
+            document.removeEventListener('scroll', onScroll);
+        };
+    }, [hasNextPage, fetchNextPage]);
+
+    console.log(data);
+
     return (
-        <ClubWarp>
-            <ScrollBanner bannerImg={back} />
+        <ClubWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <ScrollBanner bannerImg={BackgroundImg} />
             <ContentContainer>
-                <TagSection>
-                    <TagTab>
-                        <span>카테고리</span>
-                        <span onClick={() => navigate(`/club/create`, { state: 'club' })}>글 쓰기</span>
-                    </TagTab>
-                    <Tags>
-                        {Mocktags.map((tagName, idx) => (
-                            <Tag key={idx} tag={tagName} $isSelected={currTag === tagName} onClick={handleTagSelect} />
-                        ))}
-                    </Tags>
-                </TagSection>
+                <PopularContentsSection />
+                <TagSearchSection
+                    handleNavigateCreate={handleNavigateCreate}
+                    currTag={currTag}
+                    setCurrTag={setCurrTag}
+                    onSubmit={onSubmit}
+                />
                 <CardSection>
-                    {ClubDummyData.map((data) => {
-                        return <ContentsCard key={data.boardClubId} clubProps={data} type={'club'} />;
-                    })}
+                    {status === 'loading' ? (
+                        <div>Loading...</div>
+                    ) : status === 'error' ? (
+                        <div>Error: {error.message}</div>
+                    ) : (
+                        data &&
+                        data.pages &&
+                        data.pages.map((page) =>
+                            page.data.map((clubData: ClubBoardData) => {
+                                console.log(clubData);
+                                return <ContentsCard key={clubData.boardClubId} clubProps={clubData} type={'club'} />;
+                            }),
+                        )
+                    )}
+                    {(isFetching || isFetchingNextPage) && 'Loading more...'}
                 </CardSection>
             </ContentContainer>
         </ClubWarp>
@@ -44,12 +93,13 @@ function Club() {
 
 export default Club;
 
-const ClubWarp = styled.div`
+const ClubWarp = styled(motion.div)`
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #ffffff;
     width: 100%;
+    background: linear-gradient(to right, #f8fcff, #f8fbff);
 `;
 
 const ContentContainer = styled.div`
@@ -57,48 +107,13 @@ const ContentContainer = styled.div`
     flex-direction: column;
     width: 100%;
     max-width: 1280px;
-    margin: 2rem auto;
-    margin-bottom: 7rem;
+    margin: 7rem;
     padding-top: 5vh;
 `;
 
-const TagSection = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-    height: 50%;
-    margin: 0 auto;
-    margin-bottom: 5rem;
-    padding: 2rem;
-`;
-
-const TagTab = styled.div`
-    display: flex;
-    justify-content: space-between;
-    font-family: 'TTWanjudaedunsancheB', sans-serif;
-    font-size: 2.5rem;
-    font-weight: bold;
-    padding: 2rem;
-`;
-
-const Tags = styled.div`
-    width: 600px;
-    height: 130px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 5px 0 5px 0;
-    align-items: center;
-    border-radius: 15px;
-    // border: 1px solid #696969;
-    background: #fff;
-    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
-`;
-
-const CardSection = styled.div`
+const CardSection = styled.section`
     display: grid;
-    grid-template-columns: repeat(3, 420px);
+    grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: 330px;
     flex-grow: 1;
     width: 100%;

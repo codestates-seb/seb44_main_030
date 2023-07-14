@@ -1,25 +1,26 @@
 import styled from 'styled-components';
 import Splashzone from '../../public/Splashzone.png';
-import ClubCard from '../components/ClubCard';
+import ClubCard from '../../components/ClubCard';
 import CommunityPost from '../components/CommunityPost';
+import { motion } from 'framer-motion';
+import ContentsCard from '../components/common/ContentsCard';
 
 const Main = () => {
     return (
-        <div style={{ width: '100%' }}>
+        <motion.div style={{ width: '100%' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <StyledMain>
                 <StyledContent>물위에서의 재미와 도전 그리고 열정을 공유하는</StyledContent>
                 <StyledImg src={Splashzone}></StyledImg>
             </StyledMain>
 
             <CardSection>
-                <ClubCard />
-                <ClubCard />
-                <ClubCard />
-                <ClubCard />
-                <ClubCard />
-                <ClubCard />
+                <ContentsCard />
+                <ContentsCard />
+                <ContentsCard />
+                <ContentsCard />
+                <ContentsCard />
             </CardSection>
-        </div>
+        </motion.div>
     );
 };
 
