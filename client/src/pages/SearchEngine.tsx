@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setInfoInstance } from '../store/info';
+import Wrapper from '../components/style/Wrapper';
+import SearchResult from '../components/style/SearchResult';
+import { RootState } from '../store/store';
 
 interface SearchResponse {
     documents: {
@@ -20,9 +23,10 @@ interface SearchResponse {
     }[];
 }
 
-const Fetching = () => {
+const SearchEngine = () => {
     const [keyword, setKeyword] = useState('');
     const dispatch = useDispatch();
+    const infodata = useSelector((state: RootState) => state.info.infoInstance);
 
     const onClickHandler = async () => {
         const result = axios.get<SearchResponse>(
@@ -46,16 +50,17 @@ const Fetching = () => {
     };
 
     return (
-        <div>
-            <input
-                onChange={(e) => {
-                    setKeyword(e.target.value);
-                }}
-            ></input>
-            <button onClick={onClickHandler}>데이터 가져오기</button>
-            {keyword}
-        </div>
+        <Wrapper width="300px" height="20px">
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <input
+                    onChange={(e) => {
+                        setKeyword(e.target.value);
+                    }}
+                ></input>
+                <button onClick={onClickHandler}>Search</button>
+            </div>
+        </Wrapper>
     );
 };
 
-export default Fetching;
+export default SearchEngine;
