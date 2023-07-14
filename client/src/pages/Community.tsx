@@ -13,16 +13,20 @@ import Tag from '../components/common/Tag.tsx';
 import PopularContentsSection from '../components/common/PopularContentsSection.tsx';
 import TagSearchSection from '../components/common/TagSearchSection.tsx';
 import { motion } from 'framer-motion';
-
+import axios from 'axios';
 type SearchInput = {
     Keyword: string;
 };
 
 const Community = () => {
     //인기게시물은 useQuery 사용 시 stale time 길게 설정
-    const { page } = useParams();
+    const { page: pageStr } = useParams();
+    const page = Number(pageStr);
+    const [size, setSize] = useState<number>(6);
     const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
-    const [pageArr, setPageArr] = useState<Array<number>>([1, 2, 3, 4, 5]);
+    const [totalPageArr, setTotalPageArr] = useState([]);
+    const [pageArr, setPageArr] = useState<Array<number>>([]);
+    const [data, setData] = useState([]);
     const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
@@ -46,9 +50,28 @@ const Community = () => {
     //         return lastPage.nextPageToken || undefined},
     //     }
     //   );
+    // 데이터 요청
+    const fetchTotalCommunityPost = async () => {
+        const response = await axios.get('http://13.209.142.240:8080/standards', {
+            params: {
+                page: page,
+                size: size,
+            },
+        });
+        console.log(response.data);
+        // response.data
+        setData(response.data.data);
+        const totalPageNum = response.data.pageInfo.totalPages;
+        setTotalPageArr(() => {
+            const totalPageArr = [...Array(totalPageNum).keys()].map((x) => x + 1);
+            setPageArr([...totalPageArr.slice(0, page - 1)]);
+            return totalPageArr;
+        });
+    };
+
     useEffect(() => {
-        navigate(`/community/${pageArr[0]}`);
-    }, [pageArr]);
+        fetchTotalCommunityPost();
+    }, []);
 
     const handlePageList = (e: React.MouseEvent<HTMLLIElement>) => {
         if (e.currentTarget.innerText === '다음') {
@@ -58,12 +81,11 @@ const Community = () => {
             });
         }
 
-        if (e.currentTarget.innerText === '이전') {
-            page === 1 ||
-                setPageArr((prev) => {
-                    const prevPageArr = [...prev].map((el) => el - 5);
-                    return [...prevPageArr];
-                });
+        if (e.currentTarget.innerText === '이전' && page !== 1) {
+            setPageArr((prev) => {
+                const prevPageArr = [...prev].map((el) => el - 5);
+                return [...prevPageArr];
+            });
         }
     };
     const handleNavigateCreate = () => {
@@ -73,7 +95,9 @@ const Community = () => {
         const clickedPageNum = Number(e.currentTarget.innerText);
         navigate(`/community/${clickedPageNum}`);
     };
-    console.log(page);
+    // useEffect(()=>{
+
+    // },[])
     return (
         <CommunityWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ScrollBanner bannerImg={backgroundImg} />
@@ -87,7 +111,7 @@ const Community = () => {
                 />
                 <BottomSection>
                     <AllPostContainer>
-                        {CommunityAllMockdata.map((item) => (
+                        {data.map((item) => (
                             <ContentsCard key={`all_${item.standardId}`} communityProps={item} type={'community'} />
                         ))}
                     </AllPostContainer>
