@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import LOGO from '../../public/LOGO2.png';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ProfileImage from './style/ProfileImage';
 
 //토큰 받아오면 logout delet 토큰 처리해줘야됨.
@@ -12,9 +12,25 @@ interface Props {
 }
 
 const Header = () => {
+    const modalRef = useRef<HTMLDivElement | null>(null);
+
+    const handleOutsideClick = (event: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+            setMenu(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('click', handleOutsideClick, true);
+        return () => {
+            document.removeEventListener('click', handleOutsideClick, true);
+        };
+    }, []);
+
     const navigate = useNavigate();
     const [isLogin, setIsLogIn] = useState<boolean>(false);
     const [menu, setMenu] = useState(false);
+
     return (
         <div style={{ position: 'fixed', zIndex: '999' }}>
             <StyledHeader>
@@ -44,7 +60,7 @@ const Header = () => {
                 {isLogin === false ? (
                     <div onClick={() => setIsLogIn(true)}>Login</div>
                 ) : (
-                    <div style={{ position: 'relative', top: '-17px' }}>
+                    <div style={{ position: 'relative', top: '-5px' }}>
                         <ProfileImage
                             width="70px"
                             height="65px"
@@ -53,7 +69,7 @@ const Header = () => {
                                 setMenu(!menu);
                             }}
                         />
-                        {menu ? <Modal setIsLogIn={setIsLogIn}></Modal> : null}
+                        {menu ? <Modal ref={modalRef} setIsLogIn={setIsLogIn} setMenu={setMenu}></Modal> : null}
                     </div>
                 )}
             </StyledHeader>
@@ -63,13 +79,18 @@ const Header = () => {
 
 export default Header;
 
-const Modal = ({ setIsLogIn }: Props) => {
+interface ModalProps extends Props {
+    setMenu: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Modal = React.forwardRef<HTMLDivElement, ModalProps>(({ setIsLogIn, setMenu }: ModalProps, ref) => {
     const navigate = useNavigate();
     return (
-        <StyledModal>
+        <StyledModal ref={ref}>
             <div
                 onClick={() => {
                     navigate('/mypage');
+                    setMenu(false);
                 }}
             >
                 마이페이지
@@ -77,29 +98,33 @@ const Modal = ({ setIsLogIn }: Props) => {
             <div
                 onClick={() => {
                     setIsLogIn(false);
+                    setMenu(false);
                 }}
             >
                 로그아웃
             </div>
         </StyledModal>
     );
-};
+});
 
 const StyledHeader = styled.div`
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 80px;
+    align-items: center;
+    justify-content: end;
     width: 100vw;
     font-size: 1.5rem;
-    height: 80px;
+    height: 85px;
     color: white;
     background-color: rgba(56, 132, 213, 1);
     div {
-        padding-top: 15px;
+        padding-top: 0px;
     }
 
     :nth-child(2) {
         font-family: 'Monomaniac One', sans-serif;
-        grid-column: 9 / 10;
+        grid-column: 8 / 9;
         cursor: pointer;
     }
     :nth-child(2):hover {
@@ -131,27 +156,36 @@ const StyledImg = styled.img`
 `;
 
 const StyledModal = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     font-size: 1rem;
     position: absolute;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 10px;
-    left: -140px;
-    width: 100%;
-    height: 100%;
-    padding: 10px;
+    left: -95px;
+    bottom: -77px;
+    width: 130px;
+    height: 130%;
+    padding: 6px;
     background-color: white;
+    font-weight: bold;
+    color: #696969;
     font-family: 'Monomaniac One', sans-serif;
+    box-shadow: 10px 6px 76px 2px rgba(44, 151, 255, 0.21);
+    -webkit-box-shadow: 10px 6px 76px 2px rgba(44, 151, 255, 0.21);
+    -moz-box-shadow: 10px 6px 76px 2px rgba(44, 151, 255, 0.21);
     :nth-child(1) {
-        color: black;
         margin-top: 5px;
-        margin-left: 10px;
     }
     :nth-child(2) {
-        color: black;
-        margin-top: 8px;
-        margin-left: 10px;
+        margin-top: 10px;
     }
     :nth-child(2):hover {
+        color: black;
+    }
+    :nth-child(1):hover {
         color: black;
     }
 
