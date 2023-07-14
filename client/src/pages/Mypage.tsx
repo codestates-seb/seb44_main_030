@@ -11,7 +11,6 @@ const Mypage = () => {
     const [memberInfo, setmemberInfo] = useState({ name: '', nickname: '', email: '', bio: '' });
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        setLoading(true);
         getInfos(memberId).then((data) => setmemberInfo(data.data.data));
         setLoading(false);
     }, []);
