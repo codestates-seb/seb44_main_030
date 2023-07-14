@@ -1,5 +1,6 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import getClubBoardData from './ClubApi';
+import { getClubBoardDetail } from './ClubApi';
 import { ClubResponse } from '../../types/ClubData';
 
 export default function useClubBoardData() {
@@ -15,4 +16,8 @@ export default function useClubBoardData() {
             },
         },
     );
+}
+
+export function useClubBoardDetail(boardClubId: number) {
+    return useQuery(['clubDetailData', boardClubId], () => getClubBoardDetail(boardClubId));
 }

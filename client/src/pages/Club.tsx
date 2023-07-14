@@ -79,6 +79,7 @@ function Club() {
                         data.pages &&
                         data.pages.map((page) =>
                             page.data.map((clubData: ClubBoardData) => {
+                                console.log(clubData);
                                 return <ContentsCard key={clubData.boardClubId} clubProps={clubData} type={'club'} />;
                             }),
                         )

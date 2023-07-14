@@ -27,7 +27,7 @@ export default function AnimateRoute() {
                 <Route path="/community/:page" element={<Community></Community>}></Route>
                 <Route path="/community/create" element={<CommunityCreate></CommunityCreate>}></Route>
                 <Route path="/community/detail/:id" element={<CommunityDetail></CommunityDetail>}></Route>
-                <Route path="/club/detail/:id" element={<ClubDetail></ClubDetail>}></Route>
+                <Route path="/club/detail/:boardClubId" element={<ClubDetail></ClubDetail>}></Route>
                 <Route path="/club" element={<Club></Club>}></Route>
                 <Route path="/club/create" element={<CommunityCreate></CommunityCreate>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
