@@ -25,7 +25,7 @@ const Header = () => {
 
                 <div
                     onClick={() => {
-                        navigate('/community');
+                        navigate('/community/1');
                     }}
                 >
                     Community
