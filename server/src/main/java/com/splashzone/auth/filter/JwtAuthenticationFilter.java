@@ -2,9 +2,11 @@ package com.splashzone.auth.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.splashzone.member.entity.AccessToken;
 import com.splashzone.member.entity.Member;
 import com.splashzone.auth.dto.LoginDto;
 import com.splashzone.auth.jwt.JwtTokenizer;
+import com.splashzone.member.service.AccessTokenService;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,9 +27,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenizer jwtTokenizer) {
+    private final AccessTokenService accessTokenService;
+
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenizer jwtTokenizer, AccessTokenService accessTokenService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenizer = jwtTokenizer;
+        this.accessTokenService = accessTokenService;
     }
 
     @SneakyThrows
@@ -51,6 +56,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.setHeader("Refresh", refreshToken);
+
+        AccessToken accessTokenEntity = new AccessToken();
+        accessTokenEntity.setTokenValue(accessToken);
+        accessTokenEntity.setMemberId(member.getMemberId());
+        accessTokenService.addAccessToken(accessTokenEntity);
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }

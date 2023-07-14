@@ -4,6 +4,7 @@ import com.splashzone.auth.utils.CustomAuthorityUtils;
 import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
 import com.splashzone.member.repository.MemberRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +15,7 @@ import com.splashzone.member.entity.Member;
 import java.util.Collection;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class MemberDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
@@ -26,6 +28,7 @@ public class MemberDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("username: " + username);
         Optional<Member> optionalMember = memberRepository.findByEmail(username);
         Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
         return new MemberDetails(findMember);
@@ -39,8 +42,8 @@ public class MemberDetailsService implements UserDetailsService {
             setPassword(member.getPassword());
             setBio(member.getBio());
             setRoles(member.getRoles());
-            setCreatedAt(member.getTerminatedAt());
-            setTerminatedAt(member.getTerminatedAt());
+//            setCreatedAt(member.getTerminatedAt());
+//            setTerminatedAt(member.getTerminatedAt());
         }
 
         @Override

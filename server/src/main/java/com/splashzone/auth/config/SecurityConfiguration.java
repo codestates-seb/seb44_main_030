@@ -8,11 +8,16 @@ import com.splashzone.auth.handler.MemberAuthenticationFailureHandler;
 import com.splashzone.auth.handler.MemberAuthenticationSuccessHandler;
 import com.splashzone.auth.jwt.JwtTokenizer;
 import com.splashzone.auth.utils.CustomAuthorityUtils;
+import com.splashzone.member.repository.AccessTokenRepository;
+import com.splashzone.member.service.AccessTokenService;
+import com.splashzone.member.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -29,13 +34,20 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 //@EnableWebSecurity(debug = true)
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
+    private final AccessTokenRepository accessTokenRepository;
+    private final AccessTokenService accessTokenService;
+    private final MemberService memberService;
 
-    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils) {
+    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, AccessTokenRepository accessTokenRepository, AccessTokenService accessTokenService, @Lazy MemberService memberService) {
         this.jwtTokenizer = jwtTokenizer;
         this.authorityUtils = authorityUtils;
+        this.accessTokenRepository = accessTokenRepository;
+        this.accessTokenService = accessTokenService;
+        this.memberService = memberService;
     }
 
     @Bean
@@ -56,16 +68,16 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.POST, "/*/members").permitAll()
-                        .antMatchers(HttpMethod.PATCH, "/*/members/**").hasRole("USER")
-                        .antMatchers(HttpMethod.GET, "/*/members").permitAll()
-                        .antMatchers(HttpMethod.GET, "/*/members/**").hasRole("USER")
-                        .antMatchers(HttpMethod.DELETE, "/*/members/**").hasRole("USER")
-                        .antMatchers(HttpMethod.POST, "/standards").hasRole("USER")
+                        .antMatchers(HttpMethod.POST, "/members").permitAll()
+                        .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/members").permitAll()
+                        .antMatchers(HttpMethod.GET, "/members/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
+                        .antMatchers(HttpMethod.POST, "/standards").authenticated()
                         .antMatchers(HttpMethod.PATCH, "/standards/**").hasRole("USER")
                         .antMatchers(HttpMethod.GET, "/standards").permitAll()
                         .antMatchers(HttpMethod.DELETE, "/standards/**").hasRole("USER")
-                        .antMatchers(HttpMethod.POST, "/clubs").permitAll()
+                        .antMatchers(HttpMethod.POST, "/clubs").authenticated()
                         .antMatchers(HttpMethod.PATCH, "/clubs/**").hasRole("USER")
                         .antMatchers(HttpMethod.GET, "/clubs").permitAll()
                         .antMatchers(HttpMethod.DELETE, "/clubs/**").hasRole("USER")
@@ -97,12 +109,12 @@ public class SecurityConfiguration {
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, accessTokenService);
             jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, accessTokenRepository);
 
             builder
                     .addFilter(jwtAuthenticationFilter)

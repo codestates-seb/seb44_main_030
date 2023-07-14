@@ -61,9 +61,12 @@ public class BoardStandardService {
         return boardStandardRepository.findByBoardStandard(PageRequest.of(page, size, Sort.by("standardId").descending()));
     }
 
-    public void deleteStandard(long standardId) {
-        BoardStandard findBoardStandard = findVerifiedBoardStandard(standardId);
-        boardStandardRepository.delete(findBoardStandard);
+    //TODO 실제 삭제 말고 상태만 바뀌게 코드 변경하기
+    public void deleteStandard(long standardId, long memberId) {
+        BoardStandard boardStandard = boardStandardRepository.findById(standardId).orElseThrow(() -> new RuntimeException());
+        boardStandardRepository.delete(boardStandard);
+//        BoardStandard findBoardStandard = findVerifiedBoardStandard(standardId);
+//        boardStandardRepository.delete(findBoardStandard);
     }
 
     //회원이 존재하는지 확인

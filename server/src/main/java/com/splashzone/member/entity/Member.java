@@ -64,10 +64,10 @@ public class Member {
 //            this.status = status;
 //        }
 //    }
-    public enum MemberRole {
-        ROLE_USER,
-        ROLE_ADMIN
-    }
+//    public enum MemberRole {
+//        ROLE_USER,
+//        ROLE_ADMIN
+//    }
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
