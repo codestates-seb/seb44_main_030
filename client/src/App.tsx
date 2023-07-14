@@ -4,19 +4,23 @@ import Header from './components/header';
 import Footer from './components/Footer';
 import Globalstyle from './GlobalStyle';
 import AnimateRoute from './components/common/AnimateRoute';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 function App() {
     const location = useLocation();
     const hideHeaderFooter = location.pathname === `/signup` || location.pathname === `/login`;
+    const queryClient = new QueryClient();
 
     return (
-        <div>
-            <Globalstyle />
-            {!hideHeaderFooter && <Header></Header>}
-            {!hideHeaderFooter && <div style={{ paddingTop: '85px' }}></div>}
-            <AnimateRoute />
-            {!hideHeaderFooter && <Footer></Footer>}
-        </div>
+        <QueryClientProvider client={queryClient}>
+            <div>
+                <Globalstyle />
+                {!hideHeaderFooter && <Header></Header>}
+                {!hideHeaderFooter && <div style={{ paddingTop: '85px' }}></div>}
+                <AnimateRoute />
+                {!hideHeaderFooter && <Footer></Footer>}
+            </div>
+        </QueryClientProvider>
     );
 }
 
