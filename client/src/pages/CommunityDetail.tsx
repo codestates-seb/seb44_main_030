@@ -3,20 +3,15 @@ import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import backgroundImg from '../assets/Community_background.png';
 import { CommunityDetailMockdata } from '../assets/mockdata.ts';
-import ViewsIcon from '../../public/view.png';
-import MessageIcon from '../../public/bubble-chat.png';
-import LikeIcon from '../assets/Like.svg';
-import LikeFilledIcon from '../assets/Like_filled.svg';
-import { useForm, SubmitHandler } from 'react-hook-form';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import DetailContentSection from '../components/DetailContentSection.tsx';
-interface BackgroundProps {
+type BackgroundProps = {
     $image: string;
-}
+};
 
-export interface CommentInput {
+export type CommentInput = {
     Content: string;
-}
+};
 
 const CommunityDetail = () => {
     const location = useLocation();
@@ -47,8 +42,6 @@ const CommunityDetail = () => {
 
     const hanldeNavigatePrev = useCallback(() => {
         navigate(-1);
-        //이동했을 때, 이전 페이지 상태(스크롤위치, 페이지번호, 태그상태)를 유지해야한다.
-        //router기능 이용하거나, redux에 저장해서 구현할 것.
     }, []);
 
     const handleNavigateProfile = useCallback(() => {
