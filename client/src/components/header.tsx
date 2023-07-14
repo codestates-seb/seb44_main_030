@@ -89,7 +89,7 @@ const StyledHeader = styled.div`
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     padding: 20px;
-    height: 40px;
+    height: 80px;
     width: 100vw;
     font-size: 1.5rem;
     color: white;

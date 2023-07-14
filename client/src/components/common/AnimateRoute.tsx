@@ -2,7 +2,6 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import loadable from '@loadable/component';
 import { AnimatePresence } from 'framer-motion';
-// import Fetching from '../../pages/fetching';
 
 const Main = loadable(() => import('../../pages/Main'));
 const Signup = loadable(() => import('../../pages/Signup'));
@@ -32,7 +31,6 @@ export default function AnimateRoute() {
                 <Route path="/club/create" element={<CommunityCreate></CommunityCreate>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
                 <Route path="/map" element={<Map />}></Route>
-                {/* <Route path="/test" element={<Fetching />} /> */}
             </Routes>
         </AnimatePresence>
     );
