@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import backgroundImg from '../assets/Community_background.png';
 import { CommunityDetailMockdata } from '../assets/mockdata.ts';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import DetailContentSection from '../components/DetailContentSection.tsx';
+import axios from 'axios';
 type BackgroundProps = {
     $image: string;
 };
@@ -14,8 +15,7 @@ export type CommentInput = {
 };
 
 const CommunityDetail = () => {
-    const location = useLocation();
-    const standardId = location.state; //데이터 요청 시 사용
+    const { standardId } = useParams();
     const mockMemberId = 1; //useSelector 사용
     const navigate = useNavigate();
     const {
@@ -35,6 +35,15 @@ const CommunityDetail = () => {
     const [likeCount, setLikeCount] = useState(like); //실제 구현 시 데이터 받고나서 데이터 설정할 것.
     const [isLiked, setIsLiked] = useState(memberLiked?.includes(mockMemberId)); //실제 구현 시 데이터 받고나서 데이터 설정할 것.
     const [commentCount, setCommentCount] = useState(comment.length);
+
+    const getCommunityDetailData = async () => {
+        const response = axios.get(`${import.meta.env.VITE_KEY}/standard/${standardId}`);
+        console.log(response);
+    }
+    useEffect(() => {
+        getCommunityDetailData();
+    }, []);
+
     const handleLike = useCallback(() => {
         isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
         setIsLiked((prev) => !prev);
