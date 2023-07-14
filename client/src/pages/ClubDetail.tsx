@@ -7,7 +7,6 @@ import backgroundImg from '../assets/Community_background.png';
 import { CommunityDetailMockdata } from '../assets/mockdata.ts';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
-import { IconStyled, LikeButton } from '../components/CommunityPost.tsx';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import Comment from '../components/Comment.tsx';
 import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
@@ -102,11 +101,11 @@ const ClubDetail = () => {
                             <button onClick={handleDelete}>삭제</button>
                         </EditContainer>
                         <div>
-                            <IconStyled src={ViewIcon} alt="ViewCount" />
+                            <img src={ViewIcon} alt="ViewCount" />
                             {view}
                         </div>
                         <div>
-                            <IconStyled src={CommentIcon} alt="CommentCount" />
+                            <img src={CommentIcon} alt="CommentCount" />
                             {/* {commentCount} */}
                         </div>
                     </div>

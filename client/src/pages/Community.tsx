@@ -4,7 +4,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import backgroundImg from '../assets/Community_background.png';
 import PageButton from '../components/PageButton';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CommunityAllMockdata, CommunityPopularMockdata, Mocktags } from '../assets/mockdata.ts';
+import { Mocktags } from '../assets/mockdata.ts';
 import ScrollBanner from '../components/common/ScrollBanner.tsx';
 import ContentsCard from '../components/common/ContentsCard.tsx';
 import PopularContentsSection from '../components/common/PopularContentsSection.tsx';

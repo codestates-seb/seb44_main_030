@@ -2,12 +2,13 @@ import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import backgroundImg from '../assets/Community_background.png';
-import { CommunityDetailMockdata } from '../assets/mockdata.ts';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import DetailContentSection from '../components/DetailContentSection.tsx';
 import axios from 'axios';
 import { CommunityPostData } from '../types/CommunityTypes.ts';
 import { Loading } from '../components/Lodaing.tsx';
+import { useQuery } from '@tanstack/react-query';
+import { getDetailCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
 type BackgroundProps = {
     $image: string;
 };
@@ -21,32 +22,21 @@ const CommunityDetail = () => {
     const mockMemberId = 1; //useSelector 사용
     const navigate = useNavigate();
 
-    const [detailData, setDetailData] = useState<CommunityPostData>({
-        standardId: 0,
-        title: '',
-        content: '',
-        view: 0,
-        createdAt: '',
-        modifiedAt: '',
-        member: { memberId: 0, name: '', email: '', nickname: '', bio: '' },
-    });
-    const [isLoading, setIsLoading] = useState(false);
-    const getCommunityDetailData = async () => {
-        setIsLoading(true);
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_KEY}/standards/${standardId}`);
-            setDetailData(response.data.data);
-        } catch (error) {
-            console.error('Failed to fetch data:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        getCommunityDetailData();
-    }, []);
-
+    const {
+        isLoading,
+        error: errorData,
+        data,
+    } = useQuery(
+        ['communityDetail', standardId],
+        () => {
+            console.log(`게시글ID:${standardId}데이터를 가져옵니다.`);
+            return getDetailCommunityPost(standardId);
+        },
+        {
+            staleTime: 10000, // 10초
+        },
+    );
+    const detailCommunityData = data || undefined;
     // const handleLike = useCallback(() => {
     //     isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
     //     setIsLiked((prev) => !prev);
@@ -58,46 +48,46 @@ const CommunityDetail = () => {
 
     const handleNavigateProfile = useCallback(() => {
         navigate(`/mypage`);
-    }, [detailData?.memberId]);
+    }, [detailCommunityData?.member?.memberId]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-    if (isLoading || !detailData.standardId) {
-        return <Loading/>;
+    if (isLoading) {
+        return <Loading />;
     }
     return (
         <Background $image={backgroundImg}>
             <PostContainer>
                 <TitleSection>
                     <button onClick={hanldeNavigatePrev}>목록</button>
-                    <h1>{detailData?.title}</h1>
+                    <h1>{detailCommunityData?.title}</h1>
                     <div>
                         <div>
                             <h3>관련태그: </h3>
                             <span className="tag">{/* {tag} */}</span>{' '}
                         </div>
                         <div>
-                            <span className="date">{detailData?.createdAt}</span>
+                            <span className="date">{detailCommunityData?.createdAt}</span>
                             {/* <img src={memberProfileImg} /> */}
                             <span className="name" onClick={handleNavigateProfile}>
-                                {detailData?.name}
+                                {detailCommunityData?.name}
                             </span>
                         </div>
                     </div>
                 </TitleSection>
                 <DetailContentSection
-                    commentCount={detailData?.commentCount}
-                    view={detailData?.view}
-                    content={detailData?.content}
-                    handleLike={detailData?.handleLike}
-                    isLiked={detailData?.isLiked}
-                    likeCount={detailData?.likeCount}
-                    memberId={detailData?.member?.memberId}
-                    standardId={detailData?.standardId}
-                    clubId={detailData?.clubId}
+                    commentCount={detailCommunityData?.commentCount}
+                    view={detailCommunityData?.view}
+                    content={detailCommunityData?.content}
+                    handleLike={detailCommunityData?.handleLike}
+                    isLiked={detailCommunityData?.isLiked}
+                    likeCount={detailCommunityData?.likeCount}
+                    memberId={detailCommunityData?.member?.memberId}
+                    standardId={detailCommunityData?.standardId}
+                    clubId={detailCommunityData?.clubId}
                 />
-                <DetailCommentSection comment={detailData?.comment} />
+                <DetailCommentSection comment={detailCommunityData?.comment} />
             </PostContainer>
         </Background>
     );
