@@ -7,17 +7,12 @@ import DetailContentSection from '../components/DetailContentSection.tsx';
 import { Loading } from '../components/Lodaing.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { getDetailCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
-type BackgroundProps = {
+import { RouteParams } from '../types/CommunityTypes.ts';
+
+type BackgroundStyledProps = {
     $image: string;
 };
 
-export type CommentInput = {
-    Content: string;
-};
-
-type RouteParams = {
-    standardId: string;
-};
 const CommunityDetail = () => {
     const { standardId } = useParams<RouteParams>();
     if (!standardId) {
@@ -41,6 +36,8 @@ const CommunityDetail = () => {
         },
     );
     const detailCommunityData = data || undefined;
+
+    // 좋아요 구현 시 사용
     // const handleLike = useCallback(() => {
     //     isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
     //     setIsLiked((prev) => !prev);
@@ -57,12 +54,14 @@ const CommunityDetail = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
     if (isLoading) {
         return <Loading />;
     }
+
     if (errorData) {
         console.log(errorData);
-        return <div>게시글을 불러올 수 없습니다.</div>
+        return <div>게시글을 불러올 수 없습니다.</div>;
     }
     return (
         <Background $image={backgroundImg}>
@@ -103,10 +102,7 @@ const CommunityDetail = () => {
 
 export default CommunityDetail;
 
-const Background = styled.div<BackgroundProps>`
-    * {
-        box-sizing: border-box;
-    }
+const Background = styled.div<BackgroundStyledProps>`
     background-image: url(${(props) => props.$image});
     background-size: cover;
     background-position: center center;

@@ -13,9 +13,9 @@ type SignupInputs = {
     PasswordCheck: string;
 };
 
-interface BackgroundProps {
+type BackgroundStyledProps = {
     $image: string;
-}
+};
 
 const Signup = () => {
     const {
@@ -114,7 +114,7 @@ const Signup = () => {
 
 export default Signup;
 
-const MotionBackground = styled(motion.div)<BackgroundProps>`
+const MotionBackground = styled(motion.div)<BackgroundStyledProps>`
     background-image: url(${(props) => props.$image});
     background-size: cover;
     background-position: center center;

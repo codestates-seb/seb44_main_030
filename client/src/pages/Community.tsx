@@ -16,6 +16,8 @@ import { CommunityPostData } from '../types/CommunityTypes.ts';
 type SearchInput = {
     Keyword: string;
 };
+
+//한 화면에 나타낼 페이지버튼 갯수
 const PAGE_COUNT = 5;
 
 const Community = () => {
@@ -47,20 +49,25 @@ const Community = () => {
         },
     );
 
+    //페이지버튼 관련 상태 업데이트
     useEffect(() => {
         if (allCommunityData) {
             const totalPageNum = allCommunityData.pageInfo.totalPages;
             const totalPageArr = [...Array(totalPageNum).keys()].map((x) => x + 1);
-            const firstPageNum = Math.floor((page - 1) / PAGE_COUNT) * PAGE_COUNT + 1; //page가 1~5일 때는 1
+            //ex) 한 화면에서 보여지는 페이지번호가 1~5일 때 firstPageNum => 1
+            const firstPageNum = Math.floor((page - 1) / PAGE_COUNT) * PAGE_COUNT + 1;
+            //ex) 한 화면에서 보여지는 페이지번호가 1~5일 때 lastPageNum => 5
+            //ex) 총 번호갯수 8이라고 할 때, 다음버튼 눌렀을 때 5~10이 아닌 5~8이 보여야함.
             const lastPageNum =
                 totalPageNum > Math.ceil(page / PAGE_COUNT) * PAGE_COUNT
                     ? Math.ceil(page / PAGE_COUNT) * PAGE_COUNT
-                    : totalPageNum; //page가 1~5일 때는 5
+                    : totalPageNum;
             setTotalPageArr(totalPageArr);
             setPageArr([...totalPageArr.slice(firstPageNum - 1, lastPageNum)]);
         }
     }, [allCommunityData, page]);
 
+    //다음|이전 버튼 클릭 시, 페이지 변경
     const handlePageList = (e: React.MouseEvent<HTMLLIElement>) => {
         if (
             e.currentTarget.innerText === '다음' &&
@@ -78,6 +85,7 @@ const Community = () => {
         navigate('/community/create', { state: 'community' });
     };
 
+    //페이지번호 버튼 클릭 시, 페이지 변경
     const handleCurrPage = (e: React.MouseEvent<HTMLLIElement>) => {
         const clickedPageNum = Number(e.currentTarget.innerText);
         navigate(`/community/${clickedPageNum}`);
@@ -128,6 +136,7 @@ const CommunityWarp = styled(motion.div)`
     align-items: center;
     background-color: #ffffff;
     width: 100%;
+    min-width: 1280px;
     background: linear-gradient(to right, #f8fcff, #f8fbff);
     margin-bottom: 40px;
 `;
