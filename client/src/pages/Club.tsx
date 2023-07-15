@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useCallback, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { SubmitHandler } from 'react-hook-form';
 import { motion } from 'framer-motion';
 
@@ -21,14 +21,10 @@ type SearchInput = {
 };
 
 function Club() {
-    const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
+    const { tag: currTag } = useParams();
     const navigate = useNavigate();
     const scrollPosition = useSelector((state: RootState) => state.scroll);
     const dispatch = useDispatch();
-    const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
-        //검색 api 요청 추가, Query key로 currTag, searchKeyword, currPage 넣기.
-        console.log(data);
-    }, []);
 
     const handleNavigateCreate = () => {
         navigate('/club/create', { state: 'club' });
@@ -70,12 +66,7 @@ function Club() {
             <ScrollBanner bannerImg={BackgroundImg} />
             <ContentContainer>
                 <PopularContentsSection />
-                <TagSearchSection
-                    handleNavigateCreate={handleNavigateCreate}
-                    currTag={currTag}
-                    setCurrTag={setCurrTag}
-                    onSubmit={onSubmit}
-                />
+                <TagSearchSection currTag={currTag} handleNavigateCreate={handleNavigateCreate} />
                 <CardSection>
                     {status === 'loading' ? (
                         <div>Loading...</div>

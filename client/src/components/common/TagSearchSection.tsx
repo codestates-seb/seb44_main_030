@@ -4,6 +4,9 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import SearchIcon from '../../assets/Search.svg';
 import Tag from './Tag';
 import { Mocktags } from '../../assets/mockdata';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { savePosition } from '../../store/scroll.ts';
 
 type SearchInput = {
     Keyword: string;
@@ -11,22 +14,47 @@ type SearchInput = {
 
 type TagSearchSectionProps = {
     currTag: string;
-    setCurrTag: (tag: string) => void;
-    onSubmit: SubmitHandler<SearchInput>;
     handleNavigateCreate: () => void;
 };
 
-const TagSearchSection: React.FC<TagSearchSectionProps> = ({ currTag, setCurrTag, onSubmit, handleNavigateCreate }) => {
+const TagSearchSection: React.FC<TagSearchSectionProps> = ({ currTag, handleNavigateCreate }) => {
+    const { keyword } = useParams();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const boardType = location.pathname.split('/')[1];
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<SearchInput>();
+    } = useForm<SearchInput>({
+        defaultValues: {
+            Keyword: keyword==='null'? '' : keyword,
+        },
+    });
 
+    //태그선택
     const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
-        setCurrTag(e.currentTarget.innerText);
+        const selectedTagName = e.currentTarget.innerText;
+        dispatch(savePosition(window.scrollY));
+        if (boardType === 'community') {
+            navigate(`/${boardType}/1/${selectedTagName}/${keyword}`);
+        }
+        if (boardType === 'club') {
+            navigate(`/${boardType}/${selectedTagName}/${keyword}`);
+        }
     }, []);
 
+    //검색
+    const onSubmit: SubmitHandler<SearchInput> = (data) => {
+        dispatch(savePosition(window.scrollY));
+        if (boardType === 'community') {
+            navigate(`/${boardType}/1/${currTag}/${data.Keyword}`);
+        }
+        if (boardType === 'club') {
+            navigate(`/${boardType}/${currTag}/${data.Keyword}`);
+        }
+    };
     return (
         <MiddleSection>
             <TagSpace>

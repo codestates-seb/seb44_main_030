@@ -16,27 +16,21 @@ import { CommunityPostData } from '../types/CommunityTypes.ts';
 import { savePosition } from '../store/scroll.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store.tsx';
-type SearchInput = {
-    Keyword: string;
-};
+
 
 //한 화면에 나타낼 페이지버튼 갯수
 const PAGE_COUNT = 5;
 
 const Community = () => {
-    const { page: pageStr } = useParams();
+    const { page: pageStr, tag: currTag, keyword } = useParams();
     const page = Number(pageStr);
     const [size, setSize] = useState<number>(6);
-    const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
     const [totalPageArr, setTotalPageArr] = useState<Array<number>>([]);
     const [pageArr, setPageArr] = useState<Array<number>>([]);
     const navigate = useNavigate();
     const scrollPosition = useSelector((state: RootState) => state.scroll);
     const dispatch = useDispatch();
-    const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
-        //검색 api 요청 추가, Query key로 currTag, searchKeyword, currPage 넣기.
-        console.log(data);
-    }, []);
+
     console.log(scrollPosition);
     const {
         isLoading,
@@ -85,12 +79,12 @@ const Community = () => {
             pageArr[pageArr.length - 1] !== totalPageArr[totalPageArr.length - 1]
         ) {
             dispatch(savePosition(window.scrollY));
-            navigate(`/community/${pageArr[pageArr.length - 1] + 1}`);
+            navigate(`/community/${pageArr[pageArr.length - 1] + 1}/${currTag}/${keyword}`);
         }
 
         if (e.currentTarget.innerText === '이전' && !pageArr.includes(1)) {
             dispatch(savePosition(window.scrollY));
-            navigate(`/community/${pageArr[0] - PAGE_COUNT}`);
+            navigate(`/community/${pageArr[0] - PAGE_COUNT}/${currTag}/${keyword}`);
         }
     };
 
@@ -102,7 +96,7 @@ const Community = () => {
     const handleCurrPage = (e: React.MouseEvent<HTMLLIElement>) => {
         dispatch(savePosition(window.scrollY));
         const clickedPageNum = Number(e.currentTarget.innerText);
-        navigate(`/community/${clickedPageNum}`);
+        navigate(`/community/${clickedPageNum}/${currTag}/${keyword}`);
     };
 
     if (isLoading) {
@@ -117,12 +111,7 @@ const Community = () => {
             <ScrollBanner bannerImg={backgroundImg} />
             <CommunityContainer>
                 <PopularContentsSection />
-                <TagSearchSection
-                    currTag={currTag}
-                    setCurrTag={setCurrTag}
-                    onSubmit={onSubmit}
-                    handleNavigateCreate={handleNavigateCreate}
-                />
+                <TagSearchSection currTag={currTag} handleNavigateCreate={handleNavigateCreate} />
                 <BottomSection>
                     <AllPostContainer>
                         {allCommunityData?.postData.map((item: CommunityPostData) => (
