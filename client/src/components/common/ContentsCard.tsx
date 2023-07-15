@@ -10,7 +10,8 @@ import MessageIcon from '../../../public/bubble-chat.png';
 import LikeIcon from '../../assets/Like.svg';
 import LikeFilledIcon from '../../assets/Like_filled.svg';
 import { title } from 'process';
-
+import { savePosition } from '../../store/scroll.ts';
+import { useDispatch } from 'react-redux';
 interface PostProps {
     memberId: number;
     title: string;
@@ -83,7 +84,7 @@ export default function ContentsCard({
     } = clubProps || {};
 
     // console.log(communityProps);
-
+    const dispatch = useDispatch();
     const loginId = 1; //useSelector 사용
     const [likeCount, setLikeCount] = useState(like);
     const [isLiked, setIsLiked] = useState(memberLiked.includes(loginId));
@@ -96,8 +97,10 @@ export default function ContentsCard({
 
     const moveToDetail = () => {
         if (type === 'community') {
+            dispatch(savePosition(window.scrollY));
             navigate(`/community/detail/${standardId}`);
         } else if (type) {
+            dispatch(savePosition(window.scrollY));
             navigate(`/club/detail/${boardClubId}`);
         }
     };

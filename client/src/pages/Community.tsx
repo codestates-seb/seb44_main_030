@@ -13,6 +13,9 @@ import { motion } from 'framer-motion';
 import { getTotalCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
 import { useQuery } from '@tanstack/react-query';
 import { CommunityPostData } from '../types/CommunityTypes.ts';
+import { reset } from '../store/scroll.ts';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store/store.tsx';
 type SearchInput = {
     Keyword: string;
 };
@@ -28,12 +31,13 @@ const Community = () => {
     const [totalPageArr, setTotalPageArr] = useState<Array<number>>([]);
     const [pageArr, setPageArr] = useState<Array<number>>([]);
     const navigate = useNavigate();
-
+    const scrollPosition = useSelector((state: RootState) => state.scroll);
+    const dispatch = useDispatch();
     const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
         //검색 api 요청 추가, Query key로 currTag, searchKeyword, currPage 넣기.
         console.log(data);
     }, []);
-
+    console.log(scrollPosition);
     const {
         isLoading,
         error: errorData,
@@ -66,6 +70,14 @@ const Community = () => {
             setPageArr([...totalPageArr.slice(firstPageNum - 1, lastPageNum)]);
         }
     }, [allCommunityData, page]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            window.scrollTo(0, scrollPosition);
+        }, 300); // 0.3초 후에 실행
+        dispatch(reset());
+        return () => clearTimeout(timer);
+    }, []);
 
     //다음|이전 버튼 클릭 시, 페이지 변경
     const handlePageList = (e: React.MouseEvent<HTMLLIElement>) => {

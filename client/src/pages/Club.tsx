@@ -13,6 +13,10 @@ import PopularContentsSection from '../components/common/PopularContentsSection.
 import useClubBoardData from '../api/ClubApi/ClubDataHooks.ts';
 import { ClubBoardData } from '../types/ClubData.ts';
 
+import { reset } from '../store/scroll.ts';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store/store.tsx';
+
 type SearchInput = {
     Keyword: string;
 };
@@ -20,7 +24,8 @@ type SearchInput = {
 function Club() {
     const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
     const navigate = useNavigate();
-
+    const scrollPosition = useSelector((state: RootState) => state.scroll);
+    const dispatch = useDispatch();
     const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
         //검색 api 요청 추가, Query key로 currTag, searchKeyword, currPage 넣기.
         console.log(data);
@@ -31,7 +36,11 @@ function Club() {
     };
 
     useEffect(() => {
-        window.scrollTo(0, 0);
+        const timer = setTimeout(() => {
+            window.scrollTo(0, scrollPosition);
+        }, 300); // 0.3초 후에 실행
+        dispatch(reset());
+        return () => clearTimeout(timer);
     }, []);
 
     const { status, data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } = useClubBoardData();
