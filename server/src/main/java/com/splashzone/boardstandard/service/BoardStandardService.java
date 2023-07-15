@@ -62,7 +62,7 @@ public class BoardStandardService {
     }
 
     //TODO 실제 삭제 말고 상태만 바뀌게 코드 변경하기
-    public void deleteStandard(long standardId, long memberId) {
+    public void deleteStandard(long standardId) {
         BoardStandard boardStandard = boardStandardRepository.findById(standardId).orElseThrow(() -> new RuntimeException());
         boardStandardRepository.delete(boardStandard);
 //        BoardStandard findBoardStandard = findVerifiedBoardStandard(standardId);

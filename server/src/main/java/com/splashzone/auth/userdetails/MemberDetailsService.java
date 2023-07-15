@@ -41,9 +41,10 @@ public class MemberDetailsService implements UserDetailsService {
             setName(member.getName());
             setPassword(member.getPassword());
             setBio(member.getBio());
+            setNickname(member.getNickname());
             setRoles(member.getRoles());
-//            setCreatedAt(member.getTerminatedAt());
-//            setTerminatedAt(member.getTerminatedAt());
+            setCreatedAt(member.getTerminatedAt());
+            if (member.getTerminatedAt() != null) setTerminatedAt(member.getTerminatedAt());
         }
 
         @Override

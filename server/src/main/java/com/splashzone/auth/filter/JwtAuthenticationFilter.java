@@ -2,11 +2,9 @@ package com.splashzone.auth.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.splashzone.member.entity.AccessToken;
 import com.splashzone.member.entity.Member;
 import com.splashzone.auth.dto.LoginDto;
 import com.splashzone.auth.jwt.JwtTokenizer;
-import com.splashzone.member.service.AccessTokenService;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,12 +24,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
 
-    private final AccessTokenService accessTokenService;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenizer jwtTokenizer, AccessTokenService accessTokenService) {
+
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenizer jwtTokenizer) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenizer = jwtTokenizer;
-        this.accessTokenService = accessTokenService;
     }
 
     @SneakyThrows
@@ -56,11 +52,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.setHeader("Refresh", refreshToken);
-
-        AccessToken accessTokenEntity = new AccessToken();
-        accessTokenEntity.setTokenValue(accessToken);
-        accessTokenEntity.setMemberId(member.getMemberId());
-        accessTokenService.addAccessToken(accessTokenEntity);
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }

@@ -4,7 +4,6 @@ import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
 import com.splashzone.member.dto.MemberDto;
 import com.splashzone.member.mapper.MemberMapper;
-import com.splashzone.member.service.AccessTokenService;
 import com.splashzone.member.service.MemberService;
 import com.splashzone.member.entity.Member;
 import com.splashzone.utils.UriCreator;
@@ -27,15 +26,12 @@ public class MemberController {
     private final static String MEMBER_DEFAULT_URL = "/members";
     private final MemberService memberService;
     private final MemberMapper mapper;
-    private final AccessTokenService accessTokenService;
 
     @Autowired
     public MemberController(MemberService memberService,
-                            MemberMapper mapper,
-                            AccessTokenService accessTokenService) {
+                            MemberMapper mapper) {
         this.memberService = memberService;
         this.mapper = mapper;
-        this.accessTokenService = accessTokenService;
     }
 
     @PostMapping
@@ -83,10 +79,10 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/logout")
-    public ResponseEntity logout(@RequestHeader("Access") @Positive String accessToken) {
-        log.info(accessToken);
-        accessTokenService.deleteAccessToken(accessToken);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+//    @DeleteMapping("/logout")
+//    public ResponseEntity logout(@RequestHeader("Access") @Positive String accessToken) {
+//        log.info(accessToken);
+//        accessTokenService.deleteAccessToken(accessToken);
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 }

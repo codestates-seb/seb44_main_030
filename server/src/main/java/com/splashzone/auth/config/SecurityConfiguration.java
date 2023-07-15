@@ -8,8 +8,6 @@ import com.splashzone.auth.handler.MemberAuthenticationFailureHandler;
 import com.splashzone.auth.handler.MemberAuthenticationSuccessHandler;
 import com.splashzone.auth.jwt.JwtTokenizer;
 import com.splashzone.auth.utils.CustomAuthorityUtils;
-import com.splashzone.member.repository.AccessTokenRepository;
-import com.splashzone.member.service.AccessTokenService;
 import com.splashzone.member.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,15 +36,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
-    private final AccessTokenRepository accessTokenRepository;
-    private final AccessTokenService accessTokenService;
     private final MemberService memberService;
 
-    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, AccessTokenRepository accessTokenRepository, AccessTokenService accessTokenService, @Lazy MemberService memberService) {
+    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, @Lazy MemberService memberService) {
         this.jwtTokenizer = jwtTokenizer;
         this.authorityUtils = authorityUtils;
-        this.accessTokenRepository = accessTokenRepository;
-        this.accessTokenService = accessTokenService;
         this.memberService = memberService;
     }
 
@@ -67,22 +61,22 @@ public class SecurityConfiguration {
                 .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
-                .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.POST, "/members").permitAll()
-                        .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
-                        .antMatchers(HttpMethod.GET, "/members").permitAll()
-                        .antMatchers(HttpMethod.GET, "/members/**").hasRole("USER")
-                        .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
-                        .antMatchers(HttpMethod.POST, "/standards").authenticated()
-                        .antMatchers(HttpMethod.PATCH, "/standards/**").hasRole("USER")
-                        .antMatchers(HttpMethod.GET, "/standards").permitAll()
-                        .antMatchers(HttpMethod.DELETE, "/standards/**").hasRole("USER")
-                        .antMatchers(HttpMethod.POST, "/clubs").authenticated()
-                        .antMatchers(HttpMethod.PATCH, "/clubs/**").hasRole("USER")
-                        .antMatchers(HttpMethod.GET, "/clubs").permitAll()
-                        .antMatchers(HttpMethod.DELETE, "/clubs/**").hasRole("USER")
-                        .anyRequest().permitAll()
-                );
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);    //
+//                .authorizeHttpRequests(authorize -> authorize
+////                        .antMatchers(HttpMethod.POST, "/members").permitAll()
+////                        .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
+////                        .antMatchers(HttpMethod.GET, "/members").permitAll()
+////                        .antMatchers(HttpMethod.GET, "/members/**").hasRole("USER")
+////                        .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
+////                        .antMatchers(HttpMethod.POST, "/standards").authenticated()
+////                        .antMatchers(HttpMethod.PATCH, "/standards/**").hasRole("USER")
+////                        .antMatchers(HttpMethod.GET, "/standards").permitAll()
+////                        .antMatchers(HttpMethod.DELETE, "/standards/**").hasRole("USER")
+////                        .antMatchers(HttpMethod.POST, "/clubs").authenticated()
+////                        .antMatchers(HttpMethod.PATCH, "/clubs/**").hasRole("USER")
+////                        .antMatchers(HttpMethod.GET, "/clubs").permitAll()
+////                        .antMatchers(HttpMethod.DELETE, "/clubs/**").hasRole("USER")
+//                );
         return http.build();
     }
 
@@ -109,12 +103,12 @@ public class SecurityConfiguration {
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, accessTokenService);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
             jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, accessTokenRepository);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
 
             builder
                     .addFilter(jwtAuthenticationFilter)

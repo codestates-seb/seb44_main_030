@@ -50,4 +50,8 @@ public class BoardStandard extends Auditable {
             this.content = boardStandard.getContent();
         }
     }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }
