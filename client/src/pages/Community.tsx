@@ -74,7 +74,7 @@ const Community = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             window.scrollTo(0, scrollPosition);
-        }, 300); // 0.3초 후에 실행
+        }, 500); // 0.5초 후에 실행
         dispatch(reset());
         return () => clearTimeout(timer);
     }, []);
