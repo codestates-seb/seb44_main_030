@@ -13,7 +13,7 @@ import { motion } from 'framer-motion';
 import { getTotalCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
 import { useQuery } from '@tanstack/react-query';
 import { CommunityPostData } from '../types/CommunityTypes.ts';
-import { reset } from '../store/scroll.ts';
+import { reset, savePosition } from '../store/scroll.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store.tsx';
 type SearchInput = {
@@ -85,10 +85,12 @@ const Community = () => {
             e.currentTarget.innerText === '다음' &&
             pageArr[pageArr.length - 1] !== totalPageArr[totalPageArr.length - 1]
         ) {
+            dispatch(savePosition(window.scrollY));
             navigate(`/community/${pageArr[pageArr.length - 1] + 1}`);
         }
 
         if (e.currentTarget.innerText === '이전' && !pageArr.includes(1)) {
+            dispatch(savePosition(window.scrollY));
             navigate(`/community/${pageArr[0] - PAGE_COUNT}`);
         }
     };
@@ -99,6 +101,7 @@ const Community = () => {
 
     //페이지번호 버튼 클릭 시, 페이지 변경
     const handleCurrPage = (e: React.MouseEvent<HTMLLIElement>) => {
+        dispatch(savePosition(window.scrollY));
         const clickedPageNum = Number(e.currentTarget.innerText);
         navigate(`/community/${clickedPageNum}`);
     };
