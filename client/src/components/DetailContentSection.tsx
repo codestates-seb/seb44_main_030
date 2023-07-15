@@ -6,8 +6,11 @@ import LikeFilledIcon from '../assets/Like_filled.svg';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
 import { useDeletePost } from '../api/useMutationPost';
+import { useDispatch } from 'react-redux';
+import { savePostData } from '../store/editData';
 
 type DetailProps = {
+    title: string;
     view: number;
     content: string;
     commentCount: number;
@@ -17,9 +20,11 @@ type DetailProps = {
     likeCount?: number;
     handleLike?: () => void;
     isLiked?: boolean;
+    tag: string;
 };
 
 const DetailContentSection = ({
+    title,
     view,
     content,
     commentCount,
@@ -29,17 +34,20 @@ const DetailContentSection = ({
     memberId,
     standardId,
     clubId,
+    tag
 }: DetailProps) => {
     const postId = standardId || clubId; //club데이터일 때는 clubId
-    if(!postId) {
-        throw new Error("해당 게시글에 대한 ID가 존재하지 않습니다.");
-      }
+    if (!postId) {
+        throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
+    }
     const { handleDeletePost, boardType } = useDeletePost(postId);
     const mockMemberId = 1;
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const handleEdit = useCallback(() => {
+        dispatch(savePostData({postId,tag,title,content}));
         const boardTypeParam = boardType === 'standards' ? 'community' : 'club';
-        navigate(`/${boardTypeParam}/create`,{state: 'EditMode'});
+        navigate(`/${boardTypeParam}/create`, { state: 'EditMode' });
     }, [boardType]);
     return (
         <ContentSection>

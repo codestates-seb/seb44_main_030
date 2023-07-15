@@ -13,11 +13,11 @@ type SearchInput = {
 };
 
 type TagSearchSectionProps = {
-    currTag: string;
+    currTag: string | undefined;
     handleNavigateCreate: () => void;
 };
 
-const TagSearchSection: React.FC<TagSearchSectionProps> = ({ currTag, handleNavigateCreate }) => {
+const TagSearchSection = ({ currTag, handleNavigateCreate }:TagSearchSectionProps) => {
     const { keyword } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();

@@ -1,10 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useForm, SubmitHandler } from 'react-hook-form';
 import backgroundImg from '../assets/Community_background.png';
 import PageButton from '../components/PageButton';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Mocktags } from '../assets/mockdata.ts';
 import ScrollBanner from '../components/common/ScrollBanner.tsx';
 import ContentsCard from '../components/common/ContentsCard.tsx';
 import PopularContentsSection from '../components/common/PopularContentsSection.tsx';
@@ -17,12 +15,17 @@ import { savePosition } from '../store/scroll.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store.tsx';
 
-
 //한 화면에 나타낼 페이지버튼 갯수
 const PAGE_COUNT = 5;
 
+type Params = {
+    page: string;
+    tag: string;
+    keyword: string;
+  };
+
 const Community = () => {
-    const { page: pageStr, tag: currTag, keyword } = useParams();
+    const { page: pageStr, tag: currTag, keyword } = useParams<Params>();
     const page = Number(pageStr);
     const [size, setSize] = useState<number>(6);
     const [totalPageArr, setTotalPageArr] = useState<Array<number>>([]);

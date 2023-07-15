@@ -84,6 +84,7 @@ const CommunityDetail = () => {
                     </div>
                 </TitleSection>
                 <DetailContentSection
+                    title={detailCommunityData?.title}
                     commentCount={detailCommunityData?.commentCount}
                     view={detailCommunityData?.view}
                     content={detailCommunityData?.content}
@@ -93,6 +94,7 @@ const CommunityDetail = () => {
                     memberId={detailCommunityData?.member?.memberId}
                     standardId={detailCommunityData?.standardId}
                     clubId={detailCommunityData?.clubId}
+                    tag={detailCommunityData?.tag}
                 />
                 <DetailCommentSection comment={detailCommunityData?.comment} />
             </PostContainer>

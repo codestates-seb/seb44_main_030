@@ -7,7 +7,9 @@ import { Calendar } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { type } from 'os';
 import { motion } from 'framer-motion';
-
+import { useSelector } from 'react-redux';
+import { reset } from '../store/editData.ts';
+import { useDispatch } from 'react-redux';
 type FormData = {
     recuruitingNumber: string;
     contactRoute: string;
@@ -22,12 +24,20 @@ const CommunityCreate = () => {
     const location = useLocation();
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
+    const { postId, tag, title, content } = useSelector((state) => state.editData);
+    const dispatch = useDispatch();
     const {
         register,
         handleSubmit,
         control,
         formState: { errors },
-    } = useForm<FormData>();
+    } = useForm<FormData>({
+        defaultValues: {
+            title,
+            content,
+            clubTag: tag,
+        },
+    });
 
     const onSubmit = (data: FormData) => {
         console.log(data);
@@ -39,6 +49,7 @@ const CommunityCreate = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        dispatch(reset());
     }, []);
 
     return (

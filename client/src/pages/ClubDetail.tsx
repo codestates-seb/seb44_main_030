@@ -47,7 +47,7 @@ const ClubDetail = () => {
     };
     //standardId 이용해서 API 요청
     const hanldeNavigatePrev = useCallback(() => {
-        navigate('/community');
+        navigate(-1);
         //이동했을 때, 이전 페이지 상태(스크롤위치, 페이지번호, 태그상태)를 유지해야한다.
         //router기능 이용하거나, redux에 저장해서 구현할 것.
     }, []);
