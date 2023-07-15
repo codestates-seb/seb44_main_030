@@ -13,7 +13,6 @@ import PopularContentsSection from '../components/common/PopularContentsSection.
 import useClubBoardData from '../api/ClubApi/ClubDataHooks.ts';
 import { ClubBoardData } from '../types/ClubData.ts';
 
-import { reset } from '../store/scroll.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store.tsx';
 
@@ -39,7 +38,6 @@ function Club() {
         const timer = setTimeout(() => {
             window.scrollTo(0, scrollPosition);
         }, 500); // 0.5초 후에 실행
-        dispatch(reset());
         return () => clearTimeout(timer);
     }, []);
 

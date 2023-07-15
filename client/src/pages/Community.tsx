@@ -13,7 +13,7 @@ import { motion } from 'framer-motion';
 import { getTotalCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
 import { useQuery } from '@tanstack/react-query';
 import { CommunityPostData } from '../types/CommunityTypes.ts';
-import { reset, savePosition } from '../store/scroll.ts';
+import { savePosition } from '../store/scroll.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store.tsx';
 type SearchInput = {
@@ -75,7 +75,6 @@ const Community = () => {
         const timer = setTimeout(() => {
             window.scrollTo(0, scrollPosition);
         }, 500); // 0.5초 후에 실행
-        dispatch(reset());
         return () => clearTimeout(timer);
     }, []);
 
