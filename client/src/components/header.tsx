@@ -3,7 +3,8 @@ import LOGO from '../../public/LOGO2.png';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import ProfileImage from './style/ProfileImage';
-
+import { useDispatch } from 'react-redux';
+import { reset } from '../store/scroll.ts';
 //토큰 받아오면 logout delet 토큰 처리해줘야됨.
 //Login 버튼 클릭시 로그인 page로 라우팅처리해주기
 
@@ -13,7 +14,7 @@ interface Props {
 
 const Header = () => {
     const modalRef = useRef<HTMLDivElement | null>(null);
-
+    const dispatch = useDispatch();
     const handleOutsideClick = (event: MouseEvent) => {
         if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
             setMenu(false);
@@ -38,12 +39,14 @@ const Header = () => {
                     src={LOGO}
                     alt="logo"
                     onClick={() => {
+                        dispatch(reset());
                         navigate('/');
                     }}
                 />
 
                 <div
                     onClick={() => {
+                        dispatch(reset());
                         navigate('/community/1');
                     }}
                 >
@@ -52,6 +55,7 @@ const Header = () => {
 
                 <div
                     onClick={() => {
+                        dispatch(reset());
                         navigate('/club');
                     }}
                 >
