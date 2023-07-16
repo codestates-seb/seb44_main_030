@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import styled from 'styled-components';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Mocktags } from '../assets/mockdata.ts';
 import { Calendar } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -10,6 +10,8 @@ import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { reset } from '../store/editData.ts';
 import { useDispatch } from 'react-redux';
+import { RootState } from '../store/store.tsx';
+import axios from 'axios';
 type FormData = {
     recuruitingNumber: string;
     contactRoute: string;
@@ -22,9 +24,11 @@ type FormData = {
 
 const CommunityCreate = () => {
     const location = useLocation();
+    const navigate = useNavigate();
+    console.log(location.state)
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
-    const { postId, tag, title, content } = useSelector((state) => state.editData);
+    const { postId, tag, title, content } = useSelector((state: RootState) => state.editData);
     const dispatch = useDispatch();
     const {
         register,
@@ -35,14 +39,16 @@ const CommunityCreate = () => {
         defaultValues: {
             title,
             content,
-            clubTag: tag,
+            clubTag: tag || '전체',
         },
     });
 
     const onSubmit = (data: FormData) => {
-        console.log(data);
+        // axios.post
     };
-
+    const handleCancel = () => {
+        navigate(-1);
+    }
     const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
         date.getDate(),
     ).padStart(2, '0')}`;
@@ -167,7 +173,7 @@ const CommunityCreate = () => {
                         {errors.title && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
-                        <button>취소</button>
+                        <button onClick={handleCancel}>취소</button>
                         <button type="submit">글 등록</button>
                     </ButtonWarp>
                 </DetailContentContainer>

@@ -9,7 +9,7 @@ const Login = loadable(() => import('../../pages/Login'));
 const Community = loadable(() => import('../../pages/Community'));
 const CommunityDetail = loadable(() => import('../../pages/CommunityDetail'));
 const ClubDetail = loadable(() => import('../../pages/ClubDetail'));
-const CommunityCreate = loadable(() => import('../../pages/ContentsCreate'));
+const CommunityCreate = loadable(() => import('../../pages/ClubCreate'));
 const Club = loadable(() => import('../../pages/Club'));
 const Mypage = loadable(() => import('../../pages/Mypage'));
 const Map = loadable(() => import('../../pages/Map'));

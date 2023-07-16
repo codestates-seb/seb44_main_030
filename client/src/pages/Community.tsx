@@ -14,7 +14,7 @@ import { CommunityPostData } from '../types/CommunityTypes.ts';
 import { savePosition } from '../store/scroll.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store.tsx';
-
+import {Loading} from '../components/Lodaing.tsx';
 //한 화면에 나타낼 페이지버튼 갯수
 const PAGE_COUNT = 5;
 
@@ -27,7 +27,7 @@ type Params = {
 const Community = () => {
     const { page: pageStr, tag: currTag, keyword } = useParams<Params>();
     const page = Number(pageStr);
-    const [size, setSize] = useState<number>(6);
+    const [size, setSize] = useState<number>(9);
     const [totalPageArr, setTotalPageArr] = useState<Array<number>>([]);
     const [pageArr, setPageArr] = useState<Array<number>>([]);
     const navigate = useNavigate();
@@ -103,7 +103,7 @@ const Community = () => {
     };
 
     if (isLoading) {
-        return <div>로딩중..!</div>;
+        return <Loading/>;
     }
     if (errorData) {
         return <div>에러발생..!</div>;
