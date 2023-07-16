@@ -137,18 +137,17 @@ const StyledModal = styled.div`
     border-radius: 10px;
     left: -140px;
     width: 100%;
-    height: 100%;
-    padding: 10px;
+    height: 100px;
     background-color: white;
     font-family: 'Monomaniac One', sans-serif;
     :nth-child(1) {
         color: black;
-        margin-top: 5px;
+
         margin-left: 10px;
     }
     :nth-child(2) {
         color: black;
-        margin-top: 8px;
+
         margin-left: 10px;
     }
     :nth-child(2):hover {

@@ -19,6 +19,7 @@ const Tabmenu = () => {
             <TabMenu>
                 {menuArr.map((el, index) => (
                     <li
+                        key={index}
                         className={index === currentTab ? 'submenu focused' : 'submenu'}
                         onClick={() => selectMenuHandler(index)}
                     >
@@ -59,7 +60,11 @@ const Tabcomponent0 = () => {
                             const html = [];
 
                             if (mark.find((x) => x === moment(date).format('YYYY-MM-DD'))) {
-                                html.push(<div className="dot">✔</div>);
+                                html.push(
+                                    <div className="dot" key={moment(date).format('YYYY-MM-DD')}>
+                                        ✔
+                                    </div>,
+                                );
                             }
 
                             return (

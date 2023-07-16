@@ -5,19 +5,25 @@ import ProfileImage from '../components/style/ProfileImage';
 import { getInfos } from '../Api/getmember';
 import Tabmenu from '../components/Tapmenu';
 import { Loading } from '../components/Lodaing';
+import { useQuery } from '@tanstack/react-query';
 
 const Mypage = () => {
     const memberId = 3; //memberId Link로받던가 아니면  header포함해서받던가하기
-    const [memberInfo, setmemberInfo] = useState({ name: '', nickname: '', email: '', bio: '' });
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        getInfos(memberId).then((data) => setmemberInfo(data.data.data));
-        setLoading(false);
-    }, []);
+    const { data, isLoading, isError, error } = useQuery({
+        queryKey: ['memberinfo', memberId],
+        queryFn: () => getInfos(memberId),
+    });
+    if (isLoading) return <Loading />;
+
+    if (isError)
+        return (
+            <>
+                <h3>Oops, someting went wrong</h3> <p>{error.toString()}</p>
+            </>
+        );
 
     return (
-        <div>
-            {loading && <Loading></Loading>}
+        <div style={{ width: '100%', height: '100%' }}>
             <Background>
                 <div style={{ background: 'rgb(105,229,255)', width: '100%', height: '200px' }}>
                     <GridSystem>
@@ -40,22 +46,22 @@ const Mypage = () => {
                                     <Block width="272px" height="140px">
                                         <Infoexplain>
                                             <p className="sort">name</p>
-                                            <p>{memberInfo.name}</p>
+                                            <p>{data.name}</p>
                                         </Infoexplain>
                                         <Infoexplain>
                                             <p className="sort">닉네임</p>
-                                            <p>{memberInfo.nickname}</p>
+                                            <p>{data.nickname}</p>
                                         </Infoexplain>
                                         <Infoexplain>
                                             <p className="sort">e-mail</p>
-                                            <p>{memberInfo.email}</p>
+                                            <p>{data.email}</p>
                                         </Infoexplain>
                                     </Block>
 
                                     <Block width="272px" height="250px">
                                         <div>
                                             <p style={{ fontWeight: 'bold' }}>자기소개</p>
-                                            <p>{memberInfo.bio}</p>
+                                            <p>{data.bio}</p>
                                         </div>
                                     </Block>
                                     <button>수정</button>
