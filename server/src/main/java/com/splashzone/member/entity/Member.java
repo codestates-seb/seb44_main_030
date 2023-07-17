@@ -18,34 +18,36 @@ import java.util.List;
 @Builder
 public class Member {
     @Id
-    @GeneratedValue
-    private long memberId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long memberId;
 
-    @Column(nullable = false)
+    @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "NICKNAME", nullable = false)
     private String nickname;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-//    @Column(nullable = false)
-//    private Image;
+    @Column(name = "PROFILE_IMAGE_URL", nullable = true)
+    private String profileImageUrl;
 
-    @Column(nullable = true)
+    @Column(name = "BIO", nullable = true)
     private String bio;
 
-    @Column(nullable = false)
+    @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "TERMINATED_AT", nullable = true)
     private LocalDateTime terminatedAt;
 
-    @Column(nullable = false)
-    private boolean isTerminated;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "MEMBER_STATUS", nullable = false)
+    private MemberStatus memberStatus;
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
@@ -55,10 +57,29 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<BoardClub> boardClubs = new ArrayList<>();
 
-    public Member(String email, String name, String password, String nickname) {
+//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+//    private Dolphin dolphin;
+
+    public enum MemberStatus {
+        ACTIVE("활동 중"),
+        TERMINATED("탈퇴");
+
+        @Getter
+        private String status;
+
+        MemberStatus(String status) {
+            this.status = status;
+        }
+    }
+    public Member(String email, String name, String password, String nickname, String profileImageUrl) {
         this.email = email;
         this.name = name;
         this.password = password;
         this.nickname = nickname;
+        this.memberStatus = MemberStatus.ACTIVE;
+
+        this.profileImageUrl = (profileImageUrl != null && !profileImageUrl.isEmpty())
+                ? profileImageUrl
+                : "default.png";
     }
 }
