@@ -5,12 +5,14 @@ import backgroundImg from '../assets/Signup_background.png';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import RegisterForm from '../components/RegisterForm';
 import { motion } from 'framer-motion';
-
+import axios from 'axios';
 type SignupInputs = {
+    Name: string;
     Nickname: string;
     Email: string;
     Password: string;
     PasswordCheck: string;
+    Biography: string;
 };
 
 type BackgroundStyledProps = {
@@ -25,12 +27,28 @@ const Signup = () => {
         formState: { errors },
     } = useForm<SignupInputs>({ mode: 'onBlur' });
 
+    //회원가입 요청
     const onSubmit: SubmitHandler<SignupInputs> = (data) => {
-        // console.log(data);
-        // 추후 회원가입 post api 요청 작성 필요
-        // 요청 성공 가정
-        alert('회원가입 완료!');
-        navigate('/');
+        console.log(data);
+        const API_URL = import.meta.env.VITE_KEY;
+        const payload = {
+            memberId: 1,
+            name: data.Name,
+            password: data.Password,
+            nickname: data.Nickname,
+            email: data.Email,
+            bio: data.Biography,
+        };
+        axios
+            .post(`${API_URL}/members`, payload)
+            .then((response) => {
+                console.log(response);
+                alert('회원가입완료! 로그인페이지로 이동합니다.')
+                navigate('/login');
+            })
+            .catch((error) => {
+                console.error('오류:', error);
+            });
     };
     const navigate = useNavigate();
 
@@ -43,6 +61,22 @@ const Signup = () => {
             exit={{ opacity: 0 }}
         >
             <StyledRegisterForm onSubmit={handleSubmit(onSubmit)}>
+                <div>
+                    <label htmlFor="nameInput">Name</label>
+                    <input
+                        id="nameInput"
+                        type="text"
+                        placeholder="enter your name"
+                        {...register('Name', {
+                            required: true,
+                            maxLength: {
+                                value: 30,
+                                message: '이름은 30자를 넘길 수 없습니다.',
+                            },
+                        })}
+                    />
+                    {errors.Name ? <span>{errors.Name.message}</span> : <span></span>}
+                </div>
                 <div>
                     <label htmlFor="nicknameInput">Nickname</label>
                     <input
@@ -106,6 +140,22 @@ const Signup = () => {
                     />
                     {errors.PasswordCheck ? <span>{errors.PasswordCheck.message}</span> : <span></span>}
                 </div>
+                <div>
+                    <label htmlFor="biographyInput">Biography</label>
+                    <input
+                        id="biographyInput"
+                        type="text"
+                        placeholder="enter your biography"
+                        {...register('Biography', {
+                            required: true,
+                            minLength: {
+                                value: 5,
+                                message: '5자 이상 입력해주세요!',
+                            },
+                        })}
+                    />
+                    {errors.Biography ? <span>{errors.Biography.message}</span> : <span></span>}
+                </div>
                 <button type="submit">Sign up</button>
             </StyledRegisterForm>
         </MotionBackground>
@@ -126,7 +176,7 @@ const MotionBackground = styled(motion.div)<BackgroundStyledProps>`
     align-items: center;
 `;
 const StyledRegisterForm = styled(RegisterForm)`
-    height: 780px;
+    height: 950px;
     > div {
         display: flex;
         flex-direction: column;
@@ -146,7 +196,7 @@ const StyledRegisterForm = styled(RegisterForm)`
             font-family: 'Baloo Chettan 2', cursive;
             font-size: 1.5rem;
             width: 420px;
-            height: 60px;
+            height: 50px;
             border-radius: 20px;
             border: none;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);

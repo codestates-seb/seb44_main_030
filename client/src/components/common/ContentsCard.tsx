@@ -210,6 +210,7 @@ const TitleContentsTagWarp = styled.div`
     flex-direction: column;
     align-items: start;
 `;
+
 const TitleContainer = styled.div`
     font-size: 1.3rem;
     font-family: 'KimjungchulGothic-Bold';
@@ -229,6 +230,11 @@ const TitleContainer = styled.div`
     }
 `;
 const ContentsContainer = styled.div`
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
     margin-bottom: 0.5rem;
     font-size: 1rem;
     margin-bottom: 1rem;
