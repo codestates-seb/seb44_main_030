@@ -21,7 +21,7 @@ public class Tag {
     private Long tagId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "TAG_NAME", nullable = false)
     private TagName tagName;
 
     @Builder.Default

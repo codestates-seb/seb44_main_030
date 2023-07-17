@@ -18,11 +18,13 @@ public class Tracker extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long trackerId;
 
-    @Column(nullable = false)
+    @Column(name = "TRACKER_DATE", nullable = false)
     private LocalDate trackerDate;
 
+    @Column(name = "TITLE", nullable = false, length = 100)
     private String title;
 
+    @Column(name = "CONTENT", nullable = false)
     private String content;
 
     @ManyToOne
