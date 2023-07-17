@@ -44,7 +44,7 @@ public class MemberDto {
 
     @Getter
     public static class Patch {
-        private long memberId;
+        private Long memberId;
 
 //        email, name 모두 수정 불가능
 //        @NotBlank(message = "공백이 아니어야 합니다.")
@@ -57,7 +57,7 @@ public class MemberDto {
         private String nickname;
         private String bio;
 
-        public void setMemberId(long memberId) {
+        public void setMemberId(Long memberId) {
             this.memberId = memberId;
         }
     }

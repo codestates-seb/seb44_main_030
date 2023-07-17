@@ -17,8 +17,8 @@ public class DolphinController {
         this.dolphinService = dolphinService;
     }
 
-    @GetMapping("/{dolphinId}")
-    public ResponseEntity<DolphinDto> getDolphinById(@PathVariable Long dolphinId) {
+    @GetMapping("/{dolphin-id}")
+    public ResponseEntity<DolphinDto> getDolphinById(@PathVariable("dolphin-id") Long dolphinId) {
         DolphinDto dolphinDto = dolphinService.getDolphinById(dolphinId);
         return ResponseEntity.ok(dolphinDto);
     }

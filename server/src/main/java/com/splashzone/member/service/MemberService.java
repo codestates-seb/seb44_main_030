@@ -64,7 +64,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Member findMember(long memberId) {
+    public Member findMember(Long memberId) {
         return findVerifiedMember(memberId);
     }
 
@@ -72,7 +72,7 @@ public class MemberService {
         return memberRepository.findAll(PageRequest.of(page, size, Sort.by("memberId").descending()));
     }
 
-    public void terminateMember(long memberId) {
+    public void terminateMember(Long memberId) {
         Member foundMember = findMember(memberId);
         foundMember.setMemberStatus(Member.MemberStatus.TERMINATED);
         foundMember.setTerminatedAt(LocalDateTime.now());
@@ -80,7 +80,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Member findVerifiedMember(long memberId) {
+    public Member findVerifiedMember(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember =
                 optionalMember.orElseThrow(() ->
