@@ -230,10 +230,10 @@ const TitleContainer = styled.div`
     }
 `;
 const ContentsContainer = styled.div`
-display: -webkit-box;
--webkit-line-clamp: 2;
--webkit-box-orient: vertical;
-width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    width: 100%;
     margin-bottom: 1rem;
     overflow: hidden;
     text-overflow: ellipsis;
