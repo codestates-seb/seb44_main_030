@@ -2,29 +2,43 @@ import React from 'react';
 import styled from 'styled-components';
 import Comment from '../components/Comment.tsx';
 import { useForm, SubmitHandler } from 'react-hook-form';
-export interface CommentInput {
+import axios from 'axios';
+
+type CommentInput = {
     Content: string;
-}
-interface Comment {
+};
+type Comment = {
     memberId: number;
     name: string;
     memberProfileImg: string;
     content: string;
     registeredAt: string;
     modifiedAt: string | null;
-}
+};
 
 interface DetailCommentSectionProps {
     comment: Comment[];
 }
-const DetailCommentSection = ({ comment }: DetailCommentSectionProps ) => {
+const DetailCommentSection = ({ comment }: DetailCommentSectionProps) => {
+    const boardType = location.pathname.split('/')[1] === 'community' ? 'boardcomments' : 'clubcomments';
     const { register, handleSubmit, reset } = useForm<CommentInput>({ mode: 'onSubmit' });
+
+    //댓글 작성 요청
     const onSubmit: SubmitHandler<CommentInput> = (data) => {
         // console.log(data);
         // 댓글 작성 post api 요청
+        const API_URL = import.meta.env.VITE_KEY;
+        const payload = {
+            content: `${data.Content}`,
+        };
+        axios
+            .post(`${API_URL}/${boardType}`, payload)
+            .then((res) => console.log(res.status))
+            .catch((error) => console.error(error));
         reset();
         alert('댓글작성 완료!');
     };
+
     return (
         <CommentSection>
             <CreateCommentSpace>

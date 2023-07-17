@@ -209,7 +209,10 @@ const TitleContentsTagWarp = styled.div`
     display: flex;
     flex-direction: column;
     align-items: start;
+    flex-basis: 80%;
+    justify-content: space-between;
 `;
+
 const TitleContainer = styled.div`
     font-size: 1.3rem;
     font-family: 'KimjungchulGothic-Bold';
@@ -232,10 +235,11 @@ const ContentsContainer = styled.div`
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    width: 100%;
+    width: 300px;
     margin-bottom: 1rem;
     overflow: hidden;
     text-overflow: ellipsis;
+
     &:hover {
         color: #c1daf5;
         cursor: pointer;
@@ -253,9 +257,11 @@ const InfoContainer = styled.div`
     border-top: 1px solid #696969;
     width: 107%;
     margin-top: 1rem;
-    padding:10px 2px 0 2px;
+    padding: 10px 2px 0 2px;
     ${CardWarp}:hover & {
         border-top: 1px solid #ffffff;
+    }
+    flex-basis: 20%;
 `;
 
 const UserInfo = styled.div`
@@ -267,8 +273,12 @@ const UserInfo = styled.div`
         height: 30px;
     }
     > span {
+        width: 70px;
         margin-left: 10px;
         font-weight: 500;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 `;
 
