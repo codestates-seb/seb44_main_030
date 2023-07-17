@@ -16,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,12 +43,13 @@ public class BoardStandardController {
 
 
     @PostMapping
-    public ResponseEntity postStandard(@AuthenticationPrincipal Member auth,
+    public ResponseEntity postStandard(Authentication authentication,
                                        @Valid @RequestBody BoardStandardDto.Post postDto) {
-        if(auth == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        Member member = memberService.findMember(auth.getMemberId());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        Member member = memberService.findMember(Long.parseLong(userDetails.getUsername()));
+        System.out.println(member);
+
         BoardStandard boardStandard = boardStandardMapper.postDtoToBoardStandard(postDto);
         boardStandard.setMember(member);
         boardStandard = boardStandardService.createStandard(boardStandard);

@@ -61,22 +61,23 @@ public class SecurityConfiguration {
                 .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);    //
-//                .authorizeHttpRequests(authorize -> authorize
-////                        .antMatchers(HttpMethod.POST, "/members").permitAll()
-////                        .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
-////                        .antMatchers(HttpMethod.GET, "/members").permitAll()
-////                        .antMatchers(HttpMethod.GET, "/members/**").hasRole("USER")
-////                        .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
-////                        .antMatchers(HttpMethod.POST, "/standards").authenticated()
-////                        .antMatchers(HttpMethod.PATCH, "/standards/**").hasRole("USER")
-////                        .antMatchers(HttpMethod.GET, "/standards").permitAll()
-////                        .antMatchers(HttpMethod.DELETE, "/standards/**").hasRole("USER")
-////                        .antMatchers(HttpMethod.POST, "/clubs").authenticated()
-////                        .antMatchers(HttpMethod.PATCH, "/clubs/**").hasRole("USER")
-////                        .antMatchers(HttpMethod.GET, "/clubs").permitAll()
-////                        .antMatchers(HttpMethod.DELETE, "/clubs/**").hasRole("USER")
-//                );
+                .authorizeHttpRequests(authorize -> authorize
+                        .antMatchers(HttpMethod.POST, "/members").permitAll()
+                        .antMatchers(HttpMethod.POST, "/standards").permitAll()
+                        .antMatchers(HttpMethod.POST, "/clubs").permitAll()
+//                        .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
+//                        .antMatchers(HttpMethod.GET, "/members").permitAll()
+//                        .antMatchers(HttpMethod.GET, "/members/**").hasRole("USER")
+//                        .antMatchers(HttpMethod.DELETE, "/members/**").hasRole("USER")
+//                        .antMatchers(HttpMethod.POST, "/standards").authenticated()
+//                        .antMatchers(HttpMethod.PATCH, "/standards/**").hasRole("USER")
+//                        .antMatchers(HttpMethod.GET, "/standards").permitAll()
+//                        .antMatchers(HttpMethod.DELETE, "/standards/**").hasRole("USER")
+//                        .antMatchers(HttpMethod.POST, "/clubs").authenticated()
+//                        .antMatchers(HttpMethod.PATCH, "/clubs/**").hasRole("USER")
+//                        .antMatchers(HttpMethod.GET, "/clubs").permitAll()
+//                        .antMatchers(HttpMethod.DELETE, "/clubs/**").hasRole("USER")
+                );
         return http.build();
     }
 
