@@ -17,19 +17,27 @@ type TagSearchSectionProps = {
     handleNavigateCreate: () => void;
 };
 
-const TagSearchSection = ({ currTag, handleNavigateCreate }:TagSearchSectionProps) => {
+const TagSearchSection = ({ currTag, handleNavigateCreate }: TagSearchSectionProps) => {
     const { keyword } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
     const boardType = location.pathname.split('/')[1];
+    function useQueryParam() {
+        //console.log(useLocation().search);
+        return new URLSearchParams(useLocation().search);
+    }
+
+    //URLSearchParams 객체(query)는 get메서드로 쿼리파라미터 값 불러올 수있음.
+    const query = useQueryParam();
+    const page = Number(query.get('page') || 1); // 기본 페이지를 1로 설정
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<SearchInput>({
         defaultValues: {
-            Keyword: keyword==='null'? '' : keyword,
+            Keyword: keyword === 'null' ? '' : keyword,
         },
     });
 
@@ -38,7 +46,7 @@ const TagSearchSection = ({ currTag, handleNavigateCreate }:TagSearchSectionProp
         const selectedTagName = e.currentTarget.innerText;
         dispatch(savePosition(window.scrollY));
         if (boardType === 'community') {
-            navigate(`/${boardType}/1/${selectedTagName}/${keyword}`);
+            navigate(`/${boardType}/${selectedTagName}/${keyword}`);
         }
         if (boardType === 'club') {
             navigate(`/${boardType}/${selectedTagName}/${keyword}`);
@@ -49,7 +57,7 @@ const TagSearchSection = ({ currTag, handleNavigateCreate }:TagSearchSectionProp
     const onSubmit: SubmitHandler<SearchInput> = (data) => {
         dispatch(savePosition(window.scrollY));
         if (boardType === 'community') {
-            navigate(`/${boardType}/1/${currTag}/${data.Keyword}`);
+            navigate(`/${boardType}/${currTag}/${data.Keyword}`);
         }
         if (boardType === 'club') {
             navigate(`/${boardType}/${currTag}/${data.Keyword}`);

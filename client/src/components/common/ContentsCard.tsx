@@ -273,8 +273,12 @@ const UserInfo = styled.div`
         height: 30px;
     }
     > span {
+        width: 70px;
         margin-left: 10px;
         font-weight: 500;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 `;
 

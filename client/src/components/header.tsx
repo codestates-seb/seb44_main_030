@@ -47,7 +47,7 @@ const Header = () => {
                 <div
                     onClick={() => {
                         dispatch(reset());
-                        navigate('/community/1/전체/null');
+                        navigate('/community/전체/null');
                     }}
                 >
                     Community

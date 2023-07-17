@@ -24,7 +24,7 @@ export default function AnimateRoute() {
                 <Route path="/" element={<Main></Main>}></Route>
                 <Route path="/signup" element={<Signup></Signup>}></Route>
                 <Route path="/login" element={<Login></Login>}></Route>
-                <Route path="/community/:page/:tag/:keyword?" element={<Community></Community>}></Route>
+                <Route path="/community/:tag/:keyword" element={<Community></Community>}></Route>
                 <Route path="/community/create" element={<CommunityCreate></CommunityCreate>}></Route>
                 <Route path="/community/detail/:standardId" element={<CommunityDetail></CommunityDetail>}></Route>
                 <Route path="/club/detail/:boardClubId" element={<ClubDetail></ClubDetail>}></Route>

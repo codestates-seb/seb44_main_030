@@ -35,4 +35,5 @@ const PageButtonStyled = styled.li<PageButtonStyledProps>`
     &:hover {
         cursor: pointer;
     }
+    font-weight: 600;
 `;
