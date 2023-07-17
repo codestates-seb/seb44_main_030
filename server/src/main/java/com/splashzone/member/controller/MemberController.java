@@ -72,7 +72,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{member-id}")
-    public ResponseEntity deleteMember(
+    public ResponseEntity terminatedMember(
             @PathVariable("member-id") @Positive long memberId) {
         memberService.terminateMember(memberId);
 

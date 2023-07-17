@@ -64,8 +64,10 @@ public class MemberService {
     }
 
     public void terminateMember(long memberId) {
-        Member findMember = findMember(memberId);
-        memberRepository.delete(findMember);
+        Member foundMember = findMember(memberId);
+        foundMember.setMemberStatus(Member.MemberStatus.TERMINATED);
+        foundMember.setTerminatedAt(LocalDateTime.now());
+        memberRepository.save(foundMember);
     }
 
     @Transactional(readOnly = true)
