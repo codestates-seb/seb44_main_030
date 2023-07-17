@@ -25,7 +25,7 @@ type FormData = {
 const CommunityCreate = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    console.log(location.state)
+    console.log(location.state);
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
     const { postId, tag, title, content } = useSelector((state: RootState) => state.editData);
@@ -48,7 +48,7 @@ const CommunityCreate = () => {
     };
     const handleCancel = () => {
         navigate(-1);
-    }
+    };
     const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
         date.getDate(),
     ).padStart(2, '0')}`;

@@ -4,7 +4,6 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import backgroundImg from '../assets/Community_background.png';
-import { CommunityDetailMockdata } from '../assets/mockdata.ts';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -23,9 +22,6 @@ const ClubDetail = () => {
     const { boardClubId } = useParams<{ boardClubId: string }>();
     const numberBoardClubId = boardClubId ? Number(boardClubId) : 0;
     const { status, data: clubDetail, error } = useClubBoardDetail(numberBoardClubId);
-    console.log(numberBoardClubId);
-    console.log(status);
-    console.log(clubDetail && clubDetail.data);
 
     let boardClubStatus, contact, content, createdAt, dueDate, memberId, modifiedAt, tags, title, view;
 

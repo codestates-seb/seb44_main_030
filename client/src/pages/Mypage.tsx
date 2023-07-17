@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Block from '../components/style/Wrapper';
 import { useEffect, useState } from 'react';
 import ProfileImage from '../components/style/ProfileImage';
-import { getInfos } from '../Api/getmember';
+import { getInfos } from '../api/getmember';
 import Tabmenu from '../components/Tapmenu';
 import { Loading } from '../components/Lodaing';
 

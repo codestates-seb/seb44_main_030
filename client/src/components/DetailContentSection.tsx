@@ -34,7 +34,7 @@ const DetailContentSection = ({
     memberId,
     standardId,
     clubId,
-    tag
+    tag,
 }: DetailProps) => {
     const postId = standardId || clubId; //club데이터일 때는 clubId
     if (!postId) {
@@ -45,7 +45,7 @@ const DetailContentSection = ({
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleEdit = useCallback(() => {
-        dispatch(savePostData({postId,tag,title,content}));
+        dispatch(savePostData({ postId, tag, title, content }));
         const boardTypeParam = boardType === 'standards' ? 'community' : 'club';
         navigate(`/${boardTypeParam}/create`, { state: 'EditMode' });
     }, [boardType]);
