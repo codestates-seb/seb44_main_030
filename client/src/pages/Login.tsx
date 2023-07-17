@@ -20,21 +20,7 @@ const Login = () => {
         formState: { errors },
     } = useForm<FormInput>();
 
-    const onSubmit = async (data: FormInput) => {
-        const API_URL = import.meta.env.VITE_KEY;
-        try {
-            const response = await axios.post(`${API_URL}/login`, {
-                username: data.email,
-                password: data.password,
-            });
-
-            localStorage.setItem('accessToken', response.headers['Authorization'].split(' ')[1]);
-            localStorage.setItem('refreshToken', response.headers['Refresh']);
-            navigate('/');
-        } catch (error) {
-            console.error('Login failed.', error);
-        }
-    };
+    const onSubmit = async (data: FormInput) => {};
 
     const navigate = useNavigate();
 

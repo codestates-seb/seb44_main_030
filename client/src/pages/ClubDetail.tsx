@@ -51,19 +51,17 @@ const ClubDetail = () => {
         navigate(`/mypage`, { state: memberId });
     }, [memberId]);
     const handleEdit = useCallback(() => {
-        navigate('/community/create');
-    }, []);
+        navigate(`/club/create/${boardClubId}`, { state: { clubDetail: clubDetail.data } });
+    }, [clubDetail, boardClubId]);
     const handleDelete = useCallback(() => {
         alert('게시글을 삭제합니다.');
         // 게시글 삭제 API 요청
     }, []);
-    // 날짜 어떻게 받을 건지 상의 필요.(포맷팅 된 상태 or Not)
-    // 날짜 포맷팅 임의로
-    // const dateStr = modifiedAt || createdAt;
-    // const datePart = dateStr.split('T')[0];
-    // const dateArr = datePart.split('-');
-    // const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
-    // const formattedDate = modifiedAt ? `${newDateStr} (수정됨)` : newDateStr;
+
+    const handleNavigateContact = useCallback(() => {
+        window.open(contact, '_blank');
+    }, [contact]);
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -74,10 +72,26 @@ const ClubDetail = () => {
                 <TitleSection>
                     <button onClick={hanldeNavigatePrev}>목록</button>
                     <h1>{title}</h1>
-                    <div>
+                    <ContentInfo>
                         <div>
-                            <h3>관련태그: </h3>
-                            {tags && tags.map((tag) => <span className="tag">{tag.tagName}</span>)}
+                            <h3>관련 태그: </h3>
+                            {tags &&
+                                tags.map((tag, idx) => (
+                                    <span key={idx} className="tag">
+                                        {tag.tagName}
+                                    </span>
+                                ))}
+                        </div>
+                        <div>
+                            <h3>모집 인원: </h3>
+                        </div>
+                        <div>
+                            <h3>모집 마감일: </h3>
+                            <span>{dueDate}</span>
+                        </div>
+                        <div>
+                            <h3>연락 방법: </h3>
+                            <span onClick={handleNavigateContact}>링크</span>
                         </div>
                         {/* <div>
                             <span className="date">{formattedDate}</span>
@@ -86,7 +100,7 @@ const ClubDetail = () => {
                                 {name}
                             </span>
                         </div> */}
-                    </div>
+                    </ContentInfo>
                 </TitleSection>
                 <ContentSection>
                     <h1>내용</h1>
@@ -181,7 +195,7 @@ const TitleSection = styled.section`
     > div {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+
         > span {
             font-size: 20px;
             font-weight: 600;
@@ -194,15 +208,14 @@ const TitleSection = styled.section`
                 font-size: 14px;
             }
             > span.tag {
-                font-size: 12px;
+                font-size: 13px;
                 background-color: #3884d5;
                 color: #ffffff;
-                padding: 5px 8px 5px 8px;
+                padding: 3px 5px 3px 5px;
                 border-radius: 20px;
                 list-style: none;
                 white-space: nowrap;
                 margin: 0px 0px 0px 5px;
-                font-size: 15px;
             }
             > span.name {
                 font-weight: 600;
@@ -215,6 +228,22 @@ const TitleSection = styled.section`
     }
     border-bottom: 1px solid #d9d9d9;
 `;
+
+const ContentInfo = styled.div`
+    display: grid;
+    grid-template-columns: 1fr; // column은 하나
+    grid-template-rows: 1fr; // row도 하나
+    align-items: start;
+    justify-content: start;
+    font-size: 13px;
+    gap: 20px;
+    > div {
+        > h3 {
+            margin-right: 5px;
+        }
+    }
+`;
+
 const ContentSection = styled.section`
     > h1 {
         font-size: 20px;

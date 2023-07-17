@@ -30,6 +30,7 @@ export default function AnimateRoute() {
                 <Route path="/club/detail/:boardClubId" element={<ClubDetail></ClubDetail>}></Route>
                 <Route path="/club/:tag/:keyword?" element={<Club></Club>}></Route>
                 <Route path="/club/create" element={<ClubCreate></ClubCreate>}></Route>
+                <Route path="/club/create/:boardClubId" element={<ClubCreate></ClubCreate>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
                 <Route path="/map" element={<Map />}></Route>
             </Routes>

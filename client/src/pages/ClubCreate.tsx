@@ -25,8 +25,9 @@ type FormData = {
 
 const ClubCreate = () => {
     const location = useLocation();
+    const clubDetail = location.state;
+    console.log(clubDetail);
     const navigate = useNavigate();
-    console.log(location.state);
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
     const { postId, tag, title, content } = useSelector((state: RootState) => state.editData);
@@ -36,6 +37,7 @@ const ClubCreate = () => {
         handleSubmit,
         control,
         formState: { errors },
+        setValue,
     } = useForm<FormData>({
         defaultValues: {
             title,
@@ -43,6 +45,8 @@ const ClubCreate = () => {
             clubTag: tag || '전체',
         },
     });
+
+    const [editMode, setEditMode] = useState(false);
 
     const tags = {
         SWIMMING: '수영',
@@ -76,9 +80,7 @@ const ClubCreate = () => {
         };
 
         try {
-            const response = await axios.post(`${API_URL}/clubs`, payload, {
-                headers: { 'Access-Control-Allow-Origin': 'http://localhost:5173' },
-            });
+            const response = await axios.post(`${API_URL}/clubs`, payload, {});
             if (response.status === 200 || response.status === 201) {
                 navigate(-1); // post 요청 성공 시 이전 페이지로 이동
             } else {
