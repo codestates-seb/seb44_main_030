@@ -186,7 +186,7 @@ const CardWarp = styled.div`
     &:hover {
         border: 3px solid rgba(226, 240, 254, 0.8);
         background-color: rgba(56, 132, 213, 1);
-        transform: scale(1.1);
+        transform: scale(1.2);
         box-shadow: 0 5px 15px #bccbf9;
         color: #ffffff;
 
@@ -230,14 +230,17 @@ const TitleContainer = styled.div`
     }
 `;
 const ContentsContainer = styled.div`
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+width: 100%;
+    margin-bottom: 1rem;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    margin-bottom: 1rem;
+    &:hover {
+        color: #c1daf5;
+        cursor: pointer;
+    }
 `;
 
 const TagContainer = styled.div`
