@@ -1,5 +1,7 @@
 package com.splashzone.member.service;
 
+import com.splashzone.dolphin.Dolphin;
+import com.splashzone.dolphin.DolphinRepository;
 import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
 import com.splashzone.member.entity.Member;
@@ -21,10 +23,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private MemberRepository memberRepository;
+    private final DolphinRepository dolphinRepository;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, DolphinRepository dolphinRepository) {
         this.memberRepository = memberRepository;
+        this.dolphinRepository = dolphinRepository;
     }
 
     public Member createMember(Member member) {
@@ -37,10 +41,15 @@ public class MemberService {
         member.setEmail(member.getEmail());
         member.setBio(member.getBio());
         member.setNickname(member.getNickname());
-
         member.setCreatedAt(LocalDateTime.now());
 
-        return memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
+
+        Dolphin dolphin = new Dolphin(savedMember);
+
+        dolphinRepository.save(dolphin);
+
+        return savedMember;
     }
 
     public Member updateMember(Member member) {

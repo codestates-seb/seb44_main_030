@@ -2,7 +2,6 @@ package com.splashzone.member.entity;
 
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.boardstandard.entity.BoardStandard;
-import com.splashzone.dolphin.Dolphin;
 import lombok.*;
 
 import javax.persistence.*;
@@ -58,8 +57,8 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<BoardClub> boardClubs = new ArrayList<>();
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
-    private Dolphin dolphin;
+//    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+//    private Dolphin dolphin;
 
     public enum MemberStatus {
         ACTIVE("활동 중"),
