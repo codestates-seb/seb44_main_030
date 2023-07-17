@@ -25,7 +25,7 @@ type FormData = {
 
 const ClubCreate = () => {
     const location = useLocation();
-    const clubDetail = location.state;
+    const clubDetail = location.state?.clubDetail || {};
     console.log(clubDetail);
     const navigate = useNavigate();
     const [date, setDate] = useState(new Date());
@@ -37,16 +37,14 @@ const ClubCreate = () => {
         handleSubmit,
         control,
         formState: { errors },
-        setValue,
     } = useForm<FormData>({
         defaultValues: {
-            title,
-            content,
-            clubTag: tag || '전체',
+            title: clubDetail.title || '', // 만약 clubDetail에 title이 없다면 빈 문자열을 사용합니다.
+            content: clubDetail.content || '',
+            contact: clubDetail.contact || '',
+            dueDate: clubDetail.dueDate || '',
         },
     });
-
-    const [editMode, setEditMode] = useState(false);
 
     const tags = {
         SWIMMING: '수영',
@@ -80,11 +78,15 @@ const ClubCreate = () => {
         };
 
         try {
-            const response = await axios.post(`${API_URL}/clubs`, payload, {});
-            if (response.status === 200 || response.status === 201) {
-                navigate(-1); // post 요청 성공 시 이전 페이지로 이동
+            let response;
+            if (clubDetail.boardClubId !== undefined) {
+                response = await axios.patch(`${API_URL}/clubs/${clubDetail.boardClubId}`, payload, {});
             } else {
-                // 오류 처리
+                response = await axios.post(`${API_URL}/clubs`, payload, {});
+            }
+            if (response.status === 200 || response.status === 201) {
+                navigate(-1);
+            } else {
                 console.log('포스트 요청을 실패했습니다');
             }
         } catch (error: unknown) {

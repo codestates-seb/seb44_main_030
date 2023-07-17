@@ -9,6 +9,7 @@ import CommentIcon from '../assets/Comment.svg';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import Comment from '../components/Comment.tsx';
 import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
+import axios from 'axios';
 
 interface BackgroundProps {
     $image: string;
@@ -53,10 +54,15 @@ const ClubDetail = () => {
     const handleEdit = useCallback(() => {
         navigate(`/club/create/${boardClubId}`, { state: { clubDetail: clubDetail.data } });
     }, [clubDetail, boardClubId]);
-    const handleDelete = useCallback(() => {
-        alert('게시글을 삭제합니다.');
-        // 게시글 삭제 API 요청
-    }, []);
+    const handleDelete = useCallback(async () => {
+        const API_URL = import.meta.env.VITE_KEY;
+        try {
+            await axios.delete(`${API_URL}/clubs/${boardClubId}`);
+            navigate(-1);
+        } catch (error) {
+            console.error(error);
+        }
+    }, [boardClubId]);
 
     const handleNavigateContact = useCallback(() => {
         window.open(contact, '_blank');
