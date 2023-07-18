@@ -1,11 +1,41 @@
 import styled from 'styled-components';
 import Splashzone from '../../public/Splashzone.png';
-import ClubCard from '../../components/ClubCard';
-import CommunityPost from '../components/CommunityPost';
+
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import ContentsCard from '../components/common/ContentsCard';
+import { useQuery } from '@tanstack/react-query';
+import { getMaincommunity } from '../Api/MainApi/MainClubApi';
+import getMainclub from '../Api/MainApi/MainClubApi';
+import { Loading } from '../components/Lodaing';
 
 const Main = () => {
+    const [page, setPage] = useState(1);
+    const { data: community } = useQuery({
+        queryKey: ['maincommunity'],
+        queryFn: () => getMaincommunity(),
+    });
+    const {
+        data: Club,
+        isLoading,
+        isError,
+        error,
+    } = useQuery({
+        queryKey: ['mainClub', page],
+        queryFn: () => getMainclub(page),
+    });
+    console.log(Club);
+    const Comudata = community?.postData;
+
+    if (isLoading) return <Loading />;
+
+    if (isError)
+        return (
+            <>
+                <h3>Oops, someting went wrong</h3> <p>{error.toString()}</p>
+            </>
+        );
+
     return (
         <motion.div style={{ width: '100%' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <StyledMain>
@@ -13,14 +43,16 @@ const Main = () => {
                 <StyledImg src={Splashzone}></StyledImg>
             </StyledMain>
             <StyledClub>
-                <ContentsCard />
-                <ContentsCard />
-                <ContentsCard />
-                <ContentsCard />
-                <ContentsCard />
-                <ContentsCard />
-                <ContentsCard />
-                <ContentsCard />
+                <div style={{ display: 'flex' }}>
+                    {Club.map((clubData) => {
+                        return <ContentsCard key={clubData.boardClubId} clubProps={clubData} type={'club'} />;
+                    })}
+                </div>
+                <div style={{ display: 'flex' }}>
+                    {Comudata.map((item: CommunityPostData) => (
+                        <ContentsCard key={`all_${item.standardId}`} communityProps={item} type={'community'} />
+                    ))}
+                </div>
             </StyledClub>
         </motion.div>
     );
@@ -59,28 +91,5 @@ const StyledClub = styled.div`
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
 `;
-
-// const CardSection = styled.div`
-//     grid-column: 2 / 3;
-//     width: 100%;
-//     display: grid;
-//     grid-template-columns: repeat(3, 420px);
-//     grid-auto-rows: 330px;
-//     justify-content: center;
-//     flex-grow: 1;
-//     width: 100%;
-//     height: 50%;
-//     @media (max-width: 1024px) {
-//         grid-template-columns: repeat(2, 1fr);
-//         grid-column: 1 / 3;
-//         justify-content: start;
-//     }
-
-//     @media (max-width: 768px) {
-//         grid-template-columns: repeat(1, 1fr);
-//         grid-column: 1 / 2;
-//         justify-content: start;
-//     }
-// `;
