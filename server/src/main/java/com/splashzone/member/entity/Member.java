@@ -31,7 +31,9 @@ public class Member {
     @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "PASSWORD", nullable = false)
+
+    @Column(name = "PASSWORD", nullable = false, length = 100)
+
     private String password;
 
     @Column(name = "PROFILE_IMAGE_URL", nullable = true)
@@ -43,12 +45,40 @@ public class Member {
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 
+
+    @Column(name = "MODIFIED_AT", nullable = true)
+    private LocalDateTime modifiedAt;
+
+
     @Column(name = "TERMINATED_AT", nullable = true)
     private LocalDateTime terminatedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "MEMBER_STATUS", nullable = false)
     private MemberStatus memberStatus;
+
+
+
+//    @Enumerated(value = EnumType.STRING)
+//    @Column(name = "MEMBER_STATUS", length = 20, nullable = false)
+//    private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
+
+//    public enum MemberStatus{
+//        MEMBER_ACTIVE("활동중"),
+//        MEMBER_SLEEP("휴면 상태"),
+//        MEMBER_QUIT("탈퇴 상태");
+//
+//        @Getter
+//        private String status;
+//
+//        MemberStatus(String status) {
+//            this.status = status;
+//        }
+//    }
+//    public enum MemberRole {
+//        ROLE_USER,
+//        ROLE_ADMIN
+//    }
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
@@ -87,4 +117,7 @@ public class Member {
                 ? profileImageUrl
                 : "default.png";
     }
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 }
