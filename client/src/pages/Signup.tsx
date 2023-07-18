@@ -32,13 +32,13 @@ const Signup = () => {
         console.log(data);
         const API_URL = import.meta.env.VITE_KEY;
         const payload = {
-            memberId: 1,
             name: data.Name,
             password: data.Password,
             nickname: data.Nickname,
             email: data.Email,
             bio: data.Biography,
         };
+        console.log(payload)
         axios
             .post(`${API_URL}/members`, payload)
             .then((response) => {

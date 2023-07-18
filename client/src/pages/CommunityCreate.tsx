@@ -17,9 +17,8 @@ type FormData = {
 const CommunityCreate = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    console.log(location.state);
     const { postId, tag, title, content } = useSelector((state: RootState) => state.editData);
-    console.log(postId)
+
     const dispatch = useDispatch();
     const {
         register,
@@ -59,18 +58,19 @@ const CommunityCreate = () => {
             memberId: 1, // 이 부분은 로그인한 유저의 ID로 수정
             title: data.title,
             content: data.content,
-            tags: englishTagName,
+            tag: englishTagName,
         };
         const patchPayload = {
             // title: data.title,
             content: data.content,
-            tags: englishTagName,
+            tag: englishTagName,
         };
 
         if (location.state==='EditMode') {
             try {
                 const response = await axios.patch(`${API_URL}/standards/${postId}`, patchPayload);
                 if (response.status === 200 || response.status === 201) {
+                    dispatch(reset());
                     navigate(-1); // patch 요청 성공 시 이전 페이지로 이동
                 } else {
                     // 오류 처리
@@ -110,7 +110,6 @@ const CommunityCreate = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        dispatch(reset());
     }, []);
 
     return (
@@ -148,7 +147,7 @@ const CommunityCreate = () => {
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
                         />
-                        {errors.title && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
+                        {errors.content && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
                         <button onClick={handleCancel}>취소</button>

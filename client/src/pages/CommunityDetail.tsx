@@ -94,7 +94,6 @@ const CommunityDetail = () => {
                     likeCount={detailCommunityData?.likeCount}
                     memberId={detailCommunityData?.member?.memberId}
                     standardId={detailCommunityData?.standardId}
-                    clubId={detailCommunityData?.clubId}
                     tag={detailCommunityData?.tag}
                 />
                 <DetailCommentSection comment={detailCommunityData?.comment} />
