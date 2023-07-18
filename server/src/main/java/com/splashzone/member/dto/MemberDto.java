@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 public class MemberDto {
     @Getter
@@ -18,6 +19,13 @@ public class MemberDto {
         private String email;
         private String nickname;
         private String bio;
+
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+
+        private LocalDateTime terminatedAt;
+
+
     }
 
     @Getter

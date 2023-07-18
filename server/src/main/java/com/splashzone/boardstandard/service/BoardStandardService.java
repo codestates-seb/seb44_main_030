@@ -49,7 +49,7 @@ public class BoardStandardService {
         return boardStandardRepository.save(findBoardStandard);
     }
 
-    public BoardStandard selectStandard(long standardId) {
+    public BoardStandard selectStandard(Long standardId) {
         BoardStandard boardStandard = boardStandardRepository.findById(standardId).orElseThrow(() -> new RuntimeException());
         //뷰수 추가
         boardStandard.setView(boardStandard.getView() + 1);
@@ -61,9 +61,12 @@ public class BoardStandardService {
         return boardStandardRepository.findByBoardStandard(PageRequest.of(page, size, Sort.by("standardId").descending()));
     }
 
-    public void deleteStandard(long standardId) {
-        BoardStandard findBoardStandard = findVerifiedBoardStandard(standardId);
-        boardStandardRepository.delete(findBoardStandard);
+    //TODO 실제 삭제 말고 상태만 바뀌게 코드 변경하기
+    public void deleteStandard(Long standardId) {
+        BoardStandard boardStandard = boardStandardRepository.findById(standardId).orElseThrow(() -> new RuntimeException());
+        boardStandardRepository.delete(boardStandard);
+//        BoardStandard findBoardStandard = findVerifiedBoardStandard(standardId);
+//        boardStandardRepository.delete(findBoardStandard);
     }
 
     //회원이 존재하는지 확인
@@ -76,14 +79,14 @@ public class BoardStandardService {
         return boardStandardRepository.updateViews(standardId);
     }
 
-    public BoardStandard findVerifiedBoardStandard(long standardId) {
+    public BoardStandard findVerifiedBoardStandard(Long standardId) {
         Optional<BoardStandard> optionalBoardStandard = boardStandardRepository.findById(standardId);
         BoardStandard findBoardStandard = optionalBoardStandard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_STANDARD_NOT_FOUND));
         return findBoardStandard;
     }
 
     //총 질문 수 카운트
-    public long getTotalBoardStandardCount() {
+    public Long getTotalBoardStandardCount() {
         return boardStandardRepository.count();
     }
 
