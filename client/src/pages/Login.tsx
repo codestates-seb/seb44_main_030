@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
+import useApi from '../api/useTokenAddApi';
 import LoginBG from '../../public/login.png';
 import RegisterForm from '../components/RegisterForm';
-import { useCookies } from 'react-cookie';
 
 interface FormInput {
     email: string;
@@ -15,6 +15,7 @@ interface FormInput {
 }
 
 const Login = () => {
+    const api = useApi();
     const [cookies, setCookie, removeCookie] = useCookies(['Token']);
     const {
         register,
@@ -25,7 +26,7 @@ const Login = () => {
     const onSubmit = async (data: FormInput) => {
         const API_URL = import.meta.env.VITE_KEY;
         try {
-            const response = await axios.post(`${API_URL}/auth/login`, {
+            const response = await api.post(`${API_URL}/auth/login`, {
                 username: data.email,
                 password: data.password,
             });

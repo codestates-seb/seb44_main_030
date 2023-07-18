@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Mocktags } from '../assets/mockdata.ts';
 import { Calendar } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { type } from 'os';
 import { motion } from 'framer-motion';
-import { useSelector } from 'react-redux';
 import { reset } from '../store/editData.ts';
 import { useDispatch } from 'react-redux';
-import { RootState } from '../store/store.tsx';
 import axios, { AxiosError } from 'axios';
 
 type FormData = {
-    recuruitingNumber: string;
+    capacity: number;
     contactRoute: string;
     contact: string;
     clubTag: string;
@@ -22,25 +18,25 @@ type FormData = {
     title: string;
     content: string;
     clubMap?: string;
+    date?: Date;
 };
 
 const ClubCreate = () => {
     const location = useLocation();
     const clubDetail = location.state?.clubDetail || {};
-    console.log(clubDetail);
     const navigate = useNavigate();
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
-    const { postId, tag, title, content } = useSelector((state: RootState) => state.editData);
     const dispatch = useDispatch();
     const {
         register,
+        setValue,
         handleSubmit,
         control,
         formState: { errors },
     } = useForm<FormData>({
         defaultValues: {
-            title: clubDetail.title || '', // 만약 clubDetail에 title이 없다면 빈 문자열을 사용합니다.
+            title: clubDetail.title || '',
             content: clubDetail.content || '',
             contact: clubDetail.contact || '',
             dueDate: clubDetail.dueDate || '',
@@ -71,6 +67,7 @@ const ClubCreate = () => {
         const englishTagName = getKeyByValue(tags, data.clubTag);
         const payload = {
             memberId: 1, // 이 부분은 로그인한 유저의 ID로 수정
+            capacity: data.capacity,
             title: data.title,
             content: data.content,
             dueDate: data.dueDate,
@@ -103,13 +100,28 @@ const ClubCreate = () => {
     const handleCancel = () => {
         navigate(-1);
     };
-    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
-        date.getDate(),
-    ).padStart(2, '0')}`;
+    const formattedDate = date.toLocaleDateString('en-CA');
 
     useEffect(() => {
         window.scrollTo(0, 0);
         dispatch(reset());
+    }, []);
+
+    const calendarRef = useRef(null);
+    const [today, setToday] = useState(new Date());
+    const handleClickCalendarOutside = (event: MouseEvent) => {
+        if (calendarRef.current && !(calendarRef.current as Node).contains(event.target as Node)) {
+            setShowCalendar(false);
+        }
+    };
+    useEffect(() => {
+        window.addEventListener('mousedown', handleClickCalendarOutside);
+        return () => {
+            window.removeEventListener('mousedown', handleClickCalendarOutside);
+        };
+    }, []);
+    useEffect(() => {
+        setToday(new Date());
     }, []);
 
     return (
@@ -119,19 +131,13 @@ const ClubCreate = () => {
                     <DetailInfoTitle>모임의 기본 정보를 입력해주세요</DetailInfoTitle>
                     <TagContainer>
                         <TagWarp>
-                            <TagCartegory htmlFor="recuruitingNumber">모집인원</TagCartegory>
-                            <select {...register('recuruitingNumber')} id="recuruitingNumber">
-                                {['1명', '2명', '3명', '4명', '5명 이상'].map((item, idx) => (
-                                    <option key={idx} value={item}>
-                                        {item}
-                                    </option>
-                                ))}
-                            </select>
+                            <TagCartegory htmlFor="capacity">모집인원</TagCartegory>
+                            <input {...register('capacity')} id="capacity" placeholder="숫자를 입력해주세요"></input>
                         </TagWarp>
                         <TagWarp>
                             <TagCartegory htmlFor="contactRoute">연락 방법</TagCartegory>
                             <select {...register('contactRoute')} id="contactRoute">
-                                {['오픈채팅', '이메일', '구글 폼'].map((routeName, idx) => (
+                                {['오픈채팅', '구글 폼'].map((routeName, idx) => (
                                     <option key={idx} value={routeName}>
                                         {routeName}
                                     </option>
@@ -161,18 +167,22 @@ const ClubCreate = () => {
                                 readOnly
                             />
                             {showCalendar && (
-                                <CalendarContainer>
+                                <CalendarContainer ref={calendarRef}>
                                     <Controller
                                         control={control}
                                         name="date"
                                         render={({ field }) => (
                                             <Calendar
-                                                onChange={(date) => {
-                                                    setDate(date);
+                                                minDate={today}
+                                                onChange={(selectedDate) => {
+                                                    const selectedDateValue = selectedDate as Date;
+                                                    setDate(selectedDateValue);
+                                                    const formattedDate = selectedDateValue.toLocaleDateString('en-CA');
+                                                    setValue('dueDate', formattedDate);
                                                     setShowCalendar(false);
-                                                    field.onChange(date);
+                                                    field.onChange(selectedDateValue);
                                                 }}
-                                                value={date}
+                                                value={date || undefined}
                                             />
                                         )}
                                     />
