@@ -2,6 +2,7 @@ package com.splashzone.member.entity;
 
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.tracker.entity.Tracker;
 import lombok.*;
 
 import javax.persistence.*;
@@ -54,6 +55,10 @@ public class Member {
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<BoardClub> boardClubs = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private List<Tracker> trackers = new ArrayList<>();
 
     public Member(String email, String name, String password, String nickname) {
         this.email = email;
