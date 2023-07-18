@@ -4,12 +4,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Tag from './Tag';
 
-import Profile from '../../../public/profile.png';
 import ViewsIcon from '../../../public/view.png';
 import MessageIcon from '../../../public/bubble-chat.png';
 import LikeIcon from '../../assets/Like.svg';
 import LikeFilledIcon from '../../assets/Like_filled.svg';
-import { title } from 'process';
 import { savePosition } from '../../store/scroll.ts';
 import { useDispatch } from 'react-redux';
 interface PostProps {
