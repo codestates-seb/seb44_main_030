@@ -5,6 +5,8 @@ import Calendar from 'react-calendar';
 import moment from 'moment';
 import 'react-calendar/dist/Calendar.css';
 import Modal from './Modal';
+import Table from './Table';
+import Clubtable from './Clubtable';
 
 const Tabmenu = () => {
     const [currentTab, clickTab] = useState(0);
@@ -50,7 +52,7 @@ const Tabcomponent0 = () => {
                     달력 날짜를 클릭해서, 오늘 운동정보를 입력하세요!
                 </h4>
             </Block>
-            <div style={{ display: 'flex', position: 'relative', left: '50px' }}>
+            <div style={{ display: 'flex', position: 'relative' }}>
                 <ReactCalander>
                     <Calendar
                         onChange={onChange}
@@ -82,10 +84,20 @@ const Tabcomponent0 = () => {
     );
 };
 const Tabcomponent1 = () => {
-    return <div style={{ position: 'relative', left: '20px' }}>내가쓴게시글입니다.</div>;
+    return (
+        <GridTap>
+            <div></div>
+            <Table />
+        </GridTap>
+    );
 };
 const Tabcomponent2 = () => {
-    return <div style={{ position: 'relative', left: '20px' }}>내가쓴모집글입니다.</div>;
+    return (
+        <GridTap>
+            <div></div>
+            <Clubtable />
+        </GridTap>
+    );
 };
 
 export default Tabmenu;
@@ -116,6 +128,10 @@ const TabMenu = styled.ul`
     }
 `;
 
+const GridTap = styled.div`
+    position: absolute;
+    left: 5%;
+`;
 const ReactCalander = styled.div`
     margin-top: 20px;
     width: 100%;

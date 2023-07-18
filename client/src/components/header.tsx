@@ -16,16 +16,16 @@ const Header = () => {
     const [isLogin, setIsLogIn] = useState<boolean>(false);
     const [menu, setMenu] = useState(false);
     return (
-        <div style={{ position: 'fixed', zIndex: '999' }}>
-            <StyledHeader>
-                <StyledImg
-                    src={LOGO}
-                    alt="logo"
-                    onClick={() => {
-                        navigate('/');
-                    }}
-                />
+        <StyledHeader>
+            <img
+                src={LOGO}
+                alt="logo"
+                onClick={() => {
+                    navigate('/');
+                }}
+            />
 
+            <div className="header-content">
                 <div
                     onClick={() => {
                         navigate('/community/1');
@@ -44,7 +44,7 @@ const Header = () => {
                 {isLogin === false ? (
                     <div onClick={() => setIsLogIn(true)}>Login</div>
                 ) : (
-                    <div style={{ position: 'relative', top: '-17px' }}>
+                    <div style={{ position: 'relative' }}>
                         <ProfileImage
                             width="70px"
                             height="65px"
@@ -56,8 +56,8 @@ const Header = () => {
                         {menu ? <Modal setIsLogIn={setIsLogIn}></Modal> : null}
                     </div>
                 )}
-            </StyledHeader>
-        </div>
+            </div>
+        </StyledHeader>
     );
 };
 
@@ -86,73 +86,53 @@ const Modal = ({ setIsLogIn }: Props) => {
 };
 
 const StyledHeader = styled.div`
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    width: 100vw;
+    position: fixed;
+    width: 100%;
+    min-width: 817px;
+    height: 85px;
+    display: flex;
     font-size: 1.5rem;
-    height: 80px;
     color: white;
+    font-family: 'Monomaniac One', sans-serif;
     background-color: rgba(56, 132, 213, 1);
-    div {
-        padding-top: 15px;
+    box-sizing: border-box;
+    justify-content: space-evenly;
+    z-index: 999;
+    img {
+        height: 85px;
     }
-
-    :nth-child(2) {
-        font-family: 'Monomaniac One', sans-serif;
-        grid-column: 9 / 10;
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .header-content div:hover {
+        color: rgba(105, 105, 105, 1);
         cursor: pointer;
     }
-    :nth-child(2):hover {
-        color: rgba(105, 105, 105, 1);
-    }
-
-    :nth-child(3) {
-        font-family: 'Monomaniac One', sans-serif;
-        cursor: pointer;
-    }
-    :nth-child(3):hover {
-        color: rgba(105, 105, 105, 1);
-    }
-
-    :nth-child(4) {
-        font-family: 'Monomaniac One', sans-serif;
-        cursor: pointer;
-    }
-
-    :nth-child(4):hover {
-        color: rgba(105, 105, 105, 1);
-    }
-`;
-
-const StyledImg = styled.img`
-    grid-column: 3 / 4;
-    cursor: pointer;
-    height: 70px;
 `;
 
 const StyledModal = styled.div`
-    font-size: 1rem;
     position: absolute;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    top: 85px;
+    width: 105px;
     border-radius: 10px;
-    left: -140px;
-    width: 100%;
-    height: 100px;
-    background-color: white;
+    height: 70px;
+    padding: 10px;
     font-family: 'Monomaniac One', sans-serif;
-    :nth-child(1) {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: black;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    cursor: none;
+    div {
         color: black;
-
-        margin-left: 10px;
+        cursor: pointer;
     }
-    :nth-child(2) {
-        color: black;
-
-        margin-left: 10px;
+    div:hover {
+        color: rgba(105, 105, 105, 1);
     }
-    :nth-child(2):hover {
-        color: black;
-    }
-
-    z-index: 99;
 `;
