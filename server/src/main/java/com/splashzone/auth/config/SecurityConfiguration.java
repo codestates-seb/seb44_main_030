@@ -64,6 +64,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers(HttpMethod.POST, "/members").permitAll()
                         .antMatchers(HttpMethod.POST, "/standards").hasRole("USER")
+                        .antMatchers(HttpMethod.PATCH, "/standards").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/standards").permitAll()
                         .antMatchers(HttpMethod.POST, "/clubs").permitAll()
 //                        .antMatchers(HttpMethod.POST, "/standards").permitAll()
 //                        .antMatchers(HttpMethod.POST, "/clubs").permitAll()
