@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import Splashzone from '../../public/Splashzone.png';
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import ContentsCard from '../components/common/ContentsCard';
