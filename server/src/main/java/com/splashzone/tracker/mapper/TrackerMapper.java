@@ -41,6 +41,8 @@ public interface TrackerMapper {
                 .title(tracker.getTitle())
                 .content(tracker.getContent())
                 .exerciseTime(tracker.getExerciseTime())
+                .createdAt(tracker.getCreatedAt())
+                .modifiedAt(tracker.getModifiedAt())
                 .build();
     }
 }

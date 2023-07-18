@@ -22,6 +22,7 @@ public interface BoardClubMapper {
                 .title(requestBody.getTitle())
                 .content(requestBody.getContent())
                 .dueDate(requestBody.getDueDate())
+                .capacity(requestBody.getCapacity())
                 .contact(requestBody.getContact())
                 .member(member)
                 .boardClubTags(getBoardClubTagsFromTagDto(requestBody.getTags()))
@@ -37,6 +38,7 @@ public interface BoardClubMapper {
                 .title(requestBody.getTitle())
                 .content(requestBody.getContent())
                 .dueDate(requestBody.getDueDate())
+                .capacity(requestBody.getCapacity())
                 .contact(requestBody.getContact())
                 .member(member)
                 .boardClubTags(getBoardClubTagsFromTagDto(requestBody.getTags()))
@@ -51,6 +53,7 @@ public interface BoardClubMapper {
                 .title(boardClub.getTitle())
                 .content(boardClub.getContent())
                 .dueDate(boardClub.getDueDate())
+                .capacity(boardClub.getCapacity())
                 .contact(boardClub.getContact())
                 .view(boardClub.getView())
                 .tags(getTagDtosFromBoardClubTag(boardClub.getBoardClubTags()))
@@ -94,16 +97,4 @@ public interface BoardClubMapper {
 
         return tagDtos;
     }
-
-    /*
-    private static List<BoardClubTagDto> getBoardClubTagDtosFromBoardClubTags(List<BoardClubTag> boardClubTags) {
-        List<BoardClubTagDto> boardClubTagDtos = new ArrayList<>();
-
-        for (BoardClubTag boardClubTag : boardClubTags) {
-            boardClubTagDtos.add(new BoardClubTagDto(boardClubTag.getTag().getTagId(), boardClubTag.getTag().getTagName()));
-        }
-
-        return boardClubTagDtos;
-    }
-     */
 }
