@@ -8,16 +8,24 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 public class MemberDto {
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private long memberId;
+        private Long memberId;
         private String name;
         private String email;
         private String nickname;
         private String bio;
+
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+
+        private LocalDateTime terminatedAt;
+
+
     }
 
     @Getter
@@ -44,7 +52,7 @@ public class MemberDto {
 
     @Getter
     public static class Patch {
-        private long memberId;
+        private Long memberId;
 
 //        email, name 모두 수정 불가능
 //        @NotBlank(message = "공백이 아니어야 합니다.")
@@ -57,7 +65,7 @@ public class MemberDto {
         private String nickname;
         private String bio;
 
-        public void setMemberId(long memberId) {
+        public void setMemberId(Long memberId) {
             this.memberId = memberId;
         }
     }

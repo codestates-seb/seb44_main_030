@@ -1,6 +1,8 @@
 package com.splashzone.auth.filter;
 
 import com.splashzone.auth.jwt.JwtTokenizer;
+import com.splashzone.auth.userdetails.MemberDetails;
+import com.splashzone.auth.userdetails.MemberDetailsService;
 import com.splashzone.auth.utils.CustomAuthorityUtils;
 import com.splashzone.member.entity.Member;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -68,30 +70,23 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     //TODO 이 메서드 다시 확인해보기
     private void setAuthenticationToContext(Map<String, Object> claims) {
         //TODO username 확인하는게 맞는지 보기 memberId 아님?
-        String username = (String) claims.get("username");   // (4-1)
+        String username = (String) claims.get("username");
+        Long memberId = (Long) claims.get("memberId");  //
         System.out.println("setAuthenticationToContext - username: " + username);
-        List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));  // (4-2)
+        List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));
+        List<String> roles = new ArrayList<>();
+        authorities.forEach(s->roles.add(s.getAuthority()));
 
+        Member member = Member.builder()
+                .memberId(memberId)
+                .email(username)
+                .roles(roles).build();
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);  // (4-3)
-        SecurityContextHolder.getContext().setAuthentication(authentication); // (4-4)
+        Authentication authentication = new UsernamePasswordAuthenticationToken((MemberDetails) member , null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         System.out.println("setAuthenticationToContext - authentication: " + authentication);
-////        List authorities = authorityUtils.createAuthorities((List) claims.get("roles"));
-//        System.out.println("authorities: " + authorities);
-//        //
-//        List<String> roles = new ArrayList<>();
-//        System.out.println("roles: " + roles
-//        );
-//        authorities.forEach(s -> roles.add(s.getAuthority()));
-//        System.out.println("authorities: " + authorities);
-//
-//        Member member = Member.builder()
-////                .memberId(memberId)
-//                .email(username)
-//                .roles(roles).build();
-//        System.out.println("member: " + member);
-//        System.out.println("1");
+
 
     }
 

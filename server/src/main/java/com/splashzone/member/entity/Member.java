@@ -19,7 +19,7 @@ import java.util.List;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long memberId;
+    private Long memberId;
 
     @Column(name = "NAME", nullable = false)
     private String name;
@@ -41,6 +41,9 @@ public class Member {
 
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "MODIFIED_AT", nullable = true)
+    private LocalDateTime modifiedAt;
 
     @Column(name = "TERMINATED_AT", nullable = true)
     private LocalDateTime terminatedAt;

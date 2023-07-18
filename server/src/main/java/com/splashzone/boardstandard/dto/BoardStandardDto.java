@@ -26,10 +26,10 @@ public class BoardStandardDto {
         @Positive
         private Long memberId;
         @Positive
-        private long standardId;
+        private Long standardId;
         private String title;
         private String content;
-        private long view;
+        private Long view;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         public void setStandardId(Long standardId) {
@@ -41,7 +41,7 @@ public class BoardStandardDto {
     @Getter
     @Setter
     public static class Response{
-        private long standardId;
+        private Long standardId;
         private String title;
         private String content;
         private int view;
@@ -52,13 +52,13 @@ public class BoardStandardDto {
 
     @Getter
     public static class CountResponse{
-        private long standardCount;
+        private Long standardCount;
     }
 
     @Getter
     @Setter
     public static class CommentResponse{
-        private long standardId;
+        private Long standardId;
         private String standardContent;
         private LocalDateTime dateCreated;
         private LocalDateTime dateModified;

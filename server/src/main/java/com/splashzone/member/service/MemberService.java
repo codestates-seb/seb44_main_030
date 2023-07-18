@@ -53,6 +53,7 @@ public class MemberService {
         member.setTerminated(false);
 
         member.setCreatedAt(LocalDateTime.now());
+        member.setModifiedAt(LocalDateTime.now());
 
         return memberRepository.save(member);
     }
@@ -64,12 +65,13 @@ public class MemberService {
         //이름, 이메일 변경은 구현에서 뻄 (변경안됨)
         Optional.ofNullable(member.getBio()).ifPresent(bio -> fm.setBio(member.getBio()));
         Optional.ofNullable(member.getNickname()).ifPresent(nickname -> fm.setNickname(member.getNickname()));
+        member.setModifiedAt(LocalDateTime.now());
 
         return memberRepository.save(fm);
     }
 
     @Transactional(readOnly = true)
-    public Member findMember(long memberId) {
+    public Member findMember(Long memberId) {
         return findVerifiedMember(memberId);
     }
 
@@ -77,14 +79,23 @@ public class MemberService {
         return memberRepository.findAll(PageRequest.of(page, size, Sort.by("memberId").descending()));
     }
 
-    public void terminateMember(long memberId) {
+    public void terminateMember(Long memberId) {
         Member findMember = findMember(memberId);
         memberRepository.delete(findMember);
     }
 
     @Transactional(readOnly = true)
-    public Member findVerifiedMember(long memberId) {
+    public Member findVerifiedMember(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member findMember =
+                optionalMember.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        return findMember;
+    }
+
+    @Transactional(readOnly = true)
+    public Member findMemberByUsername(String username) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(username);
         Member findMember =
                 optionalMember.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));

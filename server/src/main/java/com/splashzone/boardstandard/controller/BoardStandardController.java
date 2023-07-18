@@ -1,5 +1,6 @@
 package com.splashzone.boardstandard.controller;
 
+import com.splashzone.auth.userdetails.MemberDetails;
 import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
 import com.splashzone.boardstandard.dto.BoardStandardDto;
@@ -45,9 +46,10 @@ public class BoardStandardController {
     @PostMapping
     public ResponseEntity postStandard(Authentication authentication,
                                        @Valid @RequestBody BoardStandardDto.Post postDto) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
-        Member member = memberService.findMember(Long.parseLong(userDetails.getUsername()));
+        Member member = memberService.findMemberByUsername(memberDetails.getUsername());
         System.out.println(member);
 
         BoardStandard boardStandard = boardStandardMapper.postDtoToBoardStandard(postDto);
@@ -60,7 +62,7 @@ public class BoardStandardController {
     }
 
     @PatchMapping("/{standard-id}")
-    public ResponseEntity patchStandard(@PathVariable("standard-id") @Positive long standardId,
+    public ResponseEntity patchStandard(@PathVariable("standard-id") @Positive Long standardId,
                                         @Valid @RequestBody BoardStandardDto.Patch patchDto) {
         patchDto.setStandardId(standardId);
         BoardStandard boardStandard = boardStandardService.updateStandard(boardStandardMapper.patchDtoToBoardStandard(patchDto));
@@ -69,7 +71,7 @@ public class BoardStandardController {
     }
 
     @GetMapping("/{standard-id}")
-    public ResponseEntity getStandard(@PathVariable("standard-id") long standardId) {
+    public ResponseEntity getStandard(@PathVariable("standard-id") Long standardId) {
         BoardStandard boardStandard = boardStandardService.selectStandard(standardId);
         boardStandardService.increaseViews(standardId);
         return new ResponseEntity<>(new SingleResponseDto<>(boardStandardMapper.boardStandardToResponseDto(boardStandard)), HttpStatus.OK);
@@ -89,7 +91,7 @@ public class BoardStandardController {
     }
 
     @DeleteMapping("/{standard-id}")
-    public ResponseEntity deleteStandard(@Positive @PathVariable("standard-id") long standardId) {
+    public ResponseEntity deleteStandard(@Positive @PathVariable("standard-id") Long standardId) {
         boardStandardService.deleteStandard(standardId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
