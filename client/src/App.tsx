@@ -6,6 +6,7 @@ import Globalstyle from './GlobalStyle';
 import AnimateRoute from './components/common/AnimateRoute';
 import './App.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { CookiesProvider } from 'react-cookie';
 
 function App() {
     const location = useLocation();
@@ -13,15 +14,17 @@ function App() {
     const queryClient = new QueryClient();
 
     return (
-        <QueryClientProvider client={queryClient}>
-            <div>
-                <Globalstyle />
-                {!hideHeaderFooter && <Header></Header>}
-                {!hideHeaderFooter && <div style={{ paddingTop: '85px' }}></div>}
-                <AnimateRoute />
-                {!hideHeaderFooter && <Footer></Footer>}
-            </div>
-        </QueryClientProvider>
+        <CookiesProvider>
+            <QueryClientProvider client={queryClient}>
+                <div>
+                    <Globalstyle />
+                    {!hideHeaderFooter && <Header></Header>}
+                    {!hideHeaderFooter && <div style={{ paddingTop: '85px' }}></div>}
+                    <AnimateRoute />
+                    {!hideHeaderFooter && <Footer></Footer>}
+                </div>
+            </QueryClientProvider>
+        </CookiesProvider>
     );
 }
 
