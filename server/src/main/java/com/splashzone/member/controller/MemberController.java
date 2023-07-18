@@ -79,11 +79,4 @@ public class MemberController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-//    @DeleteMapping("/logout")
-//    public ResponseEntity logout(@RequestHeader("Access") @Positive String accessToken) {
-//        log.info(accessToken);
-//        accessTokenService.deleteAccessToken(accessToken);
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
 }

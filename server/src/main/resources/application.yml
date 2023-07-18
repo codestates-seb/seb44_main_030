@@ -13,8 +13,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        id:
-          new_generator_mappings: false
     defer-datasource-initialization: true
   mvc:
     pathmatch:
@@ -35,10 +33,3 @@ server:
   servlet:
     encoding:
       force-response: true
-jwt:
-  key: ${JWT_SECRET_KEY}
-  access-token-expiration-minutes: 30
-  refresh-token-expiration-minutes: 420
-mail:
-  address:
-    admin: admin@gmail.com
