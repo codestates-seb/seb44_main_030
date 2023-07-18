@@ -48,7 +48,6 @@ public class MemberService {
         Dolphin dolphin = new Dolphin(savedMember);
 
         dolphinRepository.save(dolphin);
-
         return savedMember;
     }
 
