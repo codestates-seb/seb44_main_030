@@ -63,12 +63,6 @@ public class MemberService {
         Dolphin dolphin = new Dolphin(savedMember);
 
         dolphinRepository.save(dolphin);
-      
-        Member savedMember = memberRepository.save(member);
-
-        Dolphin dolphin = new Dolphin(savedMember);
-
-        dolphinRepository.save(dolphin);
         return savedMember;
     }
 
