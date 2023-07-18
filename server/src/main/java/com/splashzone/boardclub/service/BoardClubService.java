@@ -17,7 +17,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,6 +37,7 @@ public class BoardClubService {
                 .title(boardClub.getTitle())
                 .content(boardClub.getContent())
                 .dueDate(boardClub.getDueDate())
+                .capacity(boardClub.getCapacity())
                 .contact(boardClub.getContact())
                 .member(findMember)
                 .build();
@@ -51,23 +54,16 @@ public class BoardClubService {
     public BoardClub updateBoardClub(BoardClub boardClub) {
         BoardClub findBoardClub = findVerifiedBoardClub(boardClub.getBoardClubId());
 
-        /*
-        Optional.ofNullable(boardClub.getTitle())
-                .ifPresent(title -> findBoardClub.setTitle(title));
-        Optional.ofNullable(boardClub.getContent())
-                .ifPresent(content -> findBoardClub.setContent(content));
-        Optional.ofNullable(boardClub.getDueDate())
-                .ifPresent(dueDate -> findBoardClub.setDueDate(dueDate));
-        Optional.ofNullable(boardClub.getContact())
-                .ifPresent(contact -> findBoardClub.setContact(contact));
-        Optional.ofNullable(boardClub.getBoardClubStatus())
-                .ifPresent(boardClubStatus -> findBoardClub.setBoardClubStatus(boardClubStatus));
-         */
+        List<BoardClubTag> clubTags = boardClub.getBoardClubTags().stream() // 수정한 모임게시글에서 태그를 가져온다.
+                        .map(boardClubTag -> {
+                            Tag dbTag = tagService.findVerifiedTagByTagName(boardClubTag.getTag().getTagName()); // 수정한 모임게시글의 태그가 DB에 있는지 확인한다.
+                            return BoardClubTag.builder()
+                                    .boardClub(findBoardClub)
+                                    .tag(dbTag).build(); // 수정한 모임게시글의 태그를 저장한다.
+                        })
+                        .collect(Collectors.toList());
 
-        findBoardClub.changeBoardClub(boardClub);
-
-        deleteOriginTagInBoardClub(findBoardClub);
-        bridgeTagToBoardClub(boardClub, findBoardClub);
+        findBoardClub.changeBoardClub(boardClub, clubTags);
 
         return boardClubRepository.save(findBoardClub);
     }

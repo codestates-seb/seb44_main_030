@@ -19,25 +19,28 @@ public class BoardClub extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardClubId;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "TITLE", nullable = false, length = 100)
     private String title;
 
-    @Column(nullable = false)
+    @Column(name = "CONTENT", nullable = false)
     @Lob
     private String content;
 
-    @Column(nullable = false)
+    @Column(name = "DUE_DATE", nullable = false)
     private LocalDate dueDate; // 모집일이 지나면 자동으로 모집 종료되게 처리, 현재보다 이전일은 지정 못하게 처리
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "CAPACITY", nullable = false)
+    private Integer capacity;
+
+    @Column(name = "CONTACT", nullable = false, length = 100)
     private String contact;
 
-    @Column(columnDefinition = "integer default 0", nullable = false)
+    @Column(name = "VIEW", nullable = false, columnDefinition = "integer default 0")
     private int view;
 
     @Enumerated(value = EnumType.STRING)
     @Builder.Default
-    @Column(nullable = false)
+    @Column(name = "BOARD_CLUB_STATUS", nullable = false)
     private BoardClubStatus boardClubStatus = BoardClubStatus.BOARD_CLUB_RECRUITING;
 
     @ManyToOne
@@ -45,7 +48,7 @@ public class BoardClub extends Auditable {
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BoardClubTag> boardClubTags = new ArrayList<>();
 
     public enum BoardClubStatus {
@@ -61,7 +64,7 @@ public class BoardClub extends Auditable {
         }
     }
 
-    public void changeBoardClub(BoardClub boardClub) {
+    public void changeBoardClub(BoardClub boardClub, List<BoardClubTag> clubTags) {
         if (!boardClub.getTitle().isEmpty()) {
             this.title = boardClub.getTitle();
         }
@@ -71,12 +74,18 @@ public class BoardClub extends Auditable {
         if (boardClub.getDueDate() != null) {
             this.dueDate = boardClub.getDueDate();
         }
+        if (boardClub.getCapacity() != null) {
+            this.capacity = boardClub.getCapacity();
+        }
         if (!boardClub.getContact().isEmpty()) {
             this.contact = boardClub.getContact();
         }
         if (boardClub.getBoardClubStatus() != null) {
             this.boardClubStatus = boardClub.getBoardClubStatus();
         }
+
+        this.boardClubTags.clear();
+        this.boardClubTags.addAll(clubTags);
     }
 
     public void changeBoardClubStatus(BoardClubStatus boardClubStatus) {

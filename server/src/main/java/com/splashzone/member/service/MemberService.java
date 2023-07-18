@@ -1,6 +1,8 @@
 package com.splashzone.member.service;
 
 import com.splashzone.auth.utils.CustomAuthorityUtils;
+import com.splashzone.dolphin.Dolphin;
+import com.splashzone.dolphin.DolphinRepository;
 import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
 import com.splashzone.member.entity.Member;
@@ -26,12 +28,14 @@ public class MemberService {
     private MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
+    private final DolphinRepository dolphinRepository;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomAuthorityUtils authorityUtils) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomAuthorityUtils authorityUtils, DolphinRepository dolphinRepository) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityUtils = authorityUtils;
+        this.dolphinRepository = dolphinRepository;
     }
 
     public Member createMember(Member member) {
@@ -50,12 +54,16 @@ public class MemberService {
         member.setEmail(member.getEmail());
         member.setBio(member.getBio());
         member.setNickname(member.getNickname());
-        member.setTerminated(false);
-
         member.setCreatedAt(LocalDateTime.now());
         member.setModifiedAt(LocalDateTime.now());
 
-        return memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
+
+        Dolphin dolphin = new Dolphin(savedMember);
+
+        dolphinRepository.save(dolphin);
+
+        return savedMember;
     }
 
     public Member updateMember(Member member) {
@@ -80,8 +88,10 @@ public class MemberService {
     }
 
     public void terminateMember(Long memberId) {
-        Member findMember = findMember(memberId);
-        memberRepository.delete(findMember);
+        Member foundMember = findMember(memberId);
+        foundMember.setMemberStatus(Member.MemberStatus.TERMINATED);
+        foundMember.setTerminatedAt(LocalDateTime.now());
+        memberRepository.save(foundMember);
     }
 
     @Transactional(readOnly = true)

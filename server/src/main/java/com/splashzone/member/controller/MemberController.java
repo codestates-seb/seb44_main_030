@@ -37,6 +37,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
         Member member = mapper.memberPostToMember(requestBody);
+        member.setMemberStatus(Member.MemberStatus.ACTIVE);
 
         Member createdMember = memberService.createMember(member);
         URI location = UriCreator.createUri(MEMBER_DEFAULT_URL, createdMember.getMemberId());
@@ -72,7 +73,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{member-id}")
-    public ResponseEntity deleteMember(
+    public ResponseEntity terminatedMember(
             @PathVariable("member-id") @Positive Long memberId) {
         memberService.terminateMember(memberId);
 
