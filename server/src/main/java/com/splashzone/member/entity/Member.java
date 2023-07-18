@@ -31,7 +31,9 @@ public class Member {
     @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
+
     @Column(name = "PASSWORD", nullable = false, length = 100)
+
     private String password;
 
     @Column(name = "PROFILE_IMAGE_URL", nullable = true)
@@ -42,14 +44,20 @@ public class Member {
 
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
+
+  
     @Column(name = "MODIFIED_AT", nullable = true)
     private LocalDateTime modifiedAt;
+
+
     @Column(name = "TERMINATED_AT", nullable = true)
     private LocalDateTime terminatedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "MEMBER_STATUS", nullable = false)
     private MemberStatus memberStatus;
+
+  
 
 //    @Enumerated(value = EnumType.STRING)
 //    @Column(name = "MEMBER_STATUS", length = 20, nullable = false)
