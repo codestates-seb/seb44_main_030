@@ -78,7 +78,7 @@ const Tabcomponent0 = () => {
                         onClickDay={HandleClickDay}
                     />
                 </ReactCalander>
-                {modal && <Modal setModal={setModal}></Modal>}
+                {modal && <Modal setModal={setModal} value={value}></Modal>}
             </div>
         </>
     );

@@ -3,7 +3,7 @@ import Block from '../components/style/Wrapper';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import ProfileImage from '../components/style/ProfileImage';
-import { getInfos } from '../Api/getmember';
+import { getInfos } from '../api/getmember';
 import Tabmenu from '../components/Tapmenu';
 import { Loading } from '../components/Lodaing';
 import { useQuery, useMutation } from '@tanstack/react-query';

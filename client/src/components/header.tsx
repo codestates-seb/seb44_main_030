@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import LOGO from '../../public/LOGO2.png';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ProfileImage from './style/ProfileImage';
-
+import { useDispatch } from 'react-redux';
+import { reset } from '../store/scroll.ts';
 //토큰 받아오면 logout delet 토큰 처리해줘야됨.
 //Login 버튼 클릭시 로그인 page로 라우팅처리해주기
 
@@ -12,9 +13,25 @@ interface Props {
 }
 
 const Header = () => {
+    const modalRef = useRef<HTMLDivElement | null>(null);
+    const dispatch = useDispatch();
+    const handleOutsideClick = (event: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+            setMenu(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('click', handleOutsideClick, true);
+        return () => {
+            document.removeEventListener('click', handleOutsideClick, true);
+        };
+    }, []);
+
     const navigate = useNavigate();
     const [isLogin, setIsLogIn] = useState<boolean>(false);
     const [menu, setMenu] = useState(false);
+
     return (
         <StyledHeader>
             <img
@@ -28,7 +45,8 @@ const Header = () => {
             <div className="header-content">
                 <div
                     onClick={() => {
-                        navigate('/community/1');
+                        dispatch(reset());
+                        navigate('/community/전체/null');
                     }}
                 >
                     Community
@@ -36,7 +54,8 @@ const Header = () => {
 
                 <div
                     onClick={() => {
-                        navigate('/club');
+                        dispatch(reset());
+                        navigate('/club/전체/null');
                     }}
                 >
                     Grouping
@@ -53,7 +72,7 @@ const Header = () => {
                                 setMenu(!menu);
                             }}
                         />
-                        {menu ? <Modal setIsLogIn={setIsLogIn}></Modal> : null}
+                        {menu ? <Modal ref={modalRef} setIsLogIn={setIsLogIn} setMenu={setMenu}></Modal> : null}
                     </div>
                 )}
             </div>
@@ -63,13 +82,18 @@ const Header = () => {
 
 export default Header;
 
-const Modal = ({ setIsLogIn }: Props) => {
+interface ModalProps extends Props {
+    setMenu: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Modal = React.forwardRef<HTMLDivElement, ModalProps>(({ setIsLogIn, setMenu }: ModalProps, ref) => {
     const navigate = useNavigate();
     return (
-        <StyledModal>
+        <StyledModal ref={ref}>
             <div
                 onClick={() => {
                     navigate('/mypage');
+                    setMenu(false);
                 }}
             >
                 마이페이지
@@ -77,13 +101,14 @@ const Modal = ({ setIsLogIn }: Props) => {
             <div
                 onClick={() => {
                     setIsLogIn(false);
+                    setMenu(false);
                 }}
             >
                 로그아웃
             </div>
         </StyledModal>
     );
-};
+});
 
 const StyledHeader = styled.div`
     position: fixed;

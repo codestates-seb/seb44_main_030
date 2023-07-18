@@ -27,3 +27,7 @@ export type allCommunityData = {
     data: Array<CommunityPostData>;
     pageInfo: PageInfoData;
 }
+
+export type RouteParams = {
+    standardId: string;
+};

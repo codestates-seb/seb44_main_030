@@ -3,12 +3,17 @@ import { getDefaultMiddleware } from '@reduxjs/toolkit';
 import mapSlice from './map';
 import infoSlice from './info';
 import selectinfo from './selectinfo';
-
+import scrollReducer from './scroll';
+import userReducer from './user';
+import editDataReducer from './editData';
 export const store = configureStore({
     reducer: {
         counter: mapSlice,
         info: infoSlice,
         selection: selectinfo,
+        scroll: scrollReducer,
+        editData: editDataReducer,
+        user: userReducer,
     },
     middleware: getDefaultMiddleware({
         serializableCheck: false,

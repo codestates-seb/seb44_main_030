@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 import LoginBG from '../../public/login.png';
 import RegisterForm from '../components/RegisterForm';
@@ -19,9 +20,7 @@ const Login = () => {
         formState: { errors },
     } = useForm<FormInput>();
 
-    const onSubmit = (data: FormInput) => {
-        console.log('formState', data);
-    };
+    const onSubmit = async (data: FormInput) => {};
 
     const navigate = useNavigate();
 

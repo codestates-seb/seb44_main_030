@@ -11,7 +11,7 @@ export const getMaincommunity = async () => {
     const response = await axios.get(`${import.meta.env.VITE_KEY}/standards`, {
         params: {
             page: 1,
-            size: 4,
+            size: 2,
         },
     });
     return {
