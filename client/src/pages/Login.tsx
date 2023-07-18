@@ -7,6 +7,7 @@ import axios from 'axios';
 
 import LoginBG from '../../public/login.png';
 import RegisterForm from '../components/RegisterForm';
+import { useCookies } from 'react-cookie';
 
 interface FormInput {
     email: string;
@@ -14,13 +15,30 @@ interface FormInput {
 }
 
 const Login = () => {
+    const [cookies, setCookie, removeCookie] = useCookies(['Token']);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<FormInput>();
 
-    const onSubmit = async (data: FormInput) => {};
+    const onSubmit = async (data: FormInput) => {
+        const API_URL = import.meta.env.VITE_KEY;
+        try {
+            const response = await axios.post(`${API_URL}/auth/login`, {
+                username: data.email,
+                password: data.password,
+            });
+            if (response.data.token) {
+                setCookie('Token', response.data.token, { path: '/' });
+                navigate('/');
+            } else {
+                console.error('error');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const navigate = useNavigate();
 

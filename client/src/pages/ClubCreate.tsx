@@ -21,6 +21,7 @@ type FormData = {
     dueDate: string;
     title: string;
     content: string;
+    clubMap?: string;
 };
 
 const ClubCreate = () => {
@@ -178,6 +179,10 @@ const ClubCreate = () => {
                                 </CalendarContainer>
                             )}
                         </TagWarp>
+                        <TagWarp>
+                            <TagCartegory htmlFor="clubMap">모임 위치</TagCartegory>
+                            <input {...register('clubMap')} id="clubMap" placeholder="위치를 검색합니다"></input>
+                        </TagWarp>
                     </TagContainer>
                 </DetailInfoContainer>
                 <DetailContentContainer>
@@ -309,6 +314,9 @@ const ErrorMessage = styled.span`
 `;
 
 const Input = styled.input`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     border: none;
     padding: 20px;
@@ -320,6 +328,9 @@ const Input = styled.input`
     }
 `;
 const TextArea = styled.textarea`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     box-sizing: border-box;
     width: 1200px;
     height: 600px;
