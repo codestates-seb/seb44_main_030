@@ -25,7 +25,7 @@ export function useDeletePost(postId:number) {
                 mutation.mutate(postId);
             }
         },
-        [mutation],
+        [mutation,postId],
     );
 
     return {handleDeletePost, boardType};
