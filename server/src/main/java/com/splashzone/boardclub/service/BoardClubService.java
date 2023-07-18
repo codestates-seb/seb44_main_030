@@ -37,6 +37,7 @@ public class BoardClubService {
                 .title(boardClub.getTitle())
                 .content(boardClub.getContent())
                 .dueDate(boardClub.getDueDate())
+                .capacity(boardClub.getCapacity())
                 .contact(boardClub.getContact())
                 .member(findMember)
                 .build();

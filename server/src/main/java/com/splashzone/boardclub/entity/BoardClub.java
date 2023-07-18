@@ -29,6 +29,9 @@ public class BoardClub extends Auditable {
     @Column(name = "DUE_DATE", nullable = false)
     private LocalDate dueDate; // 모집일이 지나면 자동으로 모집 종료되게 처리, 현재보다 이전일은 지정 못하게 처리
 
+    @Column(name = "CAPACITY", nullable = false)
+    private Integer capacity;
+
     @Column(name = "CONTACT", nullable = false, length = 100)
     private String contact;
 
@@ -70,6 +73,9 @@ public class BoardClub extends Auditable {
         }
         if (boardClub.getDueDate() != null) {
             this.dueDate = boardClub.getDueDate();
+        }
+        if (boardClub.getCapacity() != null) {
+            this.capacity = boardClub.getCapacity();
         }
         if (!boardClub.getContact().isEmpty()) {
             this.contact = boardClub.getContact();

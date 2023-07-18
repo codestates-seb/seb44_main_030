@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +35,9 @@ public class BoardClubDto {
 //        @NotEmpty(message = "마감일을 지정해 주세요.")
         private LocalDate dueDate;
 
+        @NotNull(message = "모집 인원수를 작성해 주세요.")
+        private Integer capacity;
+
         @NotBlank(message = "오픈톡 링크를 작성해 주세요.")
         private String contact;
 
@@ -56,6 +60,8 @@ public class BoardClubDto {
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate dueDate;
+
+        private Integer capacity;
 
         private String contact;
 
@@ -84,6 +90,8 @@ public class BoardClubDto {
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate dueDate;
+
+        private Integer capacity;
 
         private String contact;
 

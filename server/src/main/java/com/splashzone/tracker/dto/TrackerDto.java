@@ -68,5 +68,9 @@ public class TrackerDto {
         private String content;
 
         private Long exerciseTime;
+
+        private LocalDateTime createdAt;
+
+        private LocalDateTime modifiedAt;
     }
 }
