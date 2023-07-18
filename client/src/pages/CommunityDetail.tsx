@@ -2,99 +2,101 @@ import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import backgroundImg from '../assets/Community_background.png';
-import { CommunityDetailMockdata } from '../assets/mockdata.ts';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import DetailContentSection from '../components/DetailContentSection.tsx';
-import axios from 'axios';
-type BackgroundProps = {
+import { Loading } from '../components/Lodaing.tsx';
+import { useQuery } from '@tanstack/react-query';
+import { getDetailCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
+import { RouteParams } from '../types/CommunityTypes.ts';
+
+type BackgroundStyledProps = {
     $image: string;
 };
 
-export type CommentInput = {
-    Content: string;
-};
-
 const CommunityDetail = () => {
-    const { standardId } = useParams();
+    const { standardId } = useParams<RouteParams>();
+    if (!standardId) {
+        throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
+    }
     const mockMemberId = 1; //useSelector 사용
     const navigate = useNavigate();
+
     const {
-        memberId,
-        memberProfileImg,
-        name,
-        title,
-        content,
-        tag,
-        view,
-        like,
-        memberLiked,
-        comment,
-        registeredAt,
-        modifiedAt,
-    } = CommunityDetailMockdata;
-    const [likeCount, setLikeCount] = useState(like); //실제 구현 시 데이터 받고나서 데이터 설정할 것.
-    const [isLiked, setIsLiked] = useState(memberLiked?.includes(mockMemberId)); //실제 구현 시 데이터 받고나서 데이터 설정할 것.
-    const [commentCount, setCommentCount] = useState(comment.length);
+        isLoading,
+        error: errorData,
+        data,
+    } = useQuery(
+        ['communityDetail', standardId],
+        () => {
+            console.log(`게시글ID:${standardId}데이터를 가져옵니다.`);
+            return getDetailCommunityPost(standardId);
+        },
+        {
+            staleTime: 10000, // 10초
+        },
+    );
+    const detailCommunityData = data || undefined;
 
-    const getCommunityDetailData = async () => {
-        const response = axios.get(`${import.meta.env.VITE_KEY}/standard/${standardId}`);
-        console.log(response);
-    }
-    useEffect(() => {
-        getCommunityDetailData();
-    }, []);
-
-    const handleLike = useCallback(() => {
-        isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
-        setIsLiked((prev) => !prev);
-    }, [isLiked]);
+    // 좋아요 구현 시 사용
+    // const handleLike = useCallback(() => {
+    //     isLiked ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
+    //     setIsLiked((prev) => !prev);
+    // }, [isLiked]);
 
     const hanldeNavigatePrev = useCallback(() => {
         navigate(-1);
     }, []);
 
     const handleNavigateProfile = useCallback(() => {
-        navigate(`/mypage`, { state: memberId });
-    }, [memberId]);
+        navigate(`/mypage`);
+    }, [detailCommunityData?.member?.memberId]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
-    const dateStr = modifiedAt || registeredAt;
-    const datePart = dateStr.split('T')[0];
-    const dateArr = datePart.split('-');
-    const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
-    const formattedDate = modifiedAt ? `${newDateStr} (수정됨)` : newDateStr;
+    if (isLoading) {
+        return <Loading />;
+    }
+
+    if (errorData) {
+        console.log(errorData);
+        return <div>게시글을 불러올 수 없습니다.</div>;
+    }
     return (
         <Background $image={backgroundImg}>
             <PostContainer>
                 <TitleSection>
                     <button onClick={hanldeNavigatePrev}>목록</button>
-                    <h1>{title}</h1>
+                    <h1>{detailCommunityData?.title}</h1>
                     <div>
                         <div>
                             <h3>관련태그: </h3>
-                            <span className="tag">{tag}</span>{' '}
+                            <span className="tag">{/* {tag} */}</span>{' '}
                         </div>
                         <div>
-                            <span className="date">{formattedDate}</span>
-                            <img src={memberProfileImg} />
+                            <span className="date">{detailCommunityData?.createdAt}</span>
+                            {/* <img src={memberProfileImg} /> */}
                             <span className="name" onClick={handleNavigateProfile}>
-                                {name}
+                                {detailCommunityData?.name}
                             </span>
                         </div>
                     </div>
                 </TitleSection>
                 <DetailContentSection
-                    commentCount={commentCount}
-                    view={view}
-                    content={content}
-                    handleLike={handleLike}
-                    isLiked={isLiked}
-                    likeCount={likeCount}
+                    title={detailCommunityData?.title}
+                    commentCount={detailCommunityData?.commentCount}
+                    view={detailCommunityData?.view}
+                    content={detailCommunityData?.content}
+                    handleLike={detailCommunityData?.handleLike}
+                    isLiked={detailCommunityData?.isLiked}
+                    likeCount={detailCommunityData?.likeCount}
+                    memberId={detailCommunityData?.member?.memberId}
+                    standardId={detailCommunityData?.standardId}
+                    clubId={detailCommunityData?.clubId}
+                    tag={detailCommunityData?.tag}
                 />
-                <DetailCommentSection comment={comment} />
+                <DetailCommentSection comment={detailCommunityData?.comment} />
             </PostContainer>
         </Background>
     );
@@ -102,10 +104,7 @@ const CommunityDetail = () => {
 
 export default CommunityDetail;
 
-const Background = styled.div<BackgroundProps>`
-    * {
-        box-sizing: border-box;
-    }
+const Background = styled.div<BackgroundStyledProps>`
     background-image: url(${(props) => props.$image});
     background-size: cover;
     background-position: center center;

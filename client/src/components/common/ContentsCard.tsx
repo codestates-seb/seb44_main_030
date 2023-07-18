@@ -10,7 +10,8 @@ import MessageIcon from '../../../public/bubble-chat.png';
 import LikeIcon from '../../assets/Like.svg';
 import LikeFilledIcon from '../../assets/Like_filled.svg';
 import { title } from 'process';
-
+import { savePosition } from '../../store/scroll.ts';
+import { useDispatch } from 'react-redux';
 interface PostProps {
     memberId: number;
     title: string;
@@ -83,7 +84,7 @@ export default function ContentsCard({
     } = clubProps || {};
 
     // console.log(communityProps);
-
+    const dispatch = useDispatch();
     const loginId = 1; //useSelector 사용
     const [likeCount, setLikeCount] = useState(like);
     const [isLiked, setIsLiked] = useState(memberLiked.includes(loginId));
@@ -96,8 +97,10 @@ export default function ContentsCard({
 
     const moveToDetail = () => {
         if (type === 'community') {
+            dispatch(savePosition(window.scrollY));
             navigate(`/community/detail/${standardId}`);
         } else if (type) {
+            dispatch(savePosition(window.scrollY));
             navigate(`/club/detail/${boardClubId}`);
         }
     };
@@ -183,7 +186,7 @@ const CardWarp = styled.div`
     &:hover {
         border: 3px solid rgba(226, 240, 254, 0.8);
         background-color: rgba(56, 132, 213, 1);
-        transform: scale(1.1);
+        transform: scale(1.2);
         box-shadow: 0 5px 15px #bccbf9;
         color: #ffffff;
 
@@ -206,7 +209,10 @@ const TitleContentsTagWarp = styled.div`
     display: flex;
     flex-direction: column;
     align-items: start;
+    flex-basis: 80%;
+    justify-content: space-between;
 `;
+
 const TitleContainer = styled.div`
     font-size: 1.3rem;
     font-family: 'KimjungchulGothic-Bold';
@@ -226,9 +232,18 @@ const TitleContainer = styled.div`
     }
 `;
 const ContentsContainer = styled.div`
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    width: 300px;
     margin-bottom: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+        color: #c1daf5;
+        cursor: pointer;
+    }
 `;
 
 const TagContainer = styled.div`
@@ -242,9 +257,11 @@ const InfoContainer = styled.div`
     border-top: 1px solid #696969;
     width: 107%;
     margin-top: 1rem;
-    padding:10px 2px 0 2px;
+    padding: 10px 2px 0 2px;
     ${CardWarp}:hover & {
         border-top: 1px solid #ffffff;
+    }
+    flex-basis: 20%;
 `;
 
 const UserInfo = styled.div`
@@ -256,8 +273,12 @@ const UserInfo = styled.div`
         height: 30px;
     }
     > span {
+        width: 70px;
         margin-left: 10px;
         font-weight: 500;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 `;
 

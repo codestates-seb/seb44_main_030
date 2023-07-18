@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useCallback, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { SubmitHandler } from 'react-hook-form';
 import { motion } from 'framer-motion';
 
@@ -13,25 +13,28 @@ import PopularContentsSection from '../components/common/PopularContentsSection.
 import useClubBoardData from '../api/ClubApi/ClubDataHooks.ts';
 import { ClubBoardData } from '../types/ClubData.ts';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store/store.tsx';
+
 type SearchInput = {
     Keyword: string;
 };
 
 function Club() {
-    const [currTag, setCurrTag] = useState<string>(Mocktags[0]);
+    const { tag: currTag } = useParams();
     const navigate = useNavigate();
-
-    const onSubmit: SubmitHandler<SearchInput> = useCallback((data) => {
-        //검색 api 요청 추가, Query key로 currTag, searchKeyword, currPage 넣기.
-        console.log(data);
-    }, []);
+    const scrollPosition = useSelector((state: RootState) => state.scroll);
+    const dispatch = useDispatch();
 
     const handleNavigateCreate = () => {
         navigate('/club/create', { state: 'club' });
     };
 
     useEffect(() => {
-        window.scrollTo(0, 0);
+        const timer = setTimeout(() => {
+            window.scrollTo(0, scrollPosition);
+        }, 500); // 0.5초 후에 실행
+        return () => clearTimeout(timer);
     }, []);
 
     const { status, data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } = useClubBoardData();
@@ -63,12 +66,7 @@ function Club() {
             <ScrollBanner bannerImg={BackgroundImg} />
             <ContentContainer>
                 <PopularContentsSection />
-                <TagSearchSection
-                    handleNavigateCreate={handleNavigateCreate}
-                    currTag={currTag}
-                    setCurrTag={setCurrTag}
-                    onSubmit={onSubmit}
-                />
+                <TagSearchSection currTag={currTag} handleNavigateCreate={handleNavigateCreate} />
                 <CardSection>
                     {status === 'loading' ? (
                         <div>Loading...</div>

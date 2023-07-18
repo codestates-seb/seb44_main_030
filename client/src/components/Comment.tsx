@@ -1,24 +1,31 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { CommentInput } from '../pages/CommunityDetail';
-interface CommentProps {
+import axios, { AxiosError } from 'axios';
+
+type CommentProps = {
     commentData: {
         memberId: number;
+        commentId: number;
         name: string;
         memberProfileImg: string;
         content: string;
         registeredAt: string;
         modifiedAt: string | null;
     };
-}
+};
+type CommentInput = {
+    Content: string;
+};
 const Comment = ({ commentData }: CommentProps) => {
-    const { memberId, name, memberProfileImg, content, registeredAt, modifiedAt } = commentData;
+    const { commentId, memberId, name, memberProfileImg, content, registeredAt, modifiedAt } = commentData;
     const navigate = useNavigate();
     const [modifiedDate, setModifiedAt] = useState<string | null>(modifiedAt);
     const [isEditOn, setIsEditOn] = useState<boolean>(false);
     const [commentContent, setCommentContent] = useState<string>(content);
+    const location = useLocation();
+    const boardType = location.pathname.split('/')[1] === 'community' ? 'boardcomments' : 'clubcomments';
 
     const loginId = 1; //useSelector 사용
 
@@ -33,9 +40,30 @@ const Comment = ({ commentData }: CommentProps) => {
         setModifiedAt(modifiedAt);
     }, [modifiedAt]);
 
-    const onSubmit: SubmitHandler<CommentInput> = (data) => {
+    // 댓글 수정 patch api 요청
+    const onSubmit: SubmitHandler<CommentInput> = async (data) => {
         // console.log(data);
-        // 댓글 수정 patch api 요청
+        const payload = {
+            content: `${data.Content}`,
+        };
+        const API_URL = import.meta.env.VITE_KEY;
+        try {
+            //commentId가 club, community 별로 나눠져서 관리 되는지? 합쳐서 관리되는지? 잘모름. 일단 임의로 작성.
+            const response = await axios.patch(`${API_URL}/${boardType}/${commentId}`, payload);
+            if (response.status === 200 || response.status === 201) {
+                console.log('수정 성공');
+            } else {
+                // 오류 처리
+                console.log('수정 요청을 실패했습니다');
+            }
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.log('Axios Error occurred while creating the patch', (error as AxiosError).response?.data);
+            } else {
+                console.log('Error occurred while creating the patch', error);
+            }
+        }
+        console.log(payload);
         setCommentContent(data.Content);
         reset();
         setIsEditOn((prev) => !prev);
@@ -51,10 +79,25 @@ const Comment = ({ commentData }: CommentProps) => {
         reset({ Content: commentContent });
     }, [commentContent]);
 
-    const handleDelete = useCallback(() => {
-        alert('댓글을 삭제합니다.');
-        // 댓글 삭제 Delete 요청
-    }, []);
+    // 댓글 삭제 Delete 요청
+    const handleDelete = async () => {
+        confirm('댓글을 삭제할까요?');
+        try {
+            const response = await axios.delete(`${import.meta.env.VITE_KEY}/${boardType}/${commentId}`);
+            if (response.status === 200 || response.status === 204) {
+                console.log('삭제 성공');
+            } else {
+                // 오류 처리
+                console.log('삭제 요청을 실패했습니다');
+            }
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.log('Axios Error occurred while creating the patch', (error as AxiosError).response?.data);
+            } else {
+                console.log('Error occurred while creating the patch', error);
+            }
+        }
+    };
 
     const handleCancelEdit = useCallback(() => {
         reset();
