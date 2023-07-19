@@ -65,7 +65,7 @@ const SearchEngine = () => {
 };
 
 const Searchbox = styled.div`
-    width: 300px;
+    width: 330px;
     height: 40px;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 10px;

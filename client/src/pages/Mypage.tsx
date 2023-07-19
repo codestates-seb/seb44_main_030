@@ -15,14 +15,18 @@ interface member {
     nickname?: string;
     bio?: string;
 }
+type ErrorType<T> = {
+    error: T | unknown;
+};
 
 const Mypage = () => {
     const [edit, setEdit] = useState(false);
     const memberId = 1; //memberId Link로받던가 아니면  header포함해서받던가하기
-    const { data, isLoading, isError, error } = useQuery({
+    const { data, isLoading, isError, error } = useQuery<ErrorType<T>>({
         queryKey: ['memberinfo', memberId],
         queryFn: () => getInfos(memberId),
     });
+
     const patchInfos = (edit: member) =>
         axios
             .patch(`http://13.209.142.240:8080/members/${memberId}`, edit)
@@ -36,7 +40,6 @@ const Mypage = () => {
 
     const handleUpdate = (member: member) => {
         updateMutation.mutate(member);
-        location.reload();
     };
     useEffect(() => {
         if (data) {
@@ -88,7 +91,7 @@ const Mypage = () => {
                                             {edit ? (
                                                 <StyledInput
                                                     value={member.nickname}
-                                                    onChange={(e) => {
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                         setMember((prev) => ({
                                                             ...prev,
                                                             nickname: e.target.value,
@@ -107,11 +110,11 @@ const Mypage = () => {
 
                                     <Block width="290px" height="250px">
                                         <div>
-                                            <p style={{ fontWeight: 'bold' }}>자기소개</p>
+                                            <p>자기소개</p>
                                             {edit ? (
                                                 <Styledtextarea
                                                     value={member.bio}
-                                                    onChange={(e) => {
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                         setMember((prev) => ({
                                                             ...prev,
                                                             bio: e.target.value,
