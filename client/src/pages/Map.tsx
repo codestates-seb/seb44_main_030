@@ -12,6 +12,7 @@ const Map = () => {
                 <MarkersContainer></MarkersContainer>
                 <div style={{ position: 'absolute', top: '0px', right: '0%' }}>
                     <Fetching />
+                    <StyledButton style={{ position: 'absolute', top: '0px', right: '0px' }}>❌</StyledButton>
                 </div>
                 <Wrapper width="90%" height="20%">
                     <h3>Tip</h3>
@@ -48,6 +49,13 @@ const StyledModal = styled.div`
         padding: 10px;
         border-radius: 5px;
     }
+`;
+
+const StyledButton = styled.button`
+    background-color: #ced6df;
+    border: 1px solid rgba(0,0,0,0.1)
+    color: white;
+    cursor: pointer;
 `;
 
 export default Map;
