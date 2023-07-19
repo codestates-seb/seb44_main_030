@@ -111,12 +111,12 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(({ setIsLogIn, setMen
 });
 
 const StyledHeader = styled.div`
-display: grid;
-grid-template-columns: repeat(12, minmax(0, 1fr));
-column-gap: 80px;
-align-items: center;
-justify-content: end;
-width: 100%;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 80px;
+    align-items: center;
+    justify-content: end;
+    width: 100%;
     font-size: 1.5rem;
     color: white;
     font-family: 'Monomaniac One', sans-serif;
