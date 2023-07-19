@@ -117,7 +117,7 @@ const StyledHeader = styled.div`
     column-gap: 80px;
     align-items: center;
     justify-content: end;
-    width: 100vw;
+    width: 100%;
     font-size: 1.5rem;
     height: 85px;
     color: white;

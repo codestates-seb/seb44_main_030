@@ -8,6 +8,8 @@ import { motion } from 'framer-motion';
 import { reset } from '../store/editData.ts';
 import { useDispatch } from 'react-redux';
 import axios, { AxiosError } from 'axios';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 type FormData = {
     capacity: number;
@@ -124,6 +126,21 @@ const ClubCreate = () => {
         setToday(new Date());
     }, []);
 
+    const toolbarOptions = [
+        [{ header: '1' }, { header: '2' }],
+        [{ size: [] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
+        [
+            {
+                color: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
+            },
+            {
+                background: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
+            },
+        ],
+    ];
+
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <FormContainer onSubmit={handleSubmit(onSubmit)}>
@@ -209,13 +226,26 @@ const ClubCreate = () => {
                         {errors.title && <ErrorMessage>{errors?.title.message}</ErrorMessage>}
                     </Title>
                     <Content>
-                        <TextArea
+                        {/* <TextArea
                             placeholder="모임에 대해 소개해주세요!"
                             {...register('content', {
                                 required: '내용을 입력해주세요',
                                 minLength: { value: 30, message: '30자 이상 입력해주세요' },
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
+                        /> */}
+                        <Controller
+                            name="content"
+                            control={control}
+                            defaultValue=""
+                            rules={{
+                                required: '내용을 입력해주세요',
+                                minLength: { value: 30, message: '30자 이상 입력해주세요' },
+                                maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
+                            }}
+                            render={({ field }) => (
+                                <StyledReactQuill {...field} modules={{ toolbar: toolbarOptions }} />
+                            )}
                         />
                         {errors.title && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
@@ -303,13 +333,13 @@ const Title = styled.div`
     box-sizing: border-box;
     background: #fff;
     margin: 20px 0 10px 0;
-    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.2);
 `;
 const Content = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 1200px;
+    max-width: 1200px;
     min-height: 600px;
     border-radius: 15px;
     border: none;
@@ -334,7 +364,53 @@ const Input = styled.input`
     border-radius: 15px;
     resize: none;
     &:focus {
-        outline: solid 3px #3884d5;
+        outline: solid 4px #3884d5;
+    }
+`;
+
+const StyledReactQuill = styled(ReactQuill)`
+    box-sizing: border-box;
+    max-width: 100%;
+    height: auto;
+    border: none;
+    outline: none;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+
+    .ql-toolbar {
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        background-color: #f5f5f5;
+        border: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+        .ql-picker-label,
+        .ql-picker-options {
+            font-size: 18px;
+        }
+
+        .ql-picker-options {
+            background-color: #f5f5f5;
+            border: none;
+            padding: 5px;
+        }
+    }
+
+    .ql-container {
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        background-color: #fff;
+        border: none;
+        border-top: none;
+        box-shadow: none;
+
+        .ql-editor {
+            min-width: 1200px;
+            min-height: 600px;
+            padding: 20px;
+            font-size: 30px;
+        }
     }
 `;
 const TextArea = styled.textarea`
