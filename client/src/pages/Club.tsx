@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 
 import BackgroundImg from '../assets/oceanbeach.png';
 import ScrollBanner from '../components/common/ScrollBanner';
-import { ClubDummyData, Mocktags } from '../../public/clubMockdata.ts';
 import ContentsCard from '../components/common/ContentsCard';
 import TagSearchSection from '../components/common/TagSearchSection.tsx';
 import PopularContentsSection from '../components/common/PopularContentsSection.tsx';

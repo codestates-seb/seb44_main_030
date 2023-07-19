@@ -83,13 +83,11 @@ export default function ContentsCard({
 
     const [clubStatus, setClubStatus] = useState(boardClubStatus);
     useEffect(() => {
-        // 현재 날짜와 dueDate를 비교
         const now = new Date();
+        now.setDate(now.getDate() + 1);
         const due = new Date(dueDate);
 
-        // 오늘 날짜가 마감 날짜를 지나갔다면
         if (now > due && clubStatus !== 'BOARD_CLUB_CANCEL') {
-            // 상태를 '모집 완료'로 변경
             setClubStatus('BOARD_CLUB_COMPLETED');
         }
     }, [dueDate, clubStatus]);

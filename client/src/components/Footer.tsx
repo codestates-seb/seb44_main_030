@@ -26,8 +26,8 @@ const StyledFooter = styled.footer`
     background-color: rgba(56, 132, 213, 1);
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    padding: 10px;
-    min-width: 1200px;
+    column-gap: 80px;
+    padding: 40px;
     height: 250px;
     color: white;
     font-size: 1.5rem;

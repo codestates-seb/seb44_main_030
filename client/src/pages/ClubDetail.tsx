@@ -24,10 +24,10 @@ const ClubDetail = () => {
     const numberBoardClubId = boardClubId ? Number(boardClubId) : 0;
     const { status, data: clubDetail, error } = useClubBoardDetail(numberBoardClubId);
 
-    let boardClubStatus, contact, content, createdAt, dueDate, memberId, modifiedAt, tags, title, view;
+    let boardClubStatus, contact, content, capacity, createdAt, dueDate, memberId, modifiedAt, tags, title, view;
 
     if (clubDetail && clubDetail.data) {
-        ({ boardClubStatus, contact, content, createdAt, dueDate, memberId, modifiedAt, tags, title, view } =
+        ({ boardClubStatus, contact, content, capacity, createdAt, dueDate, memberId, modifiedAt, tags, title, view } =
             clubDetail.data);
     }
     console.log(clubDetail);
@@ -86,6 +86,7 @@ const ClubDetail = () => {
                         </div>
                         <div>
                             <h3>모집 인원: </h3>
+                            <span>{capacity} 명</span>
                         </div>
                         <div>
                             <h3>모집 마감일: </h3>
