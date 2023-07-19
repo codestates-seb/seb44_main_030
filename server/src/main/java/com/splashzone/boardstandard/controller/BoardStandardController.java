@@ -72,7 +72,7 @@ public class BoardStandardController {
 
     @GetMapping("/{standard-id}")
     public ResponseEntity getStandard(@PathVariable("standard-id") Long standardId) {
-        BoardStandard boardStandard = boardStandardService.selectStandard(standardId);
+        BoardStandard boardStandard = boardStandardService.findStandard(standardId);
         boardStandardService.increaseViews(standardId);
         return new ResponseEntity<>(new SingleResponseDto<>(boardStandardMapper.boardStandardToResponseDto(boardStandard)), HttpStatus.OK);
     }

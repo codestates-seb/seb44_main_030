@@ -37,6 +37,9 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (request.getMethod().equals("OPTIONS")) {
+            return;
+        }
         try {
             Map<String, Object> claims = verifyJws(request);
             setAuthenticationToContext(claims);
@@ -73,16 +76,16 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         String username = (String) claims.get("username");
         Long memberId = (Long) claims.get("memberId");  //
         System.out.println("setAuthenticationToContext - username: " + username);
-        List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));
+        List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List) claims.get("roles"));
         List<String> roles = new ArrayList<>();
-        authorities.forEach(s->roles.add(s.getAuthority()));
+        authorities.forEach(s -> roles.add(s.getAuthority()));
 
         Member member = Member.builder()
                 .memberId(memberId)
                 .email(username)
                 .roles(roles).build();
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(new MemberDetails(authorityUtils, member) , null, authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(new MemberDetails(authorityUtils, member), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         System.out.println("setAuthenticationToContext - authentication: " + authentication);
