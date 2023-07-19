@@ -7,9 +7,9 @@ import backgroundImg from '../assets/Community_background.png';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import Comment from '../components/Comment.tsx';
 import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
 import axios from 'axios';
+import DetailCommentSection from '../components/DetailCommentSection.tsx';
 
 interface BackgroundProps {
     $image: string;
@@ -24,24 +24,20 @@ const ClubDetail = () => {
     const numberBoardClubId = boardClubId ? Number(boardClubId) : 0;
     const { status, data: clubDetail, error } = useClubBoardDetail(numberBoardClubId);
 
-    let boardClubStatus, contact, content, createdAt, dueDate, memberId, modifiedAt, tags, title, view;
+    let boardClubStatus, contact, content, capacity, createdAt, dueDate, memberId, modifiedAt, tags, title, view;
 
     if (clubDetail && clubDetail.data) {
-        ({ boardClubStatus, contact, content, createdAt, dueDate, memberId, modifiedAt, tags, title, view } =
+        ({ boardClubStatus, contact, content, capacity, createdAt, dueDate, memberId, modifiedAt, tags, title, view } =
             clubDetail.data);
     }
+    console.log(clubDetail);
 
     const location = useLocation();
     const navigate = useNavigate();
 
     // const [commentCount, setCommentCount] = useState(comment.length);
     const { register, handleSubmit, reset } = useForm<CommentInput>({ mode: 'onSubmit' });
-    const onSubmit: SubmitHandler<CommentInput> = (data: CommentInput) => {
-        // console.log(data);
-        // 댓글 작성 post api 요청
-        reset();
-        alert('댓글작성 완료!');
-    };
+
     //standardId 이용해서 API 요청
     const hanldeNavigatePrev = useCallback(() => {
         navigate(-1);
@@ -90,6 +86,7 @@ const ClubDetail = () => {
                         </div>
                         <div>
                             <h3>모집 인원: </h3>
+                            <span>{capacity} 명</span>
                         </div>
                         <div>
                             <h3>모집 마감일: </h3>
@@ -126,28 +123,7 @@ const ClubDetail = () => {
                         </div>
                     </div>
                 </ContentSection>
-                <CommentSection>
-                    <CreateCommentSpace>
-                        <label htmlFor="commentInput">댓글작성</label>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <textarea
-                                id="commentInput"
-                                placeholder="댓글 내용을 입력해주세요"
-                                {...register('Content', {
-                                    required: true,
-                                })}
-                            />
-                            <div>
-                                <button type="submit">작성</button>
-                            </div>
-                        </form>
-                    </CreateCommentSpace>
-                    {/* <div>
-                        {comment.map((commentData) => (
-                            <Comment commentData={commentData} />
-                        ))}
-                    </div> */}
-                </CommentSection>
+                <DetailCommentSection comment={clubDetail?.comment} />
             </PostContainer>
         </Background>
     );

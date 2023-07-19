@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';
-
+import ConfirmModal from './common/ConfirmModal';
 type CommentProps = {
     commentData: {
         memberId: number;
@@ -24,6 +24,7 @@ const Comment = ({ commentData }: CommentProps) => {
     const [modifiedDate, setModifiedAt] = useState<string | null>(modifiedAt);
     const [isEditOn, setIsEditOn] = useState<boolean>(false);
     const [commentContent, setCommentContent] = useState<string>(content);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const location = useLocation();
     const boardType = location.pathname.split('/')[1] === 'community' ? 'boardcomments' : 'clubcomments';
 
@@ -39,6 +40,11 @@ const Comment = ({ commentData }: CommentProps) => {
     useEffect(() => {
         setModifiedAt(modifiedAt);
     }, [modifiedAt]);
+
+    // 모달 창 닫기
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     // 댓글 수정 patch api 요청
     const onSubmit: SubmitHandler<CommentInput> = async (data) => {
@@ -81,7 +87,6 @@ const Comment = ({ commentData }: CommentProps) => {
 
     // 댓글 삭제 Delete 요청
     const handleDelete = async () => {
-        confirm('댓글을 삭제할까요?');
         try {
             const response = await axios.delete(`${import.meta.env.VITE_KEY}/${boardType}/${commentId}`);
             if (response.status === 200 || response.status === 204) {
@@ -114,6 +119,13 @@ const Comment = ({ commentData }: CommentProps) => {
 
     return (
         <CommentContainer>
+            {isModalOpen && (
+                <ConfirmModal
+                    handleCloseModal={handleCloseModal}
+                    handleConfirm={handleDelete}
+                    text="정말 삭제할까요?"
+                />
+            )}
             <UserInfoBox>
                 <img src={memberProfileImg} alt="profile_image" />
                 <div title={`${name}`} onClick={handleNavigateProfile}>
@@ -145,7 +157,7 @@ const Comment = ({ commentData }: CommentProps) => {
                         {isEditOn || (
                             <div>
                                 <button onClick={handleEdit}>수정</button>
-                                <button onClick={handleDelete}>삭제</button>
+                                <button onClick={()=>setIsModalOpen(true)}>삭제</button>
                             </div>
                         )}
                     </div>

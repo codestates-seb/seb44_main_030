@@ -27,10 +27,10 @@ export default function ScrollBanner({ bannerImg }: { bannerImg: string }) {
         const observerCallback = (entries: IntersectionObserverEntry[]) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    console.log('RollBanner is now in viewport');
+                    // console.log('RollBanner is now in viewport');
                     setIsRollBannerInViewPort(true);
                 } else {
-                    console.log('RollBanner is now out of viewport');
+                    // console.log('RollBanner is now out of viewport');
                     setIsRollBannerInViewPort(false);
                 }
             });

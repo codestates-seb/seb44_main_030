@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import React from 'react';
 import { useNavigate } from 'react-router';
 import backgroundImg from '../assets/Signup_background.png';
@@ -6,6 +6,10 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import RegisterForm from '../components/RegisterForm';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+
+import BACK1 from '../../public/ob1.png';
+import BACK2 from '../../public/ob2.png';
+
 type SignupInputs = {
     Name: string;
     Nickname: string;
@@ -32,18 +36,18 @@ const Signup = () => {
         console.log(data);
         const API_URL = import.meta.env.VITE_KEY;
         const payload = {
-            memberId: 1,
             name: data.Name,
             password: data.Password,
             nickname: data.Nickname,
             email: data.Email,
             bio: data.Biography,
         };
+        console.log(payload);
         axios
             .post(`${API_URL}/members`, payload)
             .then((response) => {
                 console.log(response);
-                alert('회원가입완료! 로그인페이지로 이동합니다.')
+                alert('회원가입완료! 로그인페이지로 이동합니다.');
                 navigate('/login');
             })
             .catch((error) => {
@@ -54,12 +58,7 @@ const Signup = () => {
 
     const password = watch('Password', '');
     return (
-        <MotionBackground
-            $image={backgroundImg}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-        >
+        <MotionBackground $image={BACK2} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <StyledRegisterForm onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <label htmlFor="nameInput">Name</label>
@@ -158,6 +157,7 @@ const Signup = () => {
                 </div>
                 <button type="submit">Sign up</button>
             </StyledRegisterForm>
+            <AnimatedBackground />
         </MotionBackground>
     );
 };
@@ -174,9 +174,36 @@ const MotionBackground = styled(motion.div)<BackgroundStyledProps>`
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 `;
+
+const zoomInZoomOut = keyframes`
+    0% {
+        transform: scale(1); 
+    }
+    50% {
+        transform: scale(1.03); 
+    }
+    100% {
+        transform: scale(1); 
+    }
+`;
+
+const AnimatedBackground = styled.div`
+    background-image: url(${BACK1});
+    background-size: cover;
+    background-position: center 10%;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    animation: ${zoomInZoomOut} 2s ease-in-out infinite;
+    will-change: transform;
+`;
+
 const StyledRegisterForm = styled(RegisterForm)`
-    height: 950px;
+    height: 940px;
+    z-index: 999;
+
     > div {
         display: flex;
         flex-direction: column;

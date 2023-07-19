@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import backgroundImg from '../assets/Community_background.png';
@@ -36,6 +36,7 @@ const CommunityDetail = () => {
         },
     );
     const detailCommunityData = data || undefined;
+    console.log(detailCommunityData);
 
     // 좋아요 구현 시 사용
     // const handleLike = useCallback(() => {
@@ -93,7 +94,6 @@ const CommunityDetail = () => {
                     likeCount={detailCommunityData?.likeCount}
                     memberId={detailCommunityData?.member?.memberId}
                     standardId={detailCommunityData?.standardId}
-                    clubId={detailCommunityData?.clubId}
                     tag={detailCommunityData?.tag}
                 />
                 <DetailCommentSection comment={detailCommunityData?.comment} />

@@ -1,10 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import BACK1 from '../../public/ob3.png';
+import BACK2 from '../../public/ob4.png';
 
+import useApi from '../api/useTokenAddApi';
 import LoginBG from '../../public/login.png';
 import RegisterForm from '../components/RegisterForm';
 
@@ -14,59 +18,88 @@ interface FormInput {
 }
 
 const Login = () => {
+    const api = useApi();
+    const [cookies, setCookie, removeCookie] = useCookies(['Token']);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<FormInput>();
 
-    const onSubmit = async (data: FormInput) => {};
+    const onSubmit = async (data: FormInput) => {
+        const API_URL = import.meta.env.VITE_KEY;
+        try {
+            const response = await axios.post(
+                `${API_URL}/auth/login`,
+                {
+                    username: data.email,
+                    password: data.password,
+                },
+                {
+                    withCredentials: true,
+                },
+            );
+            if (response.data.token) {
+                setCookie('Token', response.data.token, { path: '/' });
+                navigate('/');
+            } else {
+                console.error('error');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const navigate = useNavigate();
 
     return (
         <StyledCover initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <StyledBackgroundImg>
-                <StyledRegisterForm onSubmit={handleSubmit(onSubmit)}>
-                    <div className="forLabel">
-                        <label htmlFor="email">E-mail Address</label>
-                    </div>
-                    <StyledInput
-                        id="emailInput"
-                        type="email"
-                        placeholder="enter your e-mail address"
-                        {...register('email', {
-                            required: '아이디를 입력해주세요!',
-                            pattern: {
-                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                                message: 'Email 주소 형식이 올바르지 않습니다.',
-                            },
-                        })}
-                    />
-                    <div className="forError">{errors.email ? <span>{errors.email.message}</span> : <span></span>}</div>
-                    <div className="forLabel">
-                        <label htmlFor="password">Password</label>
-                    </div>
-                    <StyledInput
-                        id="password"
-                        type="password"
-                        placeholder="enter your password"
-                        {...register('password', {
-                            required: '비밀번호를 입력해주세요!',
-                            minLength: { value: 8, message: '비밀번호는 8자 이상이어야 합니다!' },
-                            maxLength: { value: 40, message: '비밀번호는 40자 이하이어야 합니다!' },
-                        })}
-                    />
-                    <div className="forError">
-                        {errors.password ? <span>{errors.password.message}</span> : <span></span>}
-                    </div>
-                    <StyledButton type="submit">Log in</StyledButton>
-                    <SmallButtonContainer>
-                        <SmallButton type="small">Forget ID / password</SmallButton>
-                        <SmallButton onClick={() => navigate(`/signup`)}>Sign up</SmallButton>
-                    </SmallButtonContainer>
-                </StyledRegisterForm>
-            </StyledBackgroundImg>
+            <StyledBackgroundImg2>
+                <StyledBackgroundImg>
+                    <StyledRegisterForm onSubmit={handleSubmit(onSubmit)}>
+                        <div className="forLabel">
+                            <label htmlFor="email">E-mail Address</label>
+                        </div>
+                        <StyledInput
+                            id="emailInput"
+                            type="email"
+                            placeholder="enter your e-mail address"
+                            {...register('email', {
+                                required: '아이디를 입력해주세요!',
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                                    message: 'Email 주소 형식이 올바르지 않습니다.',
+                                },
+                            })}
+                        />
+                        <div className="forError">
+                            {errors.email ? <span>{errors.email.message}</span> : <span></span>}
+                        </div>
+                        <div className="forLabel">
+                            <label htmlFor="password">Password</label>
+                        </div>
+                        <StyledInput
+                            id="password"
+                            type="password"
+                            placeholder="enter your password"
+                            {...register('password', {
+                                required: '비밀번호를 입력해주세요!',
+                                minLength: { value: 8, message: '비밀번호는 8자 이상이어야 합니다!' },
+                                maxLength: { value: 40, message: '비밀번호는 40자 이하이어야 합니다!' },
+                            })}
+                        />
+                        <div className="forError">
+                            {errors.password ? <span>{errors.password.message}</span> : <span></span>}
+                        </div>
+                        <StyledButton type="submit">Log in</StyledButton>
+                        <SmallButtonContainer>
+                            <SmallButton type="small">Forget ID / password</SmallButton>
+                            <SmallButton onClick={() => navigate(`/signup`)}>Sign up</SmallButton>
+                        </SmallButtonContainer>
+                    </StyledRegisterForm>
+                    <AnimatedBackground />
+                </StyledBackgroundImg>
+            </StyledBackgroundImg2>
         </StyledCover>
     );
 };
@@ -80,8 +113,41 @@ const StyledCover = styled(motion.div)`
     opacity: 0.9;
 `;
 
+const zoomInZoomOut = keyframes`
+    0% {
+        transform: scale(1); 
+    }
+    50% {
+        transform: scale(1.02); 
+    }
+    100% {
+        transform: scale(1); 
+    }
+`;
+
 const StyledBackgroundImg = styled.div`
-    background-image: url(${LoginBG});
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+`;
+
+const AnimatedBackground = styled.div`
+    background-image: url(${BACK1});
+    background-size: cover;
+    background-position: center 10%;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    animation: ${zoomInZoomOut} 2s ease-in-out infinite;
+    will-change: transform;
+`;
+
+const StyledBackgroundImg2 = styled.div`
+    background-image: url(${BACK2});
     background-size: cover;
     background-position: center 10%;
     height: 100vh;
@@ -91,6 +157,7 @@ const StyledBackgroundImg = styled.div`
 `;
 
 const StyledRegisterForm = styled(RegisterForm)`
+    z-index: 999;
     label {
         font-size: 35px;
         font-family: 'Baloo Chettan 2', cursive;
