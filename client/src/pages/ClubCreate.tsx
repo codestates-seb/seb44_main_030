@@ -6,7 +6,7 @@ import { Calendar } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { motion } from 'framer-motion';
 import { reset } from '../store/editData.ts';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios, { AxiosError } from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -32,6 +32,10 @@ const ClubCreate = () => {
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
     const dispatch = useDispatch();
+    const selection = useSelector((state: RootState) => state.selection.selection);
+    const [clubMap, setClubMap] = useState({});
+    console.log(selection);
+
     const {
         register,
         setValue,
@@ -44,6 +48,7 @@ const ClubCreate = () => {
             content: clubDetail.content || '',
             contact: clubDetail.contact || '',
             dueDate: clubDetail.dueDate || '',
+            clubMap: clubMap || {},
         },
     });
 
@@ -78,6 +83,7 @@ const ClubCreate = () => {
             dueDate: data.dueDate,
             contact: data.contact, //{ [data.contactRoute]: data.contact },
             tags: [{ tagName: englishTagName }],
+            clubMap: data.clubMap,
         };
 
         try {
@@ -211,8 +217,10 @@ const ClubCreate = () => {
                         </TagWarp>
                         <TagWarp>
                             <TagCartegory>모임 위치</TagCartegory>
-                            <button onClick={() => setShowMap(!showMap)}>위치 검색</button>
-                            {showMap ? <Map /> : null}
+                            <button {...register('clubMap')} onClick={() => setShowMap(!showMap)}>
+                                위치 검색
+                            </button>
+                            {showMap ? <Map setShowMap={setShowMap} /> : null}
                         </TagWarp>
                     </TagContainer>
                 </DetailInfoContainer>
