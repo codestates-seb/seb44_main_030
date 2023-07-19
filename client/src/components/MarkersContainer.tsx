@@ -11,7 +11,7 @@ const MarkersContainer = () => {
     const infos = useSelector((state: RootState) => state.info.infoInstance);
     const selection = useSelector((state: RootState) => state.selection.selection);
     const submitHandler = () => {
-        console.log('제출됨');
+        console.log(selection);
     };
     if (!map || !infos) return null;
     return (
