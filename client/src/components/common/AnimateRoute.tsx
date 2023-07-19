@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate  } from 'react-router-dom';
 import loadable from '@loadable/component';
 import { AnimatePresence } from 'framer-motion';
 
@@ -17,7 +17,7 @@ const Map = loadable(() => import('../../pages/Map'));
 
 export default function AnimateRoute() {
     const location = useLocation();
-
+    
     return (
         <AnimatePresence>
             <Routes location={location} key={location.pathname}>
@@ -25,6 +25,7 @@ export default function AnimateRoute() {
                 <Route path="/signup" element={<Signup></Signup>}></Route>
                 <Route path="/login" element={<Login></Login>}></Route>
                 <Route path="/community/:tag/:keyword" element={<Community></Community>}></Route>
+                <Route path="/community" element={<Navigate replace to="/community/전체/null" />} />
                 <Route path="/community/create" element={<CommunityCreate></CommunityCreate>}></Route>
                 <Route path="/community/detail/:standardId" element={<CommunityDetail></CommunityDetail>}></Route>
                 <Route path="/club/detail/:boardClubId" element={<ClubDetail></ClubDetail>}></Route>
