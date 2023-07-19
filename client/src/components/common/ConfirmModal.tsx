@@ -7,7 +7,7 @@ type ModalPropsType = {
     text: string;
 };
 //handleModal: 취소버튼으로 모달 닫는 함수
-//handleConfirm: 확인 버튼을 누른 후, 후속 동작을 위한 함수
+//handleConfirm: 확인 버튼을 누른 후, 후속 동작을 위한 함수(ex. 게시글삭제 로직, 뒤로가기 로직)
 const Modal = ({ handleCloseModal, handleConfirm, text }: ModalPropsType) => {
     return (
         <Styledmodal>
