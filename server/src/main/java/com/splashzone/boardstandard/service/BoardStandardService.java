@@ -49,7 +49,7 @@ public class BoardStandardService {
         return boardStandardRepository.save(findBoardStandard);
     }
 
-    public BoardStandard selectStandard(Long standardId) {
+    public BoardStandard findStandard(Long standardId) {
         BoardStandard boardStandard = boardStandardRepository.findById(standardId).orElseThrow(() -> new RuntimeException());
         //뷰수 추가
         boardStandard.setView(boardStandard.getView() + 1);

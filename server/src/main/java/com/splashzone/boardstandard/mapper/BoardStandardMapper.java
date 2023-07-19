@@ -36,6 +36,7 @@ public interface BoardStandardMapper {
         responseDto.setContent(boardStandard.getContent());
         responseDto.setCreatedAt(boardStandard.getCreatedAt());
         responseDto.setModifiedAt(boardStandard.getModifiedAt());
+        responseDto.setView(boardStandard.getView());
         responseDto.setMember(memberToMemberResponse(boardStandard.getMember()));
 
         return responseDto;
