@@ -134,8 +134,8 @@ const StyledHeader = styled.div`
     .header-content div:hover {
         color: rgba(105, 105, 105, 1);
         cursor: pointer;
-    }
-`;
+    }`
+;
 
 const StyledModal = styled.div`
     position: absolute;
@@ -159,5 +159,5 @@ const StyledModal = styled.div`
     }
     div:hover {
         color: rgba(105, 105, 105, 1);
-    }
-`;
+    }`
+;
