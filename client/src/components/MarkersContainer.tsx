@@ -11,9 +11,9 @@ const MarkersContainer = () => {
     const infos = useSelector((state: RootState) => state.info.infoInstance);
     const selection = useSelector((state: RootState) => state.selection.selection);
     const submitHandler = () => {
-        dispatch(setSelectionInstance(null));
         alert('등록되었습니다!');
     };
+    console.log(selection);
     if (!map || !infos) return null;
     return (
         <div>
