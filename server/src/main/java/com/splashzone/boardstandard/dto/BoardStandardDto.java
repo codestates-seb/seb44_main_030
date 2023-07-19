@@ -29,7 +29,6 @@ public class BoardStandardDto {
         private long standardId;
         private String title;
         private String content;
-        private long view;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         public void setStandardId(Long standardId) {
