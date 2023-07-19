@@ -81,7 +81,20 @@ export default function ContentsCard({
         boardClubStatus,
     } = clubProps || {};
 
-    // console.log(communityProps);
+    const [clubStatus, setClubStatus] = useState(boardClubStatus);
+    useEffect(() => {
+        // 현재 날짜와 dueDate를 비교
+        const now = new Date();
+        const due = new Date(dueDate);
+
+        // 오늘 날짜가 마감 날짜를 지나갔다면
+        if (now > due && clubStatus !== 'BOARD_CLUB_CANCEL') {
+            // 상태를 '모집 완료'로 변경
+            setClubStatus('BOARD_CLUB_COMPLETED');
+        }
+    }, [dueDate, clubStatus]);
+    const isCompleted = clubStatus === 'BOARD_CLUB_COMPLETED';
+
     const dispatch = useDispatch();
     const loginId = 1; //useSelector 사용
     const [likeCount, setLikeCount] = useState(like);
@@ -123,7 +136,7 @@ export default function ContentsCard({
     const formattedDate = modifiedAt ? `${newDateStr} (수정됨)` : newDateStr;
 
     return (
-        <CardWarp>
+        <CardWarp isCompleted={isCompleted}>
             <TitleContentsTagWarp>
                 <TitleContainer onClick={moveToDetail}>
                     <h3>{communityProps ? communityTitle : clubTitle}</h3>
@@ -167,19 +180,21 @@ export default function ContentsCard({
     );
 }
 
-const CardWarp = styled.div`
+const CardWarp = styled.div<{ isCompleted: boolean }>`
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: white;
-    border: 1px solid #d0d0d0;
     border-radius: 2rem;
     width: 360px;
     height: 270px;
     margin: 2rem;
     padding: 1.7rem;
     transition: 0.3s;
-    box-shadow: 0 0 10px rgba(145, 145, 145, 0.3);
+    border: ${(props) => (props.isCompleted ? '2px solid rgba(0,0,0,0.5)' : '1px solid #d0d0d0;')};
+    box-shadow: ${(props) =>
+        props.isCompleted ? '0px 0px 10px 5px rgba(0,0,0,0.2)' : '0 0 10px rgba(117, 117, 117, 0.3)'};
+    opacity: ${(props) => (props.isCompleted ? 0.2 : 1)};
 
     &:hover {
         border: 3px solid rgba(226, 240, 254, 0.8);

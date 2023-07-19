@@ -36,6 +36,7 @@ const CommunityDetail = () => {
         },
     );
     const detailCommunityData = data || undefined;
+    console.log(detailCommunityData);
 
     // 좋아요 구현 시 사용
     // const handleLike = useCallback(() => {
