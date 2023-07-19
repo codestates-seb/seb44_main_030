@@ -8,6 +8,8 @@ import { reset } from '../store/editData.ts';
 import { useDispatch } from 'react-redux';
 import { RootState } from '../store/store.tsx';
 import axios, { AxiosError } from 'axios';
+import ConfirmModal from '../components/common/ConfirmModal.tsx';
+
 type FormData = {
     title: string;
     tag: string;
@@ -18,8 +20,14 @@ const CommunityCreate = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { postId, tag, title, content } = useSelector((state: RootState) => state.editData);
-
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const dispatch = useDispatch();
+
+    // 모달 창 닫기
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
     const {
         register,
         handleSubmit,
@@ -66,7 +74,7 @@ const CommunityCreate = () => {
             tag: englishTagName,
         };
 
-        if (location.state==='EditMode') {
+        if (location.state === 'EditMode') {
             try {
                 const response = await axios.patch(`${API_URL}/standards/${postId}`, patchPayload);
                 if (response.status === 200 || response.status === 201) {
@@ -84,7 +92,7 @@ const CommunityCreate = () => {
                 }
             }
             console.log(patchPayload);
-        }else{
+        } else {
             try {
                 const response = await axios.post(`${API_URL}/standards`, postPayload);
                 if (response.status === 200 || response.status === 201) {
@@ -114,6 +122,13 @@ const CommunityCreate = () => {
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            {isModalOpen && (
+                <ConfirmModal
+                    handleCloseModal={handleCloseModal}
+                    handleConfirm={handleCancel}
+                    text="정말 취소할까요?"
+                />
+            )}
             <FormContainer onSubmit={handleSubmit(onSubmit)}>
                 <DetailContentContainer>
                     <TitleText>모두가 당신의 이야기를 듣고 싶어합니다!</TitleText>
@@ -150,7 +165,7 @@ const CommunityCreate = () => {
                         {errors.content && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
-                        <button onClick={handleCancel}>취소</button>
+                        <button onClick={()=>setIsModalOpen(true)}>취소</button>
                         <button type="submit">글 등록</button>
                     </ButtonWarp>
                 </DetailContentContainer>
