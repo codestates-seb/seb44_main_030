@@ -33,17 +33,16 @@ const Header = () => {
     const [menu, setMenu] = useState(false);
 
     return (
-        <div style={{ position: 'fixed', zIndex: '999' }}>
-            <StyledHeader>
-                <StyledImg
-                    src={LOGO}
-                    alt="logo"
-                    onClick={() => {
-                        dispatch(reset());
-                        navigate('/');
-                    }}
-                />
+        <StyledHeader>
+            <img
+                src={LOGO}
+                alt="logo"
+                onClick={() => {
+                    navigate('/');
+                }}
+            />
 
+            <div className="header-content">
                 <div
                     onClick={() => {
                         dispatch(reset());
@@ -64,7 +63,7 @@ const Header = () => {
                 {isLogin === false ? (
                     <div onClick={() => setIsLogIn(true)}>Login</div>
                 ) : (
-                    <div style={{ position: 'relative', top: '-5px' }}>
+                    <div style={{ position: 'relative' }}>
                         <ProfileImage
                             width="70px"
                             height="65px"
@@ -76,8 +75,8 @@ const Header = () => {
                         {menu ? <Modal ref={modalRef} setIsLogIn={setIsLogIn} setMenu={setMenu}></Modal> : null}
                     </div>
                 )}
-            </StyledHeader>
-        </div>
+            </div>
+        </StyledHeader>
     );
 };
 
@@ -112,86 +111,53 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(({ setIsLogIn, setMen
 });
 
 const StyledHeader = styled.div`
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: 80px;
-    align-items: center;
-    justify-content: end;
-    width: 100vw;
-    font-size: 1.5rem;
+    position: fixed;
+    width: 100%;
+    min-width: 817px;
     height: 85px;
+    display: flex;
+    font-size: 1.5rem;
     color: white;
+    font-family: 'Monomaniac One', sans-serif;
     background-color: rgba(56, 132, 213, 1);
-    div {
-        padding-top: 0px;
+    box-sizing: border-box;
+    justify-content: space-evenly;
+    z-index: 999;
+    img {
+        height: 85px;
     }
-
-    :nth-child(2) {
-        font-family: 'Monomaniac One', sans-serif;
-        grid-column: 8 / 9;
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .header-content div:hover {
+        color: rgba(105, 105, 105, 1);
         cursor: pointer;
     }
-    :nth-child(2):hover {
-        color: rgba(105, 105, 105, 1);
-    }
-
-    :nth-child(3) {
-        font-family: 'Monomaniac One', sans-serif;
-        cursor: pointer;
-    }
-    :nth-child(3):hover {
-        color: rgba(105, 105, 105, 1);
-    }
-
-    :nth-child(4) {
-        font-family: 'Monomaniac One', sans-serif;
-        cursor: pointer;
-    }
-
-    :nth-child(4):hover {
-        color: rgba(105, 105, 105, 1);
-    }
-`;
-
-const StyledImg = styled.img`
-    grid-column: 3 / 4;
-    cursor: pointer;
-    height: 70px;
 `;
 
 const StyledModal = styled.div`
+    position: absolute;
+    top: 85px;
+    width: 105px;
+    border-radius: 10px;
+    height: 70px;
+    padding: 10px;
+    font-family: 'Monomaniac One', sans-serif;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: black;
+    font-size: 0.8rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
-    position: absolute;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    left: -95px;
-    bottom: -77px;
-    width: 130px;
-    height: 130%;
-    padding: 6px;
-    background-color: white;
-    font-weight: bold;
-    color: #696969;
-    font-family: 'Monomaniac One', sans-serif;
-    box-shadow: 10px 6px 76px 2px rgba(44, 151, 255, 0.21);
-    -webkit-box-shadow: 10px 6px 76px 2px rgba(44, 151, 255, 0.21);
-    -moz-box-shadow: 10px 6px 76px 2px rgba(44, 151, 255, 0.21);
-    :nth-child(1) {
-        margin-top: 5px;
-    }
-    :nth-child(2) {
-        margin-top: 10px;
-    }
-    :nth-child(2):hover {
+    justify-content: space-around;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    cursor: none;
+    div {
         color: black;
+        cursor: pointer;
     }
-    :nth-child(1):hover {
-        color: black;
+    div:hover {
+        color: rgba(105, 105, 105, 1);
     }
-
-    z-index: 99;
 `;

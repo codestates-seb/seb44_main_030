@@ -1,11 +1,11 @@
 .marker {
     width: 20px;
     height: 20px;
-    background: red;
+    background: rgb(139, 223, 139);
     border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .marker.select {
-    background-color: blue;
+    background-color: rgba(107, 204, 243);
 }

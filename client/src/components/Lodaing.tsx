@@ -11,9 +11,9 @@ export const Loading = () => {
 };
 
 const Background = styled.div`
-    position: absolute;
+    position: fixed;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     top: 0;
     left: 0;
     background: #ffffffb7;

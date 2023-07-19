@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import loadable from '@loadable/component';
 import { AnimatePresence } from 'framer-motion';
+import Table from '../Table';
 
 const Main = loadable(() => import('../../pages/Main'));
 const Signup = loadable(() => import('../../pages/Signup'));
@@ -33,6 +34,7 @@ export default function AnimateRoute() {
                 <Route path="/club/create/:boardClubId" element={<ClubCreate></ClubCreate>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
                 <Route path="/map" element={<Map />}></Route>
+                <Route path="/test" element={<Table></Table>}></Route>
             </Routes>
         </AnimatePresence>
     );
