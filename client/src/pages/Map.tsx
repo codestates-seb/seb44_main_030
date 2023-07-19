@@ -4,12 +4,12 @@ import Wrapper from '../components/style/Wrapper';
 import Fetching from './SearchEngine';
 import styled from 'styled-components';
 
-const Map = ({ setShowMap }) => {
+const Map = ({ setShowMap, updateClubMap }) => {
     return (
         <StyledModal>
             <div className="modal" style={{ position: 'relative' }}>
                 <MapContainer></MapContainer>
-                <MarkersContainer></MarkersContainer>
+                <MarkersContainer updateClubMap={updateClubMap}></MarkersContainer>
                 <div style={{ position: 'absolute', top: '0px', right: '0%' }}>
                     <Fetching />
                     <StyledButton

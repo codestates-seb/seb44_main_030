@@ -12,6 +12,18 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Map from './Map.tsx';
 
+type Position = {
+    lat: number;
+    lng: number;
+};
+
+type ClubMapData = {
+    addressName: string;
+    id: number;
+    placeName: string;
+    position: Position;
+};
+
 type FormData = {
     capacity: number;
     contactRoute: string;
@@ -20,7 +32,7 @@ type FormData = {
     dueDate: string;
     title: string;
     content: string;
-    clubMap?: string;
+    clubMap?: ClubMapData;
     date?: Date;
 };
 
@@ -31,10 +43,14 @@ const ClubCreate = () => {
     const [showMap, setShowMap] = useState(false);
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
+    const [clubMap, setClubMap] = useState(null);
     const dispatch = useDispatch();
-    const selection = useSelector((state: RootState) => state.selection.selection);
-    const [clubMap, setClubMap] = useState({});
-    console.log(selection);
+
+    console.log(clubMap);
+
+    const updateClubMap = (data: any) => {
+        setClubMap(data);
+    };
 
     const {
         register,
@@ -48,7 +64,6 @@ const ClubCreate = () => {
             content: clubDetail.content || '',
             contact: clubDetail.contact || '',
             dueDate: clubDetail.dueDate || '',
-            clubMap: clubMap || {},
         },
     });
 
@@ -75,6 +90,7 @@ const ClubCreate = () => {
         console.log(data);
         const API_URL = import.meta.env.VITE_KEY;
         const englishTagName = getKeyByValue(tags, data.clubTag);
+        const { id, ...clubMapWithoutId } = data.clubMap;
         const payload = {
             memberId: 1, // 이 부분은 로그인한 유저의 ID로 수정
             capacity: data.capacity,
@@ -83,7 +99,7 @@ const ClubCreate = () => {
             dueDate: data.dueDate,
             contact: data.contact, //{ [data.contactRoute]: data.contact },
             tags: [{ tagName: englishTagName }],
-            clubMap: data.clubMap,
+            clubMap: clubMapWithoutId,
         };
 
         try {
@@ -149,6 +165,10 @@ const ClubCreate = () => {
             },
         ],
     ];
+
+    useEffect(() => {
+        setValue('clubMap', clubMap);
+    }, [clubMap, setValue]);
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -217,10 +237,17 @@ const ClubCreate = () => {
                         </TagWarp>
                         <TagWarp>
                             <TagCartegory>모임 위치</TagCartegory>
-                            <button {...register('clubMap')} onClick={() => setShowMap(!showMap)}>
-                                위치 검색
-                            </button>
-                            {showMap ? <Map setShowMap={setShowMap} /> : null}
+                            <Controller
+                                name="clubMap"
+                                control={control}
+                                defaultValue={clubMap}
+                                render={({ field }) => (
+                                    <StyledButton {...field} onClick={() => setShowMap(!showMap)}>
+                                        위치 검색
+                                    </StyledButton>
+                                )}
+                            />
+                            {showMap ? <Map setShowMap={setShowMap} updateClubMap={updateClubMap} /> : null}
                         </TagWarp>
                     </TagContainer>
                 </DetailInfoContainer>
@@ -328,6 +355,22 @@ const TagWarp = styled.div`
         margin: 0 0 1px 10px;
     }
 `;
+
+const StyledButton = styled.button`
+    padding: 8px 15px 8px 15px;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    outline: none;
+    border-radius: 7px;
+    resize: none;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.1);
+    margin: 0 0 1px 3px;
+
+    &:hover {
+        cursor: pointer;
+    }
+`;
+
 const TagContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);

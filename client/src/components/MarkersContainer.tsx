@@ -5,13 +5,14 @@ import Marker from './common/Marker';
 import InfoWindow from './common/InfoWindow';
 import { setSelectionInstance } from '../store/selectinfo';
 
-const MarkersContainer = () => {
+const MarkersContainer = ({ updateClubMap }) => {
     const dispatch = useDispatch();
     const map = useSelector((state: RootState) => state.counter.mapInstance);
     const infos = useSelector((state: RootState) => state.info.infoInstance);
     const selection = useSelector((state: RootState) => state.selection.selection);
     const submitHandler = () => {
         console.log(selection);
+        updateClubMap(selection);
     };
     if (!map || !infos) return null;
     return (
