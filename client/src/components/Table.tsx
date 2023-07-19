@@ -43,7 +43,7 @@ const Table = () => {
         }
     };
 
-    const CurrentPageHandler = (number) => {
+    const CurrentPageHandler = (number: number) => {
         setPageNumber(number);
     };
 
@@ -55,7 +55,7 @@ const Table = () => {
                 <div>작성일</div>
                 <div>조회</div>
             </Styledwrapper>
-            {data.postData.map((post) => {
+            {data.postData.map((post: any) => {
                 return <Tablecontent post={post}></Tablecontent>;
             })}
             <PageContainer>
@@ -77,7 +77,7 @@ const Table = () => {
 };
 export default Table;
 
-const Tablecontent = ({ post }) => {
+const Tablecontent = ({ post }: any) => {
     const url = `/community/detail/${post.standardId}`;
     return (
         <Styledwrapper>

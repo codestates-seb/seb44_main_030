@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Block from './style/Wrapper';
 import Calendar from 'react-calendar';
 import moment from 'moment';
@@ -7,6 +7,8 @@ import 'react-calendar/dist/Calendar.css';
 import Modal from './Modal';
 import Table from './Table';
 import Clubtable from './Clubtable';
+
+// 포스트요청 게시글작성-> get요청으로 전체 스플래시 트래크 정보를 가져와야겟죠(날짜,tracker-id)  ->개별 splash tracker 조회(개별) ->splash-id
 
 const Tabmenu = () => {
     const [currentTab, clickTab] = useState(0);
@@ -40,7 +42,20 @@ const Tabcomponent0 = () => {
     const [value, onChange] = useState(new Date());
     const mark = ['2023-07-08', '2023-07-10', '2023-07-15'];
     const [modal, setModal] = useState(false);
+
+    // useEffect(() => {
+    //     if (!mounted.current) {
+    //         mounted.current = true;
+    //     } else {
+    //         const dae = moment(value).format('YYYY-MM-DD');
+    //         const value1 = mark.includes(dae);
+    //         if (value1 === false) {
+    //             setModal(!modal);
+    //         }
+    //     }
+    // }, [value]);
     const HandleClickDay = () => {
+        console.log(value);
         setModal(!modal);
     };
 
@@ -77,12 +92,17 @@ const Tabcomponent0 = () => {
                         }}
                         onClickDay={HandleClickDay}
                     />
+                    <div>{moment(value).format('YYYY년 MM월 DD일')}</div>
                 </ReactCalander>
-                {modal && <Modal setModal={setModal} value={value}></Modal>}
+                {modal && <Modal setModal={setModal} value={value} mark={mark}></Modal>}
             </div>
         </>
     );
 };
+
+// {
+//     '날짜', '트래커id';
+// }
 const Tabcomponent1 = () => {
     return (
         <GridTap>
