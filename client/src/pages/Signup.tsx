@@ -186,6 +186,7 @@ const zoomInZoomOut = keyframes`
     }
     100% {
         transform: scale(1); 
+    }
 `;
 
 const AnimatedBackground = styled.div`
