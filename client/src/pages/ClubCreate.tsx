@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import axios, { AxiosError } from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import Map from './Map.tsx';
 
 type FormData = {
     capacity: number;
@@ -27,6 +28,7 @@ const ClubCreate = () => {
     const location = useLocation();
     const clubDetail = location.state?.clubDetail || {};
     const navigate = useNavigate();
+    const [showMap, setShowMap] = useState(false);
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
     const dispatch = useDispatch();
@@ -65,6 +67,7 @@ const ClubCreate = () => {
     };
 
     const onSubmit = async (data: FormData) => {
+        console.log(data);
         const API_URL = import.meta.env.VITE_KEY;
         const englishTagName = getKeyByValue(tags, data.clubTag);
         const payload = {
@@ -207,8 +210,9 @@ const ClubCreate = () => {
                             )}
                         </TagWarp>
                         <TagWarp>
-                            <TagCartegory htmlFor="clubMap">모임 위치</TagCartegory>
-                            <input {...register('clubMap')} id="clubMap" placeholder="위치를 검색합니다"></input>
+                            <TagCartegory>모임 위치</TagCartegory>
+                            <button onClick={() => setShowMap(!showMap)}>위치 검색</button>
+                            {showMap ? <Map /> : null}
                         </TagWarp>
                     </TagContainer>
                 </DetailInfoContainer>
