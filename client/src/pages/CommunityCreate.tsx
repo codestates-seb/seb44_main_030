@@ -10,7 +10,8 @@ import { RootState } from '../store/store.tsx';
 import axios, { AxiosError } from 'axios';
 import ConfirmModal from '../components/common/ConfirmModal.tsx';
 import ReactQuill from 'react-quill';
-
+import { useCookies } from 'react-cookie';
+import { usePostHeader } from '../api/getHeader.ts';
 type FormData = {
     title: string;
     tag: string;
@@ -23,6 +24,7 @@ const CommunityCreate = () => {
     const { postId, tag, title, content } = useSelector((state: RootState) => state.editData);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const dispatch = useDispatch();
+    const headers = usePostHeader();
 
     // 모달 창 닫기
     const handleCloseModal = () => {
@@ -65,7 +67,7 @@ const CommunityCreate = () => {
         const API_URL = import.meta.env.VITE_KEY;
         const englishTagName = getKeyByValue(tags, data.tag);
         const postPayload = {
-            memberId: 1, // 이 부분은 로그인한 유저의 ID로 수정
+            memberId: 3, // 이 부분은 로그인한 유저의 ID로 수정
             title: data.title,
             content: data.content,
             tag: englishTagName,
@@ -78,7 +80,7 @@ const CommunityCreate = () => {
 
         if (location.state === 'EditMode') {
             try {
-                const response = await axios.patch(`${API_URL}/standards/${postId}`, patchPayload);
+                const response = await axios.patch(`${API_URL}/standards/${postId}`, patchPayload, headers);
                 if (response.status === 200 || response.status === 201) {
                     dispatch(reset());
                     navigate(-1); // patch 요청 성공 시 이전 페이지로 이동
@@ -96,7 +98,7 @@ const CommunityCreate = () => {
             console.log(patchPayload);
         } else {
             try {
-                const response = await axios.post(`${API_URL}/standards`, postPayload);
+                const response = await axios.post(`${API_URL}/standards`, postPayload, headers);
                 if (response.status === 200 || response.status === 201) {
                     navigate(-1); // post 요청 성공 시 이전 페이지로 이동
                 } else {
@@ -164,15 +166,15 @@ const CommunityCreate = () => {
                         {errors.title && <ErrorMessage>{errors?.title.message}</ErrorMessage>}
                     </Title>
                     <Content>
-                        {/* <TextArea
+                        <TextArea
                             placeholder="모임에 대해 소개해주세요!"
                             {...register('content', {
                                 required: '내용을 입력해주세요',
                                 minLength: { value: 30, message: '30자 이상 입력해주세요' },
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
-                        /> */}
-                        <Controller
+                        />
+                        {/* <Controller
                             name="content"
                             control={control}
                             defaultValue=""
@@ -184,11 +186,11 @@ const CommunityCreate = () => {
                             render={({ field }) => (
                                 <StyledReactQuill {...field} modules={{ toolbar: toolbarOptions }} />
                             )}
-                        />
+                        /> */}
                         {errors.content && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
-                        <button onClick={()=>setIsModalOpen(true)}>취소</button>
+                        <button onClick={() => setIsModalOpen(true)}>취소</button>
                         {isModalOpen && (
                             <ConfirmModal
                                 handleCloseModal={handleCloseModal}
@@ -296,51 +298,51 @@ const Input = styled.input`
     }
 `;
 
-const StyledReactQuill = styled(ReactQuill)`
-    box-sizing: border-box;
-    max-width: 100%;
-    height: auto;
-    border: none;
-    outline: none;
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+// const StyledReactQuill = styled(ReactQuill)`
+//     box-sizing: border-box;
+//     max-width: 100%;
+//     height: auto;
+//     border: none;
+//     outline: none;
+//     background-color: #fff;
+//     border-radius: 15px;
+//     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
 
-    .ql-toolbar {
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-        background-color: #f5f5f5;
-        border: none;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+//     .ql-toolbar {
+//         border-top-left-radius: 15px;
+//         border-top-right-radius: 15px;
+//         background-color: #f5f5f5;
+//         border: none;
+//         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
-        .ql-picker-label,
-        .ql-picker-options {
-            font-size: 18px;
-        }
+//         .ql-picker-label,
+//         .ql-picker-options {
+//             font-size: 18px;
+//         }
 
-        .ql-picker-options {
-            background-color: #f5f5f5;
-            border: none;
-            padding: 5px;
-        }
-    }
+//         .ql-picker-options {
+//             background-color: #f5f5f5;
+//             border: none;
+//             padding: 5px;
+//         }
+//     }
 
-    .ql-container {
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-        background-color: #fff;
-        border: none;
-        border-top: none;
-        box-shadow: none;
+//     .ql-container {
+//         border-bottom-left-radius: 15px;
+//         border-bottom-right-radius: 15px;
+//         background-color: #fff;
+//         border: none;
+//         border-top: none;
+//         box-shadow: none;
 
-        .ql-editor {
-            min-width: 1200px;
-            min-height: 600px;
-            padding: 20px;
-            font-size: 30px;
-        }
-    }
-`;
+//         .ql-editor {
+//             min-width: 1200px;
+//             min-height: 600px;
+//             padding: 20px;
+//             font-size: 30px;
+//         }
+//     }
+// `;
 
 const TextArea = styled.textarea`
     box-sizing: border-box;
