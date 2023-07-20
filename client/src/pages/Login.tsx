@@ -28,6 +28,7 @@ const Login = () => {
 
     const onSubmit = async (data: FormInput) => {
         const API_URL = import.meta.env.VITE_KEY;
+        console.log(data);
         try {
             const response = await axios.post(
                 `${API_URL}/auth/login`,
