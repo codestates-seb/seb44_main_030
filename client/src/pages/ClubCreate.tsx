@@ -6,10 +6,23 @@ import { Calendar } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { motion } from 'framer-motion';
 import { reset } from '../store/editData.ts';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios, { AxiosError } from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import Map from './Map.tsx';
+import ConfirmModal from '../components/common/ConfirmModal';
+type Position = {
+    lat: number;
+    lng: number;
+};
+
+type ClubMapData = {
+    addressName: string;
+    id: number;
+    placeName: string;
+    position: Position;
+};
 
 type FormData = {
     capacity: number;
@@ -19,7 +32,7 @@ type FormData = {
     dueDate: string;
     title: string;
     content: string;
-    clubMap?: string;
+    clubMap?: ClubMapData;
     date?: Date;
 };
 
@@ -27,9 +40,19 @@ const ClubCreate = () => {
     const location = useLocation();
     const clubDetail = location.state?.clubDetail || {};
     const navigate = useNavigate();
+    const [showMap, setShowMap] = useState(false);
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
+    const [clubMap, setClubMap] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const dispatch = useDispatch();
+
+    console.log(clubMap);
+
+    const updateClubMap = (data: any) => {
+        setClubMap(data);
+    };
+
     const {
         register,
         setValue,
@@ -65,8 +88,10 @@ const ClubCreate = () => {
     };
 
     const onSubmit = async (data: FormData) => {
+        console.log(data);
         const API_URL = import.meta.env.VITE_KEY;
         const englishTagName = getKeyByValue(tags, data.clubTag);
+        const { id, ...clubMapWithoutId } = data.clubMap;
         const payload = {
             memberId: 1, // 이 부분은 로그인한 유저의 ID로 수정
             capacity: data.capacity,
@@ -75,6 +100,7 @@ const ClubCreate = () => {
             dueDate: data.dueDate,
             contact: data.contact, //{ [data.contactRoute]: data.contact },
             tags: [{ tagName: englishTagName }],
+            clubMap: clubMapWithoutId,
         };
 
         try {
@@ -101,6 +127,10 @@ const ClubCreate = () => {
 
     const handleCancel = () => {
         navigate(-1);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
     };
     const formattedDate = date.toLocaleDateString('en-CA');
 
@@ -140,6 +170,11 @@ const ClubCreate = () => {
             },
         ],
     ];
+
+    useEffect(() => {
+        setValue('clubMap', clubMap);
+    }, [clubMap, setValue]);
+    console.log(clubMap);
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -207,8 +242,19 @@ const ClubCreate = () => {
                             )}
                         </TagWarp>
                         <TagWarp>
-                            <TagCartegory htmlFor="clubMap">모임 위치</TagCartegory>
-                            <input {...register('clubMap')} id="clubMap" placeholder="위치를 검색합니다"></input>
+                            <TagCartegory>모임 위치</TagCartegory>
+                            <Controller
+                                name="clubMap"
+                                control={control}
+                                defaultValue={clubMap}
+                                render={({ field }) => (
+                                    <StyledButton {...field} onClick={() => setShowMap(!showMap)}>
+                                        위치 검색
+                                    </StyledButton>
+                                )}
+                            />
+                            {clubMap && <MapPlace>{clubMap.placeName}</MapPlace>}
+                            {showMap ? <Map setShowMap={setShowMap} updateClubMap={updateClubMap} /> : null}
                         </TagWarp>
                     </TagContainer>
                 </DetailInfoContainer>
@@ -250,7 +296,12 @@ const ClubCreate = () => {
                         {errors.title && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
-                        <button onClick={handleCancel}>취소</button>
+                        <button onClick={()=>{setIsModalOpen(true)}}>취소</button>
+                        {isModalOpen && <ConfirmModal
+                                handleCloseModal={handleCloseModal}
+                                handleConfirm={handleCancel}
+                                text="작성을 취소 하시겠습니까?"
+                            />}
                         <button type="submit">글 등록</button>
                     </ButtonWarp>
                 </DetailContentContainer>
@@ -316,6 +367,35 @@ const TagWarp = styled.div`
         margin: 0 0 1px 10px;
     }
 `;
+
+const StyledButton = styled.button`
+    padding: 8px 15px 8px 15px;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    outline: none;
+    border-radius: 7px;
+    resize: none;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.1);
+    margin: 0 0 1px 3px;
+
+    &:hover {
+        cursor: pointer;
+    }
+`;
+
+const MapPlace = styled.span`
+    padding: 8px 15px 8px 15px;
+    background-color: rgba(56, 132, 213, 1);
+    color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    outline: none;
+    border-radius: 7px;
+    resize: none;
+    font-size: 14px;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.1);
+    margin: 0 0 1px 10px;
+`;
+
 const TagContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);

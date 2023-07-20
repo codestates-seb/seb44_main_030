@@ -8,7 +8,7 @@ import CommentIcon from '../assets/Comment.svg';
 import { useDeletePost } from '../api/useMutationPost';
 import { useDispatch } from 'react-redux';
 import { savePostData } from '../store/editData';
-
+import ConfirmModal from '../components/common/ConfirmModal';
 type DetailProps = {
     title: string;
     view: number;
@@ -36,6 +36,7 @@ const DetailContentSection = ({
     clubId,
     tag,
 }: DetailProps) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const postId = standardId || clubId; //club데이터일 때는 clubId
     if (!postId) {
         throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
@@ -57,7 +58,14 @@ const DetailContentSection = ({
                 {memberId === mockMemberId && (
                     <EditContainer>
                         <button onClick={handleEdit}>수정</button>
-                        <button onClick={handleDeletePost}>삭제</button>
+                        <button onClick={() => setIsModalOpen(true)}>삭제</button>
+                        {isModalOpen && (
+                            <ConfirmModal
+                                handleCloseModal={() => setIsModalOpen(false)}
+                                handleConfirm={handleDeletePost}
+                                text="정말 삭제하시겠습니까?"
+                            />
+                        )}
                     </EditContainer>
                 )}
                 <div>

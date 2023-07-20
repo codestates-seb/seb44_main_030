@@ -13,7 +13,7 @@ import LoginBG from '../../public/login.png';
 import RegisterForm from '../components/RegisterForm';
 
 interface FormInput {
-    email: string;
+    username: string;
     password: string;
 }
 
@@ -28,19 +28,18 @@ const Login = () => {
 
     const onSubmit = async (data: FormInput) => {
         const API_URL = import.meta.env.VITE_KEY;
+        console.log(data);
+
         try {
-            const response = await axios.post(
-                `${API_URL}/auth/login`,
-                {
-                    username: data.email,
-                    password: data.password,
-                },
-                {
-                    withCredentials: true,
-                },
-            );
-            if (response.data.token) {
-                setCookie('Token', response.data.token, { path: '/' });
+            const response = await axios.post(`${API_URL}/auth/login`, data, {
+                withCredentials: true,
+            });
+            console.log(response.data);
+            console.log(response.headers);
+            const token = response.headers.authorization;
+            console.log(token);
+            if (token) {
+                setCookie('Token', token, { path: '/' });
                 navigate('/');
             } else {
                 console.error('error');
@@ -58,13 +57,13 @@ const Login = () => {
                 <StyledBackgroundImg>
                     <StyledRegisterForm onSubmit={handleSubmit(onSubmit)}>
                         <div className="forLabel">
-                            <label htmlFor="email">E-mail Address</label>
+                            <label htmlFor="username">E-mail Address</label>
                         </div>
                         <StyledInput
-                            id="emailInput"
+                            id="username"
                             type="email"
                             placeholder="enter your e-mail address"
-                            {...register('email', {
+                            {...register('username', {
                                 required: '아이디를 입력해주세요!',
                                 pattern: {
                                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,

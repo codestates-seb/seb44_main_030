@@ -4,15 +4,20 @@ import Wrapper from '../components/style/Wrapper';
 import Fetching from './SearchEngine';
 import styled from 'styled-components';
 
-const Map = () => {
+const Map = ({ setShowMap, updateClubMap }) => {
     return (
         <StyledModal>
             <div className="modal" style={{ position: 'relative' }}>
                 <MapContainer></MapContainer>
-                <MarkersContainer></MarkersContainer>
+                <MarkersContainer updateClubMap={updateClubMap}></MarkersContainer>
                 <div style={{ position: 'absolute', top: '0px', right: '0%' }}>
                     <Fetching />
-                    <StyledButton style={{ position: 'absolute', top: '0px', right: '0px' }}>❌</StyledButton>
+                    <StyledButton
+                        style={{ position: 'absolute', top: '0px', right: '0px' }}
+                        onClick={() => setShowMap(false)}
+                    >
+                        ❌
+                    </StyledButton>
                 </div>
                 <Wrapper width="900px" height="200px">
                     <h3>Tip</h3>

@@ -119,13 +119,6 @@ const Comment = ({ commentData }: CommentProps) => {
 
     return (
         <CommentContainer>
-            {isModalOpen && (
-                <ConfirmModal
-                    handleCloseModal={handleCloseModal}
-                    handleConfirm={handleDelete}
-                    text="정말 삭제할까요?"
-                />
-            )}
             <UserInfoBox>
                 <img src={memberProfileImg} alt="profile_image" />
                 <div title={`${name}`} onClick={handleNavigateProfile}>
@@ -157,7 +150,14 @@ const Comment = ({ commentData }: CommentProps) => {
                         {isEditOn || (
                             <div>
                                 <button onClick={handleEdit}>수정</button>
-                                <button onClick={()=>setIsModalOpen(true)}>삭제</button>
+                                <button onClick={() => setIsModalOpen(true)}>삭제</button>
+                                {isModalOpen && (
+                                    <ConfirmModal
+                                        handleCloseModal={handleCloseModal}
+                                        handleConfirm={handleDelete}
+                                        text="정말 삭제할까요?"
+                                    />
+                                )}
                             </div>
                         )}
                     </div>

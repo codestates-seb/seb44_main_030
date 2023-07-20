@@ -43,7 +43,7 @@ const DetailCommentSection = ({ comment }: DetailCommentSectionProps) => {
         <CommentSection>
             <CreateCommentSpace>
                 <label htmlFor="commentInput">댓글작성</label>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <StyledForm onSubmit={handleSubmit(onSubmit)}>
                     <textarea
                         id="commentInput"
                         placeholder="댓글 내용을 입력해주세요"
@@ -51,10 +51,8 @@ const DetailCommentSection = ({ comment }: DetailCommentSectionProps) => {
                             required: true,
                         })}
                     />
-                    <div>
-                        <button type="submit">작성</button>
-                    </div>
-                </form>
+                    <button type="submit">작성</button>
+                </StyledForm>
             </CreateCommentSpace>
             <div>
                 {comment?.map((commentData) => (
@@ -70,16 +68,23 @@ export default DetailCommentSection;
 const CommentSection = styled.section`
     border-bottom: 1px solid #d9d9d9;
 `;
+
+const StyledForm = styled.form`
+    width: 100%;
+`;
 const CreateCommentSpace = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
     border-bottom: 1px solid #d9d9d9;
     margin-top: 20px;
     padding-bottom: 15px;
     form {
         display: flex;
         justify-content: center;
-        flex-direction: column;
         align-items: center;
-        width: 750px;
+        width: 100%;
         > div {
             width: 750px;
             display: flex;
@@ -91,12 +96,13 @@ const CreateCommentSpace = styled.div`
         font-weight: 600;
     }
     textarea {
-        width: 750px;
+        font-size: 17px;
+        width: 100%;
         height: 100px;
         display: flex;
         align-items: start;
         padding: 8px 8px 8px 8px;
-        border-radius: 5px;
+        border-radius: 5px 0px 0px 5px;
         margin-top: 10px;
         resize: none;
         &:focus {
@@ -105,10 +111,11 @@ const CreateCommentSpace = styled.div`
     }
     button {
         width: 50px;
-        height: 30px;
+        height: 100px;
         background-color: #3884d5;
         color: #ffffff;
-        border-radius: 5px;
-        margin-top: 5px;
+        border-radius: 0px 5px 5px 0px;
+        margin-top: 10px;
+        padding: 8px 8px 8px 8px;
     }
 `;

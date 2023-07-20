@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { RootState } from '../store/store.tsx';
 import axios, { AxiosError } from 'axios';
 import ConfirmModal from '../components/common/ConfirmModal.tsx';
+import ReactQuill from 'react-quill';
 
 type FormData = {
     title: string;
@@ -31,6 +32,7 @@ const CommunityCreate = () => {
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors },
     } = useForm<FormData>({
         defaultValues: {
@@ -120,15 +122,23 @@ const CommunityCreate = () => {
         window.scrollTo(0, 0);
     }, []);
 
+    const toolbarOptions = [
+        [{ header: '1' }, { header: '2' }],
+        [{ size: [] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
+        [
+            {
+                color: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
+            },
+            {
+                background: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
+            },
+        ],
+    ];
+
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            {isModalOpen && (
-                <ConfirmModal
-                    handleCloseModal={handleCloseModal}
-                    handleConfirm={handleCancel}
-                    text="정말 취소할까요?"
-                />
-            )}
             <FormContainer onSubmit={handleSubmit(onSubmit)}>
                 <DetailContentContainer>
                     <TitleText>모두가 당신의 이야기를 듣고 싶어합니다!</TitleText>
@@ -154,18 +164,38 @@ const CommunityCreate = () => {
                         {errors.title && <ErrorMessage>{errors?.title.message}</ErrorMessage>}
                     </Title>
                     <Content>
-                        <TextArea
+                        {/* <TextArea
                             placeholder="모임에 대해 소개해주세요!"
                             {...register('content', {
                                 required: '내용을 입력해주세요',
                                 minLength: { value: 30, message: '30자 이상 입력해주세요' },
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
+                        /> */}
+                        <Controller
+                            name="content"
+                            control={control}
+                            defaultValue=""
+                            rules={{
+                                required: '내용을 입력해주세요',
+                                minLength: { value: 30, message: '30자 이상 입력해주세요' },
+                                maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
+                            }}
+                            render={({ field }) => (
+                                <StyledReactQuill {...field} modules={{ toolbar: toolbarOptions }} />
+                            )}
                         />
                         {errors.content && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
                         <button onClick={()=>setIsModalOpen(true)}>취소</button>
+                        {isModalOpen && (
+                            <ConfirmModal
+                                handleCloseModal={handleCloseModal}
+                                handleConfirm={handleCancel}
+                                text="정말 취소할까요?"
+                            />
+                        )}
                         <button type="submit">글 등록</button>
                     </ButtonWarp>
                 </DetailContentContainer>
@@ -265,6 +295,53 @@ const Input = styled.input`
         outline: solid 3px #3884d5;
     }
 `;
+
+const StyledReactQuill = styled(ReactQuill)`
+    box-sizing: border-box;
+    max-width: 100%;
+    height: auto;
+    border: none;
+    outline: none;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+
+    .ql-toolbar {
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        background-color: #f5f5f5;
+        border: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+        .ql-picker-label,
+        .ql-picker-options {
+            font-size: 18px;
+        }
+
+        .ql-picker-options {
+            background-color: #f5f5f5;
+            border: none;
+            padding: 5px;
+        }
+    }
+
+    .ql-container {
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        background-color: #fff;
+        border: none;
+        border-top: none;
+        box-shadow: none;
+
+        .ql-editor {
+            min-width: 1200px;
+            min-height: 600px;
+            padding: 20px;
+            font-size: 30px;
+        }
+    }
+`;
+
 const TextArea = styled.textarea`
     box-sizing: border-box;
     width: 1200px;

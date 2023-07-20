@@ -133,7 +133,7 @@ const Community = () => {
         <CommunityWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ScrollBanner bannerImg={backgroundImg} />
             <CommunityContainer>
-                <PopularContentsSection />
+                {/* <PopularContentsSection /> */}
                 <TagSearchSection currTag={currTag} handleNavigateCreate={handleNavigateCreate} />
                 <BottomSection>
                     <AllPostContainer>
