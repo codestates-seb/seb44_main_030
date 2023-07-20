@@ -15,6 +15,7 @@ import com.splashzone.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -161,11 +162,5 @@ public class BoardClubService {
     public boolean hasBoardClubLike(BoardClub boardClub, Member member) {
         return boardClubLikeRepository.findByBoardClubAndMember(boardClub, member)
                 .isPresent();
-    }
-
-    // 좋아요 순으로 인기글 조회
-    @Transactional(readOnly = true)
-    public Page<BoardClub> findBestBoardClubs(Integer page, Integer size) {
-        return boardClubRepository.findAll(PageRequest.of(page, size, Sort.by("boardClubId").descending()));
     }
 }
