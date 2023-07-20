@@ -14,6 +14,7 @@ const MarkersContainer = ({ updateClubMap }) => {
         console.log(selection);
         updateClubMap(selection);
     };
+    console.log(selection);
     if (!map || !infos) return null;
     return (
         <div>
