@@ -1,7 +1,11 @@
 package com.splashzone.member.controller;
 
+import com.splashzone.auth.userdetails.MemberDetails;
+import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
+import com.splashzone.exception.BusinessLogicException;
+import com.splashzone.exception.ExceptionCode;
 import com.splashzone.member.dto.MemberDto;
 import com.splashzone.member.mapper.MemberMapper;
 import com.splashzone.member.service.MemberService;
@@ -12,12 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/members")
@@ -46,13 +53,23 @@ public class MemberController {
     }
 
     @PatchMapping("/{member-id}")
-    public ResponseEntity patchMember(
-            @PathVariable("member-id") @Positive Long memberId,
-            @Valid @RequestBody MemberDto.Patch requestBody) {
-        requestBody.setMemberId(memberId);
+    public ResponseEntity patchMember(Authentication authentication,
+                                      @PathVariable("member-id") @Positive Long memberId,
+                                      @Valid @RequestBody MemberDto.Patch patchDto) {
+
+        if(authentication == null){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+        if(!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()).getMemberId(), memberId)){
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
+        patchDto.setMemberId(memberId);
 
         Member member =
-                memberService.updateMember(mapper.memberPatchToMember(requestBody));
+                memberService.updateMember(mapper.memberPatchToMember(patchDto));
 
         return ResponseEntity.ok(mapper.memberToMemberResponse(member));
     }
@@ -73,8 +90,8 @@ public class MemberController {
     }
 
     @DeleteMapping("/{member-id}")
-    public ResponseEntity terminatedMember(
-            @PathVariable("member-id") @Positive Long memberId) {
+    public ResponseEntity terminatedMember(Authentication authentication,
+                                           @PathVariable("member-id") @Positive Long memberId) {
         memberService.terminateMember(memberId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
