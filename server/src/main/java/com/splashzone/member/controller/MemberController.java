@@ -117,7 +117,7 @@ public class MemberController {
         return ResponseEntity.ok(new MultiResponseDto<>(boardStandardResponses, boardStandardPage));
     }
 
-    @GetMapping("/mypages/clubs/{member-id}")
+    @GetMapping("/mypage/clubs/{member-id}")
     public ResponseEntity getMyClubBoards(
             @PathVariable("member-id") @Positive Long memberId,
             @Positive @RequestParam int page,
