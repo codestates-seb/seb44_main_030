@@ -169,6 +169,7 @@ const ClubCreate = () => {
     useEffect(() => {
         setValue('clubMap', clubMap);
     }, [clubMap, setValue]);
+    console.log(clubMap);
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -247,6 +248,7 @@ const ClubCreate = () => {
                                     </StyledButton>
                                 )}
                             />
+                            {clubMap && <MapPlace>{clubMap.placeName}</MapPlace>}
                             {showMap ? <Map setShowMap={setShowMap} updateClubMap={updateClubMap} /> : null}
                         </TagWarp>
                     </TagContainer>
@@ -369,6 +371,19 @@ const StyledButton = styled.button`
     &:hover {
         cursor: pointer;
     }
+`;
+
+const MapPlace = styled.span`
+    padding: 8px 15px 8px 15px;
+    background-color: rgba(56, 132, 213, 1);
+    color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    outline: none;
+    border-radius: 7px;
+    resize: none;
+    font-size: 14px;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.1);
+    margin: 0 0 1px 10px;
 `;
 
 const TagContainer = styled.div`

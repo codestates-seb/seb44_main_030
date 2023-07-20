@@ -61,7 +61,7 @@ const Login = () => {
                             <label htmlFor="email">E-mail Address</label>
                         </div>
                         <StyledInput
-                            id="emailInput"
+                            id="email"
                             type="email"
                             placeholder="enter your e-mail address"
                             {...register('email', {
