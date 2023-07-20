@@ -31,12 +31,6 @@ public class TrackerService {
     public Tracker createTracker(Tracker tracker) throws ParseException {
         Member findMember = memberService.findVerifiedMember(tracker.getMember().getMemberId());
 
-//        try {
-//            long exerciseTime = calculateExerciseTime(tracker.getExerciseStartTime(), tracker.getExerciseEndTime());
-//        } catch (ParseException parseException) {
-//            parseException.printStackTrace();
-//        }
-
         Tracker reBuildTracker = Tracker.builder()
                 .title(tracker.getTitle())
                 .content(tracker.getContent())

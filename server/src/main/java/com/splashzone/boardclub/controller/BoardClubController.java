@@ -106,4 +106,16 @@ public class BoardClubController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    /*
+    @PostMapping("/{club-id}/likes")
+    public ResponseEntity likeBoardClub(@PathVariable("club-id") @Positive Long boardClubId) {
+
+    }
+
+    @GetMapping("/best")
+    public ResponseEntity getBestBoardClubs() {
+
+    }
+     */
 }
