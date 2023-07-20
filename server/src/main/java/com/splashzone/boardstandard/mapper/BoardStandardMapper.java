@@ -42,19 +42,18 @@ public interface BoardStandardMapper {
 
         return responseDto;
     }
-    List<BoardStandardDto.Response> boardStandardToResponseDto(List<BoardStandard> boardStandards);
-//    {
-//        if (boardStandards == null) {
-//            return null;
-//        }
-//
-//        List<BoardStandardDto.Response> list = new ArrayList<BoardStandardDto.Response>(boardStandards.size());
-//        for (BoardStandard boardStandard : boardStandards) {
-//            list.add(boardStandardToResponseDto(boardStandard));
-//        }
-//
-//        return list;
-//    }
+    default List<BoardStandardDto.Response> boardStandardToResponseDto(List<BoardStandard> boardStandards){
+        if (boardStandards == null) {
+            return null;
+        }
+
+        List<BoardStandardDto.Response> list = new ArrayList<BoardStandardDto.Response>(boardStandards.size());
+        for (BoardStandard boardStandard : boardStandards) {
+            list.add(boardStandardToResponseDto(boardStandard));
+        }
+
+        return list;
+    }
 
     MemberDto.Response memberToMemberResponse(Member member);
 }
