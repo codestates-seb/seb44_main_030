@@ -13,20 +13,21 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {MemberMapper.class})
 public interface BoardStandardMapper {
-    default BoardStandard postDtoToBoardStandard(BoardStandardDto.Post postDto){
-        Member member = new Member();
-        member.setMemberId(postDto.getMemberId());
-
-        return BoardStandard.builder()
-                .title(postDto.getTitle())
-                .content(postDto.getContent())
-                .member(member)
-                .build();
-    }
+    BoardStandard postDtoToBoardStandard(BoardStandardDto.Post postDto);
+//    {
+//        Member member = new Member();
+//        member.setMemberId(postDto.getMemberId());
+//
+//        return BoardStandard.builder()
+//                .title(postDto.getTitle())
+//                .content(postDto.getContent())
+//                .member(member)
+//                .build();
+//    }
 
     BoardStandard patchDtoToBoardStandard(BoardStandardDto.Patch patchDto);
 
-    default BoardStandardDto.Response boardStandardToResponseDto(BoardStandard boardStandard) {
+    default BoardStandardDto.Response boardStandardToResponseDto(BoardStandard boardStandard){
         if (boardStandard == null) return null;
 
         BoardStandardDto.Response responseDto = new BoardStandardDto.Response();
@@ -46,12 +47,13 @@ public interface BoardStandardMapper {
             return null;
         }
 
-        List<BoardStandardDto.Response> list = new ArrayList<BoardStandardDto.Response>( boardStandards.size());
+        List<BoardStandardDto.Response> list = new ArrayList<BoardStandardDto.Response>(boardStandards.size());
         for (BoardStandard boardStandard : boardStandards) {
             list.add(boardStandardToResponseDto(boardStandard));
         }
 
         return list;
     }
+
     MemberDto.Response memberToMemberResponse(Member member);
 }

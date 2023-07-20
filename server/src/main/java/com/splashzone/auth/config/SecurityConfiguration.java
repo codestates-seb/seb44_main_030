@@ -64,10 +64,16 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                                 .antMatchers(HttpMethod.POST, "/members").permitAll()
+                                .antMatchers(HttpMethod.PATCH, "/members").hasRole("USER")
+                                .antMatchers(HttpMethod.DELETE, "/members").hasRole("USER")
                                 .antMatchers(HttpMethod.POST, "/standards").hasRole("USER")
                                 .antMatchers(HttpMethod.PATCH, "/standards").hasRole("USER")
                                 .antMatchers(HttpMethod.GET, "/standards").permitAll()
-                                .antMatchers(HttpMethod.POST, "/clubs").permitAll()
+                                .antMatchers(HttpMethod.DELETE, "/standards").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/clubs").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/clubs").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/clubs").permitAll()
+                                .antMatchers(HttpMethod.DELETE, "/clubs").hasRole("USER")
 //                        .antMatchers(HttpMethod.POST, "/standards").permitAll()
 //                        .antMatchers(HttpMethod.POST, "/clubs").permitAll()
 //                        .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
@@ -105,6 +111,7 @@ public class SecurityConfiguration {
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Refresh"));
         configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

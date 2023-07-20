@@ -60,6 +60,10 @@ public class MemberDto {
         private String nickname;
         private String bio;
 
+//        public void setUsername(String username) {
+//            this.email = username;
+//        }
+
         public void setMemberId(Long memberId) {
             this.memberId = memberId;
         }

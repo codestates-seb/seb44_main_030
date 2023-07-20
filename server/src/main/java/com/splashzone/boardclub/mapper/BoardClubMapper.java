@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface BoardClubMapper {
     default BoardClub boardClubPostDtotoBoardClub(BoardClubDto.Post requestBody) {
-        Member member = new Member();
-        member.setMemberId(requestBody.getMemberId());
+//        Member member = new Member();
+//        member.setMemberId(requestBody.getMemberId());
 
         return BoardClub.builder()
                 .title(requestBody.getTitle())
@@ -24,14 +24,14 @@ public interface BoardClubMapper {
                 .dueDate(requestBody.getDueDate())
                 .capacity(requestBody.getCapacity())
                 .contact(requestBody.getContact())
-                .member(member)
+//                .member(member)
                 .boardClubTags(getBoardClubTagsFromTagDto(requestBody.getTags()))
                 .build();
     }
 
     default BoardClub boardClubPatchDtotoBoardClub(BoardClubDto.Patch requestBody, Long boardClubId) {
-        Member member = new Member();
-        member.setMemberId(requestBody.getMemberId());
+//        Member member = new Member();
+//        member.setMemberId(requestBody.getMemberId());
 
         return BoardClub.builder()
                 .boardClubId(boardClubId)
@@ -40,7 +40,7 @@ public interface BoardClubMapper {
                 .dueDate(requestBody.getDueDate())
                 .capacity(requestBody.getCapacity())
                 .contact(requestBody.getContact())
-                .member(member)
+//                .member(member)
                 .boardClubTags(getBoardClubTagsFromTagDto(requestBody.getTags()))
                 .boardClubStatus(requestBody.getBoardClubStatus())
                 .build();
@@ -49,7 +49,7 @@ public interface BoardClubMapper {
     default BoardClubDto.Response boardClubToBoardClubResponseDto(BoardClub boardClub) {
         return BoardClubDto.Response.builder()
                 .boardClubId(boardClub.getBoardClubId())
-                .memberId(boardClub.getMember().getMemberId())
+//                .memberId(boardClub.getMember().getMemberId())
                 .title(boardClub.getTitle())
                 .content(boardClub.getContent())
                 .dueDate(boardClub.getDueDate())

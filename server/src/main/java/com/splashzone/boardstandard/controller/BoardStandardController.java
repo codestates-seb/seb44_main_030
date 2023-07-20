@@ -26,10 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Validated
 @RestController
@@ -50,24 +47,33 @@ public class BoardStandardController {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
-        System.out.println(member);
+        System.out.println("postStandard MEMBER: " + member);
 
         BoardStandard boardStandard = boardStandardMapper.postDtoToBoardStandard(postDto);
         boardStandard.setMember(member);
-        boardStandard = boardStandardService.createStandard(boardStandard);
-        URI location = UriCreator.createUri(STANDARD_DEFAULT_URL, boardStandard.getStandardId());
+        BoardStandard postBoardStandard = boardStandardService.createStandard(boardStandard);
+        URI location = UriCreator.createUri(STANDARD_DEFAULT_URL, postBoardStandard.getStandardId());
 //        return ResponseEntity.created(location).build();
-        return new ResponseEntity<>(boardStandardMapper.boardStandardToResponseDto(boardStandard),
+        return new ResponseEntity<>(boardStandardMapper.boardStandardToResponseDto(postBoardStandard),
                 HttpStatus.CREATED);
     }
 
     @PatchMapping("/{standard-id}")
-    public ResponseEntity patchStandard(@PathVariable("standard-id") @Positive Long standardId,
+    public ResponseEntity patchStandard(Authentication authentication,
+                                        @PathVariable("standard-id") @Positive Long standardId,
                                         @Valid @RequestBody BoardStandardDto.Patch patchDto) {
-        patchDto.setStandardId(standardId);
-        BoardStandard boardStandard = boardStandardService.updateStandard(boardStandardMapper.patchDtoToBoardStandard(patchDto));
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
-        return new ResponseEntity<>(new SingleResponseDto<>(boardStandardMapper.boardStandardToResponseDto(boardStandard)), HttpStatus.OK);
+        Member member = memberService.findMemberByUsername(memberDetails.getUsername());
+        System.out.println("patchStandard MEMBER: " + member);
+
+        BoardStandard boardStandard = boardStandardMapper.patchDtoToBoardStandard(patchDto);
+        boardStandard.setMember(member);
+
+        boardStandard.setStandardId(standardId);
+        BoardStandard patchBoardStandard = boardStandardService.updateStandard(boardStandard);
+
+        return new ResponseEntity<>(new SingleResponseDto<>(boardStandardMapper.boardStandardToResponseDto(patchBoardStandard)), HttpStatus.OK);
     }
 
     @GetMapping("/{standard-id}")
@@ -91,7 +97,11 @@ public class BoardStandardController {
     }
 
     @DeleteMapping("/{standard-id}")
-    public ResponseEntity deleteStandard(@Positive @PathVariable("standard-id") Long standardId) {
+    public ResponseEntity deleteStandard(Authentication authentication,
+                                         @Positive @PathVariable("standard-id") Long standardId) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
         boardStandardService.deleteStandard(standardId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
