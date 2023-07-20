@@ -10,6 +10,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
 import axios from 'axios';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
+import { useMutation } from '@tanstack/react-query';
 
 interface BackgroundProps {
     $image: string;
@@ -32,11 +33,7 @@ const ClubDetail = () => {
     }
     console.log(clubDetail);
 
-    const location = useLocation();
     const navigate = useNavigate();
-
-    // const [commentCount, setCommentCount] = useState(comment.length);
-    const { register, handleSubmit, reset } = useForm<CommentInput>({ mode: 'onSubmit' });
 
     //standardId 이용해서 API 요청
     const hanldeNavigatePrev = useCallback(() => {
@@ -50,15 +47,25 @@ const ClubDetail = () => {
     const handleEdit = useCallback(() => {
         navigate(`/club/create/${boardClubId}`, { state: { clubDetail: clubDetail.data } });
     }, [clubDetail, boardClubId]);
-    const handleDelete = useCallback(async () => {
-        const API_URL = import.meta.env.VITE_KEY;
-        try {
-            await axios.delete(`${API_URL}/clubs/${boardClubId}`);
-            navigate(-1);
-        } catch (error) {
-            console.error(error);
+
+    const mutation = useMutation(
+        (boardClubId: number) => axios.delete(`${import.meta.env.VITE_KEY}/clubs/${boardClubId}`),
+        {
+            onSuccess: () => {
+                alert('게시글이 성공적으로 삭제되었습니다.');
+                navigate(-1);
+            },
+            onError: () => {
+                alert('게시글 삭제에 실패했습니다.');
+            },
+        },
+    );
+
+    const handleDelete = useCallback(() => {
+        if (window.confirm('게시글을 삭제하시겠습니까?')) {
+            mutation.mutate(boardClubId);
         }
-    }, [boardClubId]);
+    }, [mutation, boardClubId]);
 
     const handleNavigateContact = useCallback(() => {
         window.open(contact, '_blank');
@@ -107,7 +114,7 @@ const ClubDetail = () => {
                 </TitleSection>
                 <ContentSection>
                     <h1>내용</h1>
-                    <p>{content}</p>
+                    <p dangerouslySetInnerHTML={{ __html: content }} />
                     <div>
                         <EditContainer>
                             <button onClick={handleEdit}>수정</button>
@@ -272,50 +279,5 @@ const EditContainer = styled.div`
             color: #3884d5;
             cursor: pointer;
         }
-    }
-`;
-const CommentSection = styled.section`
-    border-bottom: 1px solid #d9d9d9;
-`;
-const CreateCommentSpace = styled.div`
-    border-bottom: 1px solid #d9d9d9;
-    margin-top: 20px;
-    padding-bottom: 15px;
-    form {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        width: 960px;
-        > div {
-            width: 960px;
-            display: flex;
-            justify-content: end;
-        }
-    }
-    label {
-        font-size: 20px;
-        font-weight: 600;
-    }
-    textarea {
-        width: 960px;
-        height: 100px;
-        display: flex;
-        align-items: start;
-        padding: 8px 8px 8px 8px;
-        border-radius: 5px;
-        margin-top: 10px;
-        resize: none;
-        &:focus {
-            outline: solid 1px #3884d5;
-        }
-    }
-    button {
-        width: 50px;
-        height: 30px;
-        background-color: #3884d5;
-        color: #ffffff;
-        border-radius: 5px;
-        margin-top: 5px;
     }
 `;
