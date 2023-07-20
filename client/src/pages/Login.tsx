@@ -36,6 +36,7 @@ const Login = () => {
             });
             console.log(response.data);
             console.log(response.headers);
+
             const token = response.headers.authorization;
             console.log(token);
             if (token) {
@@ -50,6 +51,7 @@ const Login = () => {
     };
 
     const navigate = useNavigate();
+    console.log(cookies);
 
     return (
         <StyledCover initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

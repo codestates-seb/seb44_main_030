@@ -164,15 +164,15 @@ const CommunityCreate = () => {
                         {errors.title && <ErrorMessage>{errors?.title.message}</ErrorMessage>}
                     </Title>
                     <Content>
-                        {/* <TextArea
+                        <TextArea
                             placeholder="모임에 대해 소개해주세요!"
                             {...register('content', {
                                 required: '내용을 입력해주세요',
                                 minLength: { value: 30, message: '30자 이상 입력해주세요' },
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
-                        /> */}
-                        <Controller
+                        />
+                        {/* <Controller
                             name="content"
                             control={control}
                             defaultValue=""
@@ -184,11 +184,11 @@ const CommunityCreate = () => {
                             render={({ field }) => (
                                 <StyledReactQuill {...field} modules={{ toolbar: toolbarOptions }} />
                             )}
-                        />
+                        /> */}
                         {errors.content && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
-                        <button onClick={()=>setIsModalOpen(true)}>취소</button>
+                        <button onClick={() => setIsModalOpen(true)}>취소</button>
                         {isModalOpen && (
                             <ConfirmModal
                                 handleCloseModal={handleCloseModal}
