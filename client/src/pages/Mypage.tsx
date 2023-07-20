@@ -40,6 +40,7 @@ const Mypage = () => {
 
     const handleUpdate = (member: member) => {
         updateMutation.mutate(member);
+        location.reload();
     };
     useEffect(() => {
         if (data) {

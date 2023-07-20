@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import MapContainer from './Mapcontainer';
 import ClubInfoWindow from './common/InfoWindow/clubindex';
+import { useEffect } from 'react';
 
 const ClubMapContainer = () => {
     const map = useSelector((state: RootState) => state.counter.mapInstance);
@@ -16,6 +17,14 @@ const ClubMapContainer = () => {
             lng: 126.970606917394,
         },
     };
+
+    const newcenter = new naver.maps.LatLng(data.position.lat, data.position.lng);
+    useEffect(() => {
+        if (map) {
+            map.setCenter(newcenter);
+            console.log('센터바뀜');
+        }
+    }, [map]);
 
     return (
         <div style={{ width: '600px' }}>
