@@ -1,8 +1,9 @@
 import React from 'react';
-import { Routes, Route, useLocation, Navigate  } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import loadable from '@loadable/component';
 import { AnimatePresence } from 'framer-motion';
 import Table from '../Table';
+import ClubMapContainer from '../clubMap';
 
 const Main = loadable(() => import('../../pages/Main'));
 const Signup = loadable(() => import('../../pages/Signup'));
@@ -18,7 +19,7 @@ const Map = loadable(() => import('../../pages/Map'));
 
 export default function AnimateRoute() {
     const location = useLocation();
-    
+
     return (
         <AnimatePresence>
             <Routes location={location} key={location.pathname}>
@@ -35,7 +36,7 @@ export default function AnimateRoute() {
                 <Route path="/club/create/:boardClubId" element={<ClubCreate></ClubCreate>}></Route>
                 <Route path="/mypage" element={<Mypage></Mypage>}></Route>
                 <Route path="/map" element={<Map />}></Route>
-                <Route path="/test" element={<Table></Table>}></Route>
+                <Route path="/test" element={<ClubMapContainer></ClubMapContainer>}></Route>
             </Routes>
         </AnimatePresence>
     );
