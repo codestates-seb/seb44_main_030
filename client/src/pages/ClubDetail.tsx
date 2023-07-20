@@ -107,7 +107,7 @@ const ClubDetail = () => {
                 </TitleSection>
                 <ContentSection>
                     <h1>내용</h1>
-                    <p>{content}</p>
+                    <p dangerouslySetInnerHTML={{ __html: content }} />
                     <div>
                         <EditContainer>
                             <button onClick={handleEdit}>수정</button>

@@ -84,7 +84,7 @@ export default function ContentsCard({
     const [clubStatus, setClubStatus] = useState(boardClubStatus);
     useEffect(() => {
         const now = new Date();
-        now.setDate(now.getDate() + 1);
+        now.setDate(now.getDate() - 1);
         const due = new Date(dueDate);
 
         if (now > due && clubStatus !== 'BOARD_CLUB_CANCEL') {
@@ -140,7 +140,7 @@ export default function ContentsCard({
                     <h3>{communityProps ? communityTitle : clubTitle}</h3>
                 </TitleContainer>
                 <ContentsContainer onClick={moveToDetail}>
-                    <span>{communityProps ? communityContent : clubContent}</span>
+                    <span dangerouslySetInnerHTML={{ __html: communityProps ? communityContent : clubContent }}></span>
                 </ContentsContainer>
                 <TagContainer>
                     {communityProps && <Tag tag={tag} className="tag-component" />}
