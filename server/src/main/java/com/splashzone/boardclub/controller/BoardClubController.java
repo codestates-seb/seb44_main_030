@@ -28,7 +28,6 @@ public class BoardClubController {
     private final static String BOARD_CLUB_DEFAULT_URL = "/clubs";
     private final BoardClubService boardClubService;
     private final BoardClubMapper boardClubMapper;
-    private final MemberService memberService;
 
     @PostMapping
     public ResponseEntity postBoardClub(@Valid @RequestBody BoardClubDto.Post requestBody) {
@@ -41,8 +40,6 @@ public class BoardClubController {
     @PatchMapping("/{club-id}")
     public ResponseEntity patchBoardClub(@PathVariable("club-id") @Positive Long boardClubId,
                                          @Valid @RequestBody BoardClubDto.Patch requestBody) {
-//        requestBody.setBoardClubId(boardClubId);
-
         BoardClub boardClub = boardClubService.updateBoardClub(boardClubMapper.boardClubPatchDtotoBoardClub(requestBody, boardClubId));
 
         return new ResponseEntity<>(new SingleResponseDto<>(boardClubMapper.boardClubToBoardClubResponseDto(boardClub)), HttpStatus.OK);

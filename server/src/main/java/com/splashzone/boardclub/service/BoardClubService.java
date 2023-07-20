@@ -70,7 +70,7 @@ public class BoardClubService {
 
     @Transactional(readOnly = true)
     public BoardClub findBoardClub(Long boardClubId) {
-        return findVerifiedBoardClub(boardClubId); // 댓글 조회 추가 예정
+        return findVerifiedBoardClub(boardClubId);
     }
 
     public Page<BoardClub> findBoardClubs(Integer page, Integer size) {
@@ -87,7 +87,7 @@ public class BoardClubService {
         boardClubRepository.delete(findBoardClub);
     }
 
-    private BoardClub findVerifiedBoardClub(Long boardClubId) {
+    public BoardClub findVerifiedBoardClub(Long boardClubId) {
         Optional<BoardClub> optionalBoardClub = boardClubRepository.findById(boardClubId);
 
         BoardClub findBoardClub =

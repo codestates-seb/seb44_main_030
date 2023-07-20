@@ -70,9 +70,9 @@ public class BoardClubDto {
 
         private BoardClub.BoardClubStatus boardClubStatus;
 
-        public void setBoardClubId(Long boardClubId) {
-            this.boardClubId = boardClubId;
-        }
+//        public void setBoardClubId(Long boardClubId) {
+//            this.boardClubId = boardClubId;
+//        }
     }
 
     @Getter

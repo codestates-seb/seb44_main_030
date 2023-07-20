@@ -1,6 +1,7 @@
 package com.splashzone.boardclub.entity;
 
 import com.splashzone.audit.Auditable;
+import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.member.entity.Member;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
 @Entity
 public class BoardClub extends Auditable {
@@ -50,6 +52,10 @@ public class BoardClub extends Auditable {
     @Builder.Default
     @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BoardClubTag> boardClubTags = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<BoardClubComment> boardClubComments = new ArrayList<>();
 
     public enum BoardClubStatus {
         BOARD_CLUB_RECRUITING("모집 중"),
