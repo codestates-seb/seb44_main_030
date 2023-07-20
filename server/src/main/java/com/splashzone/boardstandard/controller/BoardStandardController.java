@@ -26,10 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Validated
 @RestController
@@ -100,7 +97,11 @@ public class BoardStandardController {
     }
 
     @DeleteMapping("/{standard-id}")
-    public ResponseEntity deleteStandard(@Positive @PathVariable("standard-id") Long standardId) {
+    public ResponseEntity deleteStandard(Authentication authentication,
+                                         @Positive @PathVariable("standard-id") Long standardId) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
         boardStandardService.deleteStandard(standardId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

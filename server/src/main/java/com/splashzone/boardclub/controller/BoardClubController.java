@@ -96,7 +96,12 @@ public class BoardClubController {
     }
 
     @DeleteMapping("/{club-id}")
-    public ResponseEntity deleteBoardClub(@PathVariable("club-id") @Positive Long boardClubId) {
+    public ResponseEntity deleteBoardClub(Authentication authentication,
+                                          @PathVariable("club-id") @Positive Long boardClubId) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         boardClubService.deleteBoardClub(boardClubId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

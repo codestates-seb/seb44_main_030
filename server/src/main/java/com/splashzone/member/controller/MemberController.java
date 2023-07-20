@@ -1,6 +1,9 @@
 package com.splashzone.member.controller;
 
 import com.splashzone.auth.userdetails.MemberDetails;
+import com.splashzone.boardclub.dto.BoardClubDto;
+import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
@@ -25,6 +28,7 @@ import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/members")
@@ -57,12 +61,12 @@ public class MemberController {
                                       @PathVariable("member-id") @Positive Long memberId,
                                       @Valid @RequestBody MemberDto.Patch patchDto) {
 
-        if(authentication == null){
+        if (authentication == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
-        if(!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()).getMemberId(), memberId)){
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()).getMemberId(), memberId)) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
@@ -92,9 +96,37 @@ public class MemberController {
     @DeleteMapping("/{member-id}")
     public ResponseEntity terminatedMember(Authentication authentication,
                                            @PathVariable("member-id") @Positive Long memberId) {
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()).getMemberId(), memberId)) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
         memberService.terminateMember(memberId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/mypage/standards/{member-id}")
+    public ResponseEntity getMyStandardBoards(
+            @PathVariable("member-id") @Positive Long memberId,
+            @Positive @RequestParam int page,
+            @Positive @RequestParam int size) {
+        Page<BoardStandard> boardStandardPage = memberService.findStandardBoardsByMember(memberId, page - 1, size);
+        List<BoardStandardDto.Response> boardStandardResponses = boardStandardPage.getContent().stream()
+                .map(mapper::boardStandardToBoardStandardResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new MultiResponseDto<>(boardStandardResponses, boardStandardPage));
+    }
+
+    @GetMapping("/mypages/clubs/{member-id}")
+    public ResponseEntity getMyClubBoards(
+            @PathVariable("member-id") @Positive Long memberId,
+            @Positive @RequestParam int page,
+            @Positive @RequestParam int size) {
+        Page<BoardClub> boardClubPage = memberService.findClubBoardsByMember(memberId, page - 1, size);
+        List<BoardClubDto.Response> boardClubResponses = boardClubPage.getContent().stream()
+                .map(mapper::boardClubToBoardClubResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new MultiResponseDto<>(boardClubResponses, boardClubPage));
     }
 
 //    @DeleteMapping("/logout")
