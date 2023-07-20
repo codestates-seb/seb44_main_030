@@ -67,7 +67,7 @@ const Modal = ({ setModal, value, mark }) => {
     };
 
     const onSubmitHandler = (data: PostProps) => {
-        const url = 'http://13.209.142.240:8080/tracker';
+        const url = 'http://13.209.142.240:8080/trackers';
 
         return axios
             .post(url, data)

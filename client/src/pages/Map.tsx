@@ -19,7 +19,7 @@ const Map = ({ setShowMap, updateClubMap }) => {
                         ❌
                     </StyledButton>
                 </div>
-                <Wrapper width="90%" height="20%">
+                <Wrapper width="900px" height="200px">
                     <h3>Tip</h3>
                     <p>STEP1 근처 역 혹은 지역이름을 키워드로 검색합니다.</p>
                     <p>STEP2 줌을통해 지역을 확인후 마커를 클릭해 장소를 등록합니다.</p>
@@ -48,8 +48,8 @@ const StyledModal = styled.div`
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 50%;
-        height: 80%;
+        width: 1000px;
+        height: 600px;
         background-color: white;
         padding: 10px;
         border-radius: 5px;
