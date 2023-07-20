@@ -11,7 +11,7 @@ import axios, { AxiosError } from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Map from './Map.tsx';
-
+import ConfirmModal from '../components/common/ConfirmModal';
 type Position = {
     lat: number;
     lng: number;
@@ -44,6 +44,7 @@ const ClubCreate = () => {
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
     const [clubMap, setClubMap] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const dispatch = useDispatch();
 
     console.log(clubMap);
@@ -126,6 +127,10 @@ const ClubCreate = () => {
 
     const handleCancel = () => {
         navigate(-1);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
     };
     const formattedDate = date.toLocaleDateString('en-CA');
 
@@ -289,7 +294,12 @@ const ClubCreate = () => {
                         {errors.title && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
-                        <button onClick={handleCancel}>취소</button>
+                        <button onClick={()=>{setIsModalOpen(true)}}>취소</button>
+                        {isModalOpen && <ConfirmModal
+                                handleCloseModal={handleCloseModal}
+                                handleConfirm={handleCancel}
+                                text="작성을 취소 하시겠습니까?"
+                            />}
                         <button type="submit">글 등록</button>
                     </ButtonWarp>
                 </DetailContentContainer>

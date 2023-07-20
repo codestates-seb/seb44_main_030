@@ -122,13 +122,6 @@ const CommunityCreate = () => {
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            {isModalOpen && (
-                <ConfirmModal
-                    handleCloseModal={handleCloseModal}
-                    handleConfirm={handleCancel}
-                    text="정말 취소할까요?"
-                />
-            )}
             <FormContainer onSubmit={handleSubmit(onSubmit)}>
                 <DetailContentContainer>
                     <TitleText>모두가 당신의 이야기를 듣고 싶어합니다!</TitleText>
@@ -165,7 +158,14 @@ const CommunityCreate = () => {
                         {errors.content && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
-                        <button onClick={()=>setIsModalOpen(true)}>취소</button>
+                        <button onClick={() => setIsModalOpen(true)}>취소</button>
+                        {isModalOpen && (
+                            <ConfirmModal
+                                handleCloseModal={handleCloseModal}
+                                handleConfirm={handleCancel}
+                                text="정말 취소할까요?"
+                            />
+                        )}
                         <button type="submit">글 등록</button>
                     </ButtonWarp>
                 </DetailContentContainer>
