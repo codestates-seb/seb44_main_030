@@ -1,5 +1,6 @@
 package com.splashzone.member.dto;
 
+import com.splashzone.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -17,7 +18,9 @@ public class MemberDto {
         private String name;
         private String email;
         private String nickname;
+        private String profileImageUrl;
         private String bio;
+        private Member.MemberStatus memberStatus;
     }
 
     @Getter
@@ -53,7 +56,7 @@ public class MemberDto {
 //
 //        @Email(message = "이메일 형식이 올바르지 않습니다.")
 //        private String email;
-
+        private String profileImageUrl;
         private String nickname;
         private String bio;
 

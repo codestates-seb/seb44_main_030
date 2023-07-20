@@ -1,6 +1,7 @@
 package com.splashzone.boardstandard.repository;
 
 import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface BoardStandardRepository extends JpaRepository<BoardStandard, Lo
     @Modifying
     @Query("UPDATE BoardStandard c SET c.view = c.view + 1 WHERE c.standardId = :standardId")
     int updateViews(Long standardId);
+
+    Page<BoardStandard> findByMember(Member member, Pageable pageable);
 }
