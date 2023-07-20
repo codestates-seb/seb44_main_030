@@ -82,7 +82,7 @@ public class BoardClubDto {
     public static class Response {
         private Long boardClubId;
 
-럍        private Long memberId;
+        private Long memberId;
 
         private String title;
 
