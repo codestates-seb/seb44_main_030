@@ -67,6 +67,10 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<Tracker> trackers = new ArrayList<>();
 
+//    @Builder.Default
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+//    private List<Like> likes = new ArrayList<>();
+
 //    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
 //    private Dolphin dolphin;
 

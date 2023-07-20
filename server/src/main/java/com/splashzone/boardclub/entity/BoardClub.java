@@ -45,7 +45,7 @@ public class BoardClub extends Auditable {
     @Column(name = "BOARD_CLUB_STATUS", nullable = false)
     private BoardClubStatus boardClubStatus = BoardClubStatus.BOARD_CLUB_RECRUITING;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
@@ -56,6 +56,14 @@ public class BoardClub extends Auditable {
     @Builder.Default
     @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BoardClubComment> boardClubComments = new ArrayList<>();
+
+//    @Builder.Default
+//    @OneToMany(mappedBy = "boardClub")
+//    private List<Like> likes = new ArrayList<>();
+
+//    @Builder.Default
+    @Column(name = "LIKE_COUNT", nullable = true)
+    private int likeCount;
 
     public enum BoardClubStatus {
         BOARD_CLUB_RECRUITING("모집 중"),
@@ -96,5 +104,13 @@ public class BoardClub extends Auditable {
 
     public void changeBoardClubStatus(BoardClubStatus boardClubStatus) {
         this.boardClubStatus = boardClubStatus;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
     }
 }

@@ -1,7 +1,9 @@
 package com.splashzone.boardclub.service;
 
 import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.boardclub.entity.BoardClubLike;
 import com.splashzone.boardclub.entity.BoardClubTag;
+import com.splashzone.boardclub.repository.BoardClubLikeRepository;
 import com.splashzone.boardclub.repository.BoardClubRepository;
 import com.splashzone.boardclub.repository.BoardClubTagRepository;
 import com.splashzone.exception.BusinessLogicException;
@@ -25,9 +27,12 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class BoardClubService {
+    private static final String SUCCESS_LIKE_BOARD_CLUB = "좋아요 처리 완료";
+    private static final String SUCCESS_UNLIKE_BOARD_CLUB = "좋아요 취소 완료";
     private final MemberService memberService;
     private final BoardClubRepository boardClubRepository;
     private final BoardClubTagRepository boardClubTagRepository;
+    private final BoardClubLikeRepository boardClubLikeRepository;
     private final TagService tagService;
 
     public BoardClub createBoardClub(BoardClub boardClub) {
@@ -73,6 +78,7 @@ public class BoardClubService {
         return findVerifiedBoardClub(boardClubId);
     }
 
+    @Transactional(readOnly = true)
     public Page<BoardClub> findBoardClubs(Integer page, Integer size) {
         return boardClubRepository.findAll(PageRequest.of(page, size, Sort.by("boardClubId").descending()));
     }
@@ -97,6 +103,7 @@ public class BoardClubService {
         return findBoardClub;
     }
 
+    /*
     private void deleteOriginTagInBoardClub(BoardClub findBoardClub) {
         findBoardClub.getBoardClubTags().stream()
                 .forEach(boardClubTag -> {
@@ -104,6 +111,7 @@ public class BoardClubService {
                     boardClubTagRepository.delete(boardClubTag);
                 });
     }
+     */
 
     private void bridgeTagToBoardClub(BoardClub boardClub, BoardClub reBuildBoardClub) {
         boardClub.getBoardClubTags().stream() // 수정한 모임게시글에서 태그를 가져온다.
@@ -119,5 +127,45 @@ public class BoardClubService {
 
     public int updateViews(Long boardClubId) {
         return boardClubRepository.updateViews(boardClubId);
+    }
+
+    public String updateLikeOfBoardClub(Long boardClubId, Long memberId) {
+        BoardClub findBoardClub = findVerifiedBoardClub(boardClubId);
+
+        Member findMember = memberService.findVerifiedMember(memberId);
+
+        if (!hasBoardClubLike(findBoardClub, findMember)) {
+            findBoardClub.increaseLikeCount();
+            return createBoardClubLike(findBoardClub, findMember);
+        }
+
+        findBoardClub.decreaseLikeCount();
+        return removeBoardClubLike(findBoardClub, findMember);
+    }
+
+    public String createBoardClubLike(BoardClub boardClub, Member member) {
+        BoardClubLike boardClubLike = new BoardClubLike(boardClub, member);
+        boardClubLikeRepository.save(boardClubLike);
+        return SUCCESS_LIKE_BOARD_CLUB;
+    }
+
+    public String removeBoardClubLike(BoardClub boardClub, Member member) {
+        BoardClubLike boardClubLike = boardClubLikeRepository.findByBoardClubAndMember(boardClub, member)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.LIKE_NOT_FOUND));
+
+        boardClubLikeRepository.delete(boardClubLike);
+
+        return SUCCESS_UNLIKE_BOARD_CLUB;
+    }
+
+    public boolean hasBoardClubLike(BoardClub boardClub, Member member) {
+        return boardClubLikeRepository.findByBoardClubAndMember(boardClub, member)
+                .isPresent();
+    }
+
+    // 좋아요 순으로 인기글 조회
+    @Transactional(readOnly = true)
+    public Page<BoardClub> findBestBoardClubs(Integer page, Integer size) {
+        return boardClubRepository.findAll(PageRequest.of(page, size, Sort.by("boardClubId").descending()));
     }
 }

@@ -49,9 +49,11 @@ public class Tracker extends Auditable {
     public Long calculateExerciseTime(String exerciseStartTime, String exerciseEndTime) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMddHHmm");
 
+        // String -> Date
         Date startDate = dateFormat.parse(exerciseStartTime);
         Date endDate = dateFormat.parse(exerciseEndTime);
 
+        // Date -> 밀리세컨즈
         Long startDateTime = startDate.getTime();
         Long endDateTime = endDate.getTime();
 
