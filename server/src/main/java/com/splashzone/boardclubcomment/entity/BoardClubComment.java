@@ -28,7 +28,12 @@ public class BoardClubComment extends Auditable {
     @JoinColumn(name = "BOARD_CLUB_ID")
     private BoardClub boardClub;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+
+    public BoardClubComment changeContent(String newContent) {
+        this.content = newContent;
+        return this;
+    }
 }

@@ -1,6 +1,7 @@
 package com.splashzone.member.entity;
 
 import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.tracker.entity.Tracker;
 import lombok.*;
@@ -90,7 +91,15 @@ public class Member {
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private List<BoardClubComment> boardClubComments = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<Tracker> trackers = new ArrayList<>();
+
+//    @Builder.Default
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+//    private List<Like> likes = new ArrayList<>();
 
 //    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
 //    private Dolphin dolphin;

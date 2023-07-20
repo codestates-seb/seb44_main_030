@@ -13,6 +13,8 @@ public interface BoardClubRepository extends JpaRepository<BoardClub, Long> {
     @Query("UPDATE BoardClub c SET c.view = c.view + 1 WHERE c.boardClubId = :boardClubId")
     int updateViews(Long boardClubId);
 
+    Page<BoardClub> findByLikeCountGreaterThanEqual(Pageable pageable, int number);
+
     // memberId로 findByMember 방법 고려
     Page<BoardClub> findByMember(Member member, Pageable pageable);
 }
