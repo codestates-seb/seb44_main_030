@@ -19,7 +19,7 @@ interface FormInput {
 
 const Login = () => {
     const api = useApi();
-    const [cookies, setCookie, removeCookie] = useCookies(['Token']);
+    const [cookies, setCookie, removeCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
     const {
         register,
         handleSubmit,
@@ -35,12 +35,11 @@ const Login = () => {
                 withCredentials: true,
             });
             console.log(response.data);
-            console.log(response.headers);
-
-            const token = response.headers.authorization;
-            console.log(token);
-            if (token) {
-                setCookie('Token', token, { path: '/' });
+            const Authorization = response.headers.authorization;
+            const Refresh = response.headers.refresh;
+            if (Authorization && Refresh) {
+                setCookie('AuthorizationToken', Authorization, { path: '/' });
+                setCookie('RefreshToken', Refresh, { path: '/' });
                 navigate('/');
             } else {
                 console.error('error');
