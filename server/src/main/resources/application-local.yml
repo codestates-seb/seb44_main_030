@@ -1,44 +1,47 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2
   datasource:
-    url: jdbc:h2:mem:test
-    initialization-mode: always
+    url: ${LOCAL_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${LOCAL_USERNAME}
+    password: ${LOCAL_PASSWORD}
+  sql:
+    init:
+      mode: always
   jpa:
     hibernate:
       ddl-auto: create
-    show-sql: true
     properties:
       hibernate:
         format_sql: true
         id:
           new_generator_mappings: false
     defer-datasource-initialization: true
+    show-sql: true
+    open-in-view: true
+    profiles:
+      include: database
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  sql:
-    init:
-      data-locations: classpath*:db/h2/data.sql
-logging:
-  level:
-    org:
-      springframework:
-        orm:
-          jpa: DEBUG
-      hibernate:
-        SQL: DEBUG
-        type: trace
-server:
-  servlet:
-    encoding:
-      force-response: true
+  logging:
+    level:
+      org:
+        springframework:
+          orm:
+            jpa: DEBUG
+        hibernate:
+          SQL: DEBUG
+          type: trace
+  server:
+    servlet:
+      encoding:
+        force-response: true
+
+mail:
+  address:
+    admin: admin@gmail.com
+
 jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 420
-mail:
-  address:
-    admin: admin@gmail.com

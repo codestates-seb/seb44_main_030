@@ -1,15 +1,15 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/main_project?serverTimezone=Asia/Seoul
+    url: ${RDS_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 1234
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
   sql:
     init:
       mode: always
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
@@ -36,16 +36,6 @@ spring:
     servlet:
       encoding:
         force-response: true
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            clientId: 445352671644-r63ah7ovh24jbru29cjgl5n6l7gn4tea.apps.googleusercontent.com
-            clientSecret: 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
-            scope:
-              - email
-              - profile
 
 mail:
   address:
