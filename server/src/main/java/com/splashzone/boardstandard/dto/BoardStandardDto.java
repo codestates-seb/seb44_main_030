@@ -12,8 +12,8 @@ public class BoardStandardDto {
     @Getter
     @Setter
     public static class Post{
-        @Positive
-        private Long memberId;
+//        @Positive
+//        private Long memberId;
         @NotBlank(message = "제목을 입력하세요")
         private String title;
         @NotBlank(message = "내용을 입력하세요")
@@ -23,18 +23,17 @@ public class BoardStandardDto {
     @Getter
     @Setter
     public static class Patch{
-        @Positive
-        private Long memberId;
-        @Positive
-        private long standardId;
+//        @Positive
+//        private Long memberId;
+//        @Positive
+//        private long standardId;
         private String title;
         private String content;
-        private long view;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        public void setStandardId(Long standardId) {
-            this.standardId = standardId;
-        }
+//        public void setStandardId(Long standardId) {
+//            this.standardId = standardId;
+//        }
 
     }
 

@@ -1,6 +1,7 @@
 package com.splashzone.boardclub.repository;
 
 import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,7 @@ public interface BoardClubRepository extends JpaRepository<BoardClub, Long> {
     int updateViews(Long boardClubId);
 
     Page<BoardClub> findByLikeCountGreaterThanEqual(Pageable pageable, int number);
+
+    // memberId로 findByMember 방법 고려
+    Page<BoardClub> findByMember(Member member, Pageable pageable);
 }

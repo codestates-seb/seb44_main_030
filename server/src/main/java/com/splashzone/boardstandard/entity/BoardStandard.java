@@ -16,26 +16,26 @@ import java.time.LocalDateTime;
 @Entity
 public class BoardStandard extends Auditable {
     @Id
-    @GeneratedValue
-    private long standardId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long standardId;
 
-    @Column(nullable = false)
+    @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(name = "CONTENT", nullable = false)
     private String content;
 
-    @Column(columnDefinition = "integer default 0", nullable = false)
+    @Column(name = "VIEW", nullable = false, columnDefinition = "integer default 0")
     private int view;
 
     //TODO tagId mapping,likeCount 추가 해야됨!!
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
 
-    public BoardStandard(long standardId, String title, String content, int view) {
+    public BoardStandard(Long standardId, String title, String content, int view) {
         this.standardId = standardId;
         this.title = title;
         this.content = content;
@@ -49,5 +49,9 @@ public class BoardStandard extends Auditable {
         if (!boardStandard.getContent().isEmpty()) {
             this.content = boardStandard.getContent();
         }
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }

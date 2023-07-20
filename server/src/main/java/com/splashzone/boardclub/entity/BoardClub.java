@@ -13,11 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Builder
 @Entity
 public class BoardClub extends Auditable {
     @Id
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardClubId;
 
@@ -112,5 +112,9 @@ public class BoardClub extends Auditable {
 
     public void decreaseLikeCount() {
         this.likeCount -= 1;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }
