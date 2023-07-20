@@ -4,6 +4,7 @@ import com.splashzone.auth.userdetails.MemberDetails;
 import com.splashzone.boardclub.dto.BoardClubDto;
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.boardclub.mapper.BoardClubMapper;
+import com.splashzone.boardclub.repository.BoardClubRepository;
 import com.splashzone.boardclub.service.BoardClubService;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.dto.MultiResponseDto;
@@ -13,6 +14,9 @@ import com.splashzone.member.service.MemberService;
 import com.splashzone.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,9 +35,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardClubController {
     private final static String BOARD_CLUB_DEFAULT_URL = "/clubs";
+    private static final int RECOMMEND_LIKE_COUNT = 1;
     private final BoardClubService boardClubService;
     private final BoardClubMapper boardClubMapper;
     private final MemberService memberService;
+    private final BoardClubRepository boardClubRepository;
 
     @PostMapping
     public ResponseEntity postBoardClub(Authentication authentication,
@@ -107,15 +113,24 @@ public class BoardClubController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    /*
     @PostMapping("/{club-id}/likes")
-    public ResponseEntity likeBoardClub(@PathVariable("club-id") @Positive Long boardClubId) {
+    public ResponseEntity likeBoardClub(Authentication authentication,
+                                        @PathVariable("club-id") @Positive Long boardClubId) {
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
+        Member member = memberService.findMemberByUsername(memberDetails.getUsername());
+
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(boardClubService.updateLikeOfBoardClub(boardClubId, member.getMemberId())),
+                HttpStatus.OK);
     }
 
     @GetMapping("/best")
-    public ResponseEntity getBestBoardClubs() {
+    public ResponseEntity getBestBoardClubs(@PageableDefault(size = 5, sort = "likeCount", direction = Sort.Direction.DESC) final Pageable pageable) {
+        Page<BoardClub> pageBoardClubs = boardClubRepository.findByLikeCountGreaterThanEqual(pageable, RECOMMEND_LIKE_COUNT);
+        List<BoardClub> boardClubs = pageBoardClubs.getContent();
 
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boardClubMapper.boardClubsToBoardClubResponseDtos(boardClubs), pageBoardClubs), HttpStatus.OK);
     }
-     */
 }
