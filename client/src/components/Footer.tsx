@@ -62,7 +62,18 @@ const Footer = () => {
                     <div>ABOUT</div>
                     <Info>사용설명서</Info>
                 </div>
-                <div>SUPPORT</div>
+                <div>
+                    <div>SUPPORT</div>
+                    <Info>
+                        <StyledLink
+                            href="https://github.com/codestates-seb/seb44_main_030"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Splash github
+                        </StyledLink>
+                    </Info>
+                </div>
             </StyledInfo>
             <StyledIntroduce>
                 Site design / logo © 2023 SplashZone TEAM30;
