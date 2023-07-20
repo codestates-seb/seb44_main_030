@@ -2,6 +2,10 @@ package com.splashzone.member.service;
 
 
 import com.splashzone.auth.utils.CustomAuthorityUtils;
+import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.boardclub.repository.BoardClubRepository;
+import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.boardstandard.repository.BoardStandardRepository;
 import com.splashzone.dolphin.Dolphin;
 import com.splashzone.dolphin.DolphinRepository;
 import com.splashzone.exception.BusinessLogicException;
@@ -30,13 +34,24 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
     private final DolphinRepository dolphinRepository;
+    private final BoardClubRepository boardClubRepository;
+    private final BoardStandardRepository boardStandardRepository;
+
 
     @Autowired
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomAuthorityUtils authorityUtils, DolphinRepository dolphinRepository) {
+    public MemberService(MemberRepository memberRepository,
+                         PasswordEncoder passwordEncoder,
+                         CustomAuthorityUtils authorityUtils,
+                         DolphinRepository dolphinRepository,
+                         BoardClubRepository boardClubRepository,
+                         BoardStandardRepository boardStandardRepository) {
+
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityUtils = authorityUtils;
         this.dolphinRepository = dolphinRepository;
+        this.boardClubRepository = boardClubRepository;
+        this.boardStandardRepository = boardStandardRepository;
     }
 
     public Member createMember(Member member) {
@@ -110,5 +125,16 @@ public class MemberService {
                 optionalMember.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
         return findMember;
+    }
+
+    public Page<BoardStandard> findStandardBoardsByMember(Long memberId, int page, int size) {
+        Member member = findVerifiedMember(memberId);
+        return boardStandardRepository.findByMember(member, PageRequest.of(page, size, Sort.by("StandardId").descending()));
+    }
+
+    // memberId로 findByMember 방법 고려 -> clubRepository
+    public Page<BoardClub> findClubBoardsByMember(Long memberId, int page, int size) {
+        Member member = findVerifiedMember(memberId);
+        return boardClubRepository.findByMember(member, PageRequest.of(page, size, Sort.by("boardClubId").descending()));
     }
 }

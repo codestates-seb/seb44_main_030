@@ -1,5 +1,9 @@
 package com.splashzone.member.controller;
 
+import com.splashzone.boardclub.dto.BoardClubDto;
+import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.boardstandard.dto.BoardStandardDto;
+import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
 import com.splashzone.member.dto.MemberDto;
@@ -18,9 +22,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping
 @Slf4j
 public class MemberController {
     private final static String MEMBER_DEFAULT_URL = "/members";
@@ -34,7 +39,7 @@ public class MemberController {
         this.mapper = mapper;
     }
 
-    @PostMapping
+    @PostMapping("/members")
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
         Member member = mapper.memberPostToMember(requestBody);
         member.setMemberStatus(Member.MemberStatus.ACTIVE);
@@ -45,7 +50,7 @@ public class MemberController {
         return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping("/{member-id}")
+    @PatchMapping("/members/{member-id}")
     public ResponseEntity patchMember(
             @PathVariable("member-id") @Positive Long memberId,
             @Valid @RequestBody MemberDto.Patch requestBody) {
@@ -57,14 +62,14 @@ public class MemberController {
         return ResponseEntity.ok(mapper.memberToMemberResponse(member));
     }
 
-    @GetMapping("/{member-id}")
+    @GetMapping("/members/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") @Positive Long memberId) {
         Member member = memberService.findMember(memberId);
         MemberDto.Response response = mapper.memberToMemberResponse(member);
         return ResponseEntity.ok(new SingleResponseDto<>(response));
     }
 
-    @GetMapping
+    @GetMapping("/members")
     public ResponseEntity getMembers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size) {
         Page<Member> pageMembers = memberService.findMembers(page - 1, size);
@@ -72,7 +77,7 @@ public class MemberController {
         return ResponseEntity.ok(new MultiResponseDto(mapper.membersToMemberResponses(members), pageMembers));
     }
 
-    @DeleteMapping("/{member-id}")
+    @DeleteMapping("/members/{member-id}")
     public ResponseEntity terminatedMember(
             @PathVariable("member-id") @Positive Long memberId) {
         memberService.terminateMember(memberId);
@@ -86,4 +91,27 @@ public class MemberController {
 //        accessTokenService.deleteAccessToken(accessToken);
 //        return new ResponseEntity(HttpStatus.OK);
 //    }
+    @GetMapping("/mypage/standards/{member-id}")
+    public ResponseEntity getMyStandardBoards(
+            @PathVariable("member-id") @Positive Long memberId,
+            @Positive @RequestParam int page,
+            @Positive @RequestParam int size) {
+        Page<BoardStandard> boardStandardPage = memberService.findStandardBoardsByMember(memberId, page - 1, size);
+        List<BoardStandardDto.Response> boardStandardResponses = boardStandardPage.getContent().stream()
+                .map(mapper::boardStandardToBoardStandardResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new MultiResponseDto<>(boardStandardResponses, boardStandardPage));
+    }
+
+    @GetMapping("/mypages/clubs/{member-id}")
+    public ResponseEntity getMyClubBoards(
+            @PathVariable("member-id") @Positive Long memberId,
+            @Positive @RequestParam int page,
+            @Positive @RequestParam int size) {
+        Page<BoardClub> boardClubPage = memberService.findClubBoardsByMember(memberId, page - 1, size);
+        List<BoardClubDto.Response> boardClubResponses = boardClubPage.getContent().stream()
+                .map(mapper::boardClubToBoardClubResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new MultiResponseDto<>(boardClubResponses, boardClubPage));
+    }
 }
