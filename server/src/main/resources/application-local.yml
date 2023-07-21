@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/splashzone?serverTimezone=Asia/Seoul
+    url: ${LOCAL_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 1234
+    username: ${LOCAL_USERNAME}
+    password: ${LOCAL_PASSWORD}
   sql:
     init:
       mode: always
