@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';
 import ConfirmModal from './common/ConfirmModal';
+import { usePostHeader } from '../api/getHeader';
 type CommentProps = {
     commentData: {
         memberId: number;
@@ -25,6 +26,7 @@ const Comment = ({ commentData }: CommentProps) => {
     const [isEditOn, setIsEditOn] = useState<boolean>(false);
     const [commentContent, setCommentContent] = useState<string>(content);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const headers = usePostHeader(); 
     const location = useLocation();
     const boardType = location.pathname.split('/')[1] === 'community' ? 'boardcomments' : 'clubcomments';
 
@@ -55,7 +57,7 @@ const Comment = ({ commentData }: CommentProps) => {
         const API_URL = import.meta.env.VITE_KEY;
         try {
             //commentId가 club, community 별로 나눠져서 관리 되는지? 합쳐서 관리되는지? 잘모름. 일단 임의로 작성.
-            const response = await axios.patch(`${API_URL}/${boardType}/${commentId}`, payload);
+            const response = await axios.patch(`${API_URL}/${boardType}/${commentId}`, payload, headers);
             if (response.status === 200 || response.status === 201) {
                 console.log('수정 성공');
             } else {
@@ -88,7 +90,7 @@ const Comment = ({ commentData }: CommentProps) => {
     // 댓글 삭제 Delete 요청
     const handleDelete = async () => {
         try {
-            const response = await axios.delete(`${import.meta.env.VITE_KEY}/${boardType}/${commentId}`);
+            const response = await axios.delete(`${import.meta.env.VITE_KEY}/${boardType}/${commentId}`,headers);
             if (response.status === 200 || response.status === 204) {
                 console.log('삭제 성공');
             } else {

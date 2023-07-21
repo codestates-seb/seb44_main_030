@@ -121,6 +121,7 @@ const ContentSection = styled.section`
     }
     > p {
         line-height: 25px;
+        word-wrap: break-word;
     }
     padding-bottom: 15px;
     border-bottom: 1px solid #d9d9d9;
