@@ -32,7 +32,6 @@ public class BoardClubDto {
 
         //        @DateTimeFormat(pattern = "yyyy-MM-dd")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-//        @NotEmpty(message = "마감일을 지정해 주세요.")
         private LocalDate dueDate;
 
         @NotNull(message = "모집 인원수를 작성해 주세요.")
@@ -40,6 +39,16 @@ public class BoardClubDto {
 
         @NotBlank(message = "오픈톡 링크를 작성해 주세요.")
         private String contact;
+
+        @NotBlank(message = "장소 이름을 작성해 주세요.")
+        private String placeName;
+
+        @NotBlank(message = "주소를 작성해 주세요.")
+        private String addressName;
+
+        private Double latitude;
+
+        private Double longitude;
 
         @NotEmpty(message = "태그를 지정해 주세요.")
         private List<TagDto> tags;
@@ -65,6 +74,14 @@ public class BoardClubDto {
 
         private String contact;
 
+        private String placeName;
+
+        private String addressName;
+
+        private Double latitude;
+
+        private Double longitude;
+
         @NotEmpty
         private List<TagDto> tags;
 
@@ -82,7 +99,8 @@ public class BoardClubDto {
     public static class Response {
         private Long boardClubId;
 
-        private Long memberId;
+//        private Long memberId;
+        private String nickname;
 
         private String title;
 
@@ -94,6 +112,14 @@ public class BoardClubDto {
         private Integer capacity;
 
         private String contact;
+
+        private String placeName;
+
+        private String addressName;
+
+        private Double latitude;
+
+        private Double longitude;
 
         private int view;
 

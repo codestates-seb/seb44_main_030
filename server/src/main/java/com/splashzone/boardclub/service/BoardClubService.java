@@ -45,6 +45,10 @@ public class BoardClubService {
                 .dueDate(boardClub.getDueDate())
                 .capacity(boardClub.getCapacity())
                 .contact(boardClub.getContact())
+                .placeName(boardClub.getPlaceName())
+                .addressName(boardClub.getAddressName())
+                .latitude(boardClub.getLatitude())
+                .longitude(boardClub.getLongitude())
                 .member(findMember)
                 .build();
 

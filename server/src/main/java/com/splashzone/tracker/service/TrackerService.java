@@ -58,9 +58,9 @@ public class TrackerService {
         return findVerifiedTracker(trackerId);
     }
 
-//    public Page<Tracker> findTrackers(Integer page, Integer size) {
-//        return trackerRepository.findAll(PageRequest.of(page, size, Sort.by("trackerId").descending()));
-//    }
+    public Page<Tracker> findTrackers(Integer page, Integer size) {
+        return trackerRepository.findAll(PageRequest.of(page, size, Sort.by("trackerId").descending()));
+    }
 
     public void deleteTracker(Long trackerId) {
         Tracker findTracker = findVerifiedTracker(trackerId);

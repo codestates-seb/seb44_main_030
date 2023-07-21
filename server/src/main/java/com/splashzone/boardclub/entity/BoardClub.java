@@ -37,6 +37,18 @@ public class BoardClub extends Auditable {
     @Column(name = "CONTACT", nullable = false, length = 100)
     private String contact;
 
+    @Column(name = "PLACE_NAME", nullable = false)
+    private String placeName;
+
+    @Column(name = "ADDRESS_NAME", nullable = false)
+    private String addressName;
+
+    @Column(name = "LATITUDE", nullable = false)
+    private Double latitude;
+
+    @Column(name = "LONGITUDE", nullable = false)
+    private Double longitude;
+
     @Column(name = "VIEW", nullable = false, columnDefinition = "integer default 0")
     private int view;
 
@@ -79,24 +91,19 @@ public class BoardClub extends Auditable {
     }
 
     public void changeBoardClub(BoardClub boardClub, List<BoardClubTag> clubTags) {
-        if (!boardClub.getTitle().isEmpty()) {
-            this.title = boardClub.getTitle();
-        }
-        if (!boardClub.getContent().isEmpty()) {
-            this.content = boardClub.getContent();
-        }
-        if (boardClub.getDueDate() != null) {
-            this.dueDate = boardClub.getDueDate();
-        }
-        if (boardClub.getCapacity() != null) {
-            this.capacity = boardClub.getCapacity();
-        }
-        if (!boardClub.getContact().isEmpty()) {
-            this.contact = boardClub.getContact();
-        }
-        if (boardClub.getBoardClubStatus() != null) {
-            this.boardClubStatus = boardClub.getBoardClubStatus();
-        }
+
+        this.title = boardClub.getTitle();
+        this.content = boardClub.getContent();
+        this.dueDate = boardClub.getDueDate();
+        this.capacity = boardClub.getCapacity();
+        this.contact = boardClub.getContact();
+
+        this.placeName = boardClub.getPlaceName();
+        this.addressName = boardClub.getAddressName();
+        this.latitude = boardClub.getLatitude();
+        this.longitude = boardClub.getLongitude();
+
+        this.boardClubStatus = boardClub.getBoardClubStatus();
 
         this.boardClubTags.clear();
         this.boardClubTags.addAll(clubTags);
