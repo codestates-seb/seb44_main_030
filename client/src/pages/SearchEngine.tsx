@@ -49,6 +49,12 @@ const SearchEngine = () => {
         dispatch(setInfoInstance(infos));
     };
 
+    const onKeyPress = (e) => {
+        if ((e.key = 'Enter')) {
+            onClickHandler();
+        }
+    };
+
     return (
         <Searchbox>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
@@ -57,6 +63,7 @@ const SearchEngine = () => {
                     onChange={(e) => {
                         setKeyword(e.target.value);
                     }}
+                    onKeyPress={onKeyPress}
                 ></input>
                 <button onClick={onClickHandler}>Search</button>
             </div>

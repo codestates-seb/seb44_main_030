@@ -1,8 +1,10 @@
-import React, { useState, Dispatch, SetStateAction } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-
+import { useForm } from 'react-hook-form';
 import moment from 'moment';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setToast } from '../store/toastState';
 
 interface InputProps {
     height?: string;
@@ -10,131 +12,27 @@ interface InputProps {
     value?: string;
 }
 
-interface PostProps {
-    memberId: string;
+interface DataProps {
+    memberId?: number;
     title: string;
     content: string;
     exerciseStartTime: string;
     exerciseEndTime: string;
 }
 
-interface TimeselectProps {
-    startType: string;
-    handleStartTypeChange: Dispatch<SetStateAction<string>>;
-    endType: string;
-    handleEndTypeChange: Dispatch<SetStateAction<string>>;
-}
-
 const Modal = ({ setModal, value, mark }) => {
+    const dispatch = useDispatch();
     const dae = moment(value).format('YYYYMMDD');
+
     const [startType, setStartType] = useState('');
-    const [endType, setEndType] = useState('');
-    const [formdata, setFormData] = useState({
-        memberId: '1',
-        title: ' ',
-        content: '',
-        exerciseStartTime: '',
-        exerciseEndTime: '',
-    });
+
     const [isFinished, setIsFinished] = useState(false);
-    // useEffect(() => {
-    //mark 에서 넘겨준 id값과 날짜값,여기서 mark 내부에서 dae와 연관된값이있으면
-    // 작성/비작성 상태를 작성완료로 바꿔줌
-    // api 콜-> get요청을통해 특정데이터값 받아오기
-    // }, []);
-    console.log(mark);
-    console.log(dae);
-    console.log(formdata);
+    const { register, handleSubmit, watch } = useForm();
+
     const handleClose = () => {
         setModal(false);
     };
 
-    const handleStartTypeChange = (e) => {
-        const selectedValue = e.target.value;
-        setStartType(selectedValue);
-        setEndType('');
-        setFormData((prev) => ({
-            ...prev,
-            exerciseStartTime: dae + selectedValue.replace(':', ''),
-            exerciseEndTime: '',
-        }));
-    };
-
-    const handleEndTypeChange = (e) => {
-        const selectedValue = e.target.value;
-        setEndType(selectedValue);
-        setFormData((prev) => ({ ...prev, exerciseEndTime: dae + selectedValue.replace(':', '') }));
-    };
-
-    const onSubmitHandler = (data: PostProps) => {
-        const url = 'http://13.209.142.240:8080/trackers';
-
-        return axios
-            .post(url, data)
-            .then((response) => {
-                console.log(response);
-                return response.data;
-            })
-            .catch((error) => {
-                console.error(error);
-                throw error;
-            });
-    };
-
-    return (
-        <Styledmodal>
-            <div className="modal-background" onClick={handleClose}>
-                <div className="modal" onClick={(e) => e.stopPropagation()}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                        <h3 style={{ fontWeight: 'bold' }}>운동정보 기록하기</h3>
-                        <button className="modal-close" onClick={handleClose}>
-                            X
-                        </button>
-                    </div>
-                    <Styledform>
-                        <h1>Session Time</h1>
-
-                        <div>
-                            <div>운동시간선택</div>
-                            <TimeSelect
-                                startType={startType}
-                                handleStartTypeChange={handleStartTypeChange}
-                                endType={endType}
-                                handleEndTypeChange={handleEndTypeChange}
-                            ></TimeSelect>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
-                            <StyledInput
-                                height="30px"
-                                value={formdata.title}
-                                onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
-                            ></StyledInput>
-                            <Styledtextarea
-                                height="300px"
-                                value={formdata.content}
-                                onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))}
-                            ></Styledtextarea>
-                            <div>
-                                <Styledbutton
-                                    onClick={() => {
-                                        onSubmitHandler(formdata);
-                                    }}
-                                >
-                                    save
-                                </Styledbutton>
-                                <Styledbutton onClick={handleClose}>cancel</Styledbutton>
-                            </div>
-                        </div>
-                    </Styledform>
-                </div>
-            </div>
-        </Styledmodal>
-    );
-};
-
-export default Modal;
-
-const TimeSelect = ({ startType, handleStartTypeChange, endType, handleEndTypeChange }: TimeselectProps) => {
     const options = [];
     options.push(
         <option key="" value="">
@@ -154,6 +52,10 @@ const TimeSelect = ({ startType, handleStartTypeChange, endType, handleEndTypeCh
             </option>,
         );
     }
+    const handleStartTypeChange = (e) => {
+        const selectedValue = e.target.value;
+        setStartType(selectedValue);
+    };
 
     let endOptions = options;
     if (startType) {
@@ -162,19 +64,73 @@ const TimeSelect = ({ startType, handleStartTypeChange, endType, handleEndTypeCh
         endOptions = options.slice(selectedIndex + 1);
     }
 
+    const watchStartTime = watch('exerciseStartTime');
+    const watchEndTime = watch('exerciseEndTime');
+
+    const onSubmitHandler = async (data: DataProps) => {
+        const modifiedValue = `${dae}${watchStartTime.replace(':', '')}`;
+        const modfied2Value = `${dae}${watchEndTime.replace(':', '')}`;
+        data.memberId = 1;
+        data.exerciseStartTime = modifiedValue;
+        data.exerciseEndTime = modfied2Value;
+        const url = 'http://13.209.142.240:8080/trackers';
+        console.log(data);
+
+        try {
+            const response = await axios.post(url, data);
+            console.log(response);
+            dispatch(setToast(true));
+            setModal(false);
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
     return (
-        <>
-            시작{' '}
-            <select name="startType" value={startType} onChange={handleStartTypeChange}>
-                {options}
-            </select>
-            끝{' '}
-            <select name="endType" value={endType} onChange={handleEndTypeChange}>
-                {endOptions}
-            </select>
-        </>
+        <Styledmodal>
+            <div className="modal-background" onClick={handleClose}>
+                <div className="modal" onClick={(e) => e.stopPropagation()}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                        <h3 style={{ fontWeight: 'bold' }}>운동정보 기록하기</h3>
+                        <button className="modal-close" onClick={handleClose}>
+                            X
+                        </button>
+                    </div>
+                    <Styledform onSubmit={handleSubmit(onSubmitHandler)}>
+                        <h1>Session Time</h1>
+
+                        <div>
+                            <div>운동시간선택</div>
+                            <>
+                                시작{' '}
+                                <select {...register('exerciseStartTime')} onChange={handleStartTypeChange}>
+                                    {options}
+                                </select>
+                                끝{' '}
+                                <select {...register('exerciseEndTime')} disabled={startType === ''}>
+                                    {endOptions}
+                                </select>
+                            </>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+                            <StyledInput height="30px" {...register('title')}></StyledInput>
+                            <Styledtextarea height="300px" {...register('content')}></Styledtextarea>
+                            <div>
+                                <Styledbutton type="submit">save</Styledbutton>
+                                <Styledbutton onClick={handleClose}>cancel</Styledbutton>
+                            </div>
+                        </div>
+                    </Styledform>
+                </div>
+            </div>
+        </Styledmodal>
     );
 };
+
+export default Modal;
+
 const Styledform = styled.form`
     width: 100%;
     height: 100%;
