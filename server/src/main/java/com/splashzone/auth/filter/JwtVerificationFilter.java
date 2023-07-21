@@ -73,7 +73,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     //TODO 이 메서드 다시 확인해보기
     private void setAuthenticationToContext(Map<String, Object> claims) {
         String username = (String) claims.get("username");
-        Long memberId = (Long) claims.get("memberId");  //
+        Long memberId = (Long) claims.get("memberId");  //TODO: 대체 claims에 "memberId"가 어딨음??
         System.out.println("setAuthenticationToContext - username: " + username);
         List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List) claims.get("roles"));
         List<String> roles = new ArrayList<>();

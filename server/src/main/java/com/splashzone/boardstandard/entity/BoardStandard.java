@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Builder
 @Entity
 public class BoardStandard extends Auditable {
     @Id
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long standardId;
 
@@ -25,6 +25,7 @@ public class BoardStandard extends Auditable {
     @Column(name = "CONTENT", nullable = false)
     private String content;
 
+    @Setter
     @Column(name = "VIEW", nullable = false, columnDefinition = "integer default 0")
     private int view;
 
