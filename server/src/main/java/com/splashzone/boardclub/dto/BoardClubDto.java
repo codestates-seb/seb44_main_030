@@ -99,6 +99,8 @@ public class BoardClubDto {
 
         private List<TagDto> tags;
 
+        private int likeCount;
+
         private BoardClub.BoardClubStatus boardClubStatus;
 
         private LocalDateTime createdAt;

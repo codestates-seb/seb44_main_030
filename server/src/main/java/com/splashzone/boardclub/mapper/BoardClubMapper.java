@@ -57,6 +57,7 @@ public interface BoardClubMapper {
                 .contact(boardClub.getContact())
                 .view(boardClub.getView())
                 .tags(getTagDtosFromBoardClubTag(boardClub.getBoardClubTags()))
+                .likeCount(boardClub.getLikeCount())
                 .boardClubStatus(boardClub.getBoardClubStatus())
                 .createdAt(boardClub.getCreatedAt())
                 .modifiedAt(boardClub.getModifiedAt())
