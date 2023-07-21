@@ -91,7 +91,6 @@ public class BoardClubCommentController {
     }
 
 
-    //TODO 로그인인증 추가하기!
     @DeleteMapping("/{club-comment-id}")
     public ResponseEntity deleteBoardClubComment(Authentication authentication,
                                                  @PathVariable("club-comment-id") @Positive Long boardClubCommentId) {
