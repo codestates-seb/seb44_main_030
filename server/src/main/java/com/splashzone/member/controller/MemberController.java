@@ -106,10 +106,17 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/standards/{member-id}")
-    public ResponseEntity getMyStandardBoards(
-            @PathVariable("member-id") @Positive Long memberId,
-            @Positive @RequestParam int page,
-            @Positive @RequestParam int size) {
+    public ResponseEntity getMyStandardBoards(Authentication authentication,
+                                              @PathVariable("member-id") @Positive Long memberId,
+                                              @Positive @RequestParam int page,
+                                              @Positive @RequestParam int size) {
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                memberService.findMember(memberId))) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         Page<BoardStandard> boardStandardPage = memberService.findStandardBoardsByMember(memberId, page - 1, size);
         List<BoardStandardDto.Response> boardStandardResponses = boardStandardPage.getContent().stream()
                 .map(mapper::boardStandardToBoardStandardResponse)
@@ -118,10 +125,18 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/clubs/{member-id}")
-    public ResponseEntity getMyClubBoards(
-            @PathVariable("member-id") @Positive Long memberId,
-            @Positive @RequestParam int page,
-            @Positive @RequestParam int size) {
+    public ResponseEntity getMyClubBoards(Authentication authentication,
+                                          @PathVariable("member-id") @Positive Long memberId,
+                                          @Positive @RequestParam int page,
+                                          @Positive @RequestParam int size) {
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                memberService.findMember(memberId))) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
+
         Page<BoardClub> boardClubPage = memberService.findClubBoardsByMember(memberId, page - 1, size);
         List<BoardClubDto.Response> boardClubResponses = boardClubPage.getContent().stream()
                 .map(mapper::boardClubToBoardClubResponse)
