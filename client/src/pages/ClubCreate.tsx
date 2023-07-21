@@ -12,6 +12,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Map from './Map.tsx';
 import ConfirmModal from '../components/common/ConfirmModal';
+import { useCookies } from 'react-cookie';
 type Position = {
     lat: number;
     lng: number;
@@ -37,6 +38,8 @@ type FormData = {
 };
 
 const ClubCreate = () => {
+    const [cookies] = useCookies();
+    console.log(cookies.AuthorizationToken);
     const location = useLocation();
     const clubDetail = location.state?.clubDetail || {};
     const navigate = useNavigate();
@@ -296,12 +299,20 @@ const ClubCreate = () => {
                         {errors.title && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>
-                        <button onClick={()=>{setIsModalOpen(true)}}>취소</button>
-                        {isModalOpen && <ConfirmModal
+                        <button
+                            onClick={() => {
+                                setIsModalOpen(true);
+                            }}
+                        >
+                            취소
+                        </button>
+                        {isModalOpen && (
+                            <ConfirmModal
                                 handleCloseModal={handleCloseModal}
                                 handleConfirm={handleCancel}
                                 text="작성을 취소 하시겠습니까?"
-                            />}
+                            />
+                        )}
                         <button type="submit">글 등록</button>
                     </ButtonWarp>
                 </DetailContentContainer>

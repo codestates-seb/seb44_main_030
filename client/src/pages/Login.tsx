@@ -8,7 +8,6 @@ import axios from 'axios';
 import BACK1 from '../../public/ob3.png';
 import BACK2 from '../../public/ob4.png';
 
-import useApi from '../api/useTokenAddApi';
 import LoginBG from '../../public/login.png';
 import RegisterForm from '../components/RegisterForm';
 
@@ -18,7 +17,6 @@ interface FormInput {
 }
 
 const Login = () => {
-    const api = useApi();
     const [cookies, setCookie, removeCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
     const {
         register,
