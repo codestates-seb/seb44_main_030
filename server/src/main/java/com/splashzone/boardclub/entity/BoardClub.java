@@ -37,6 +37,18 @@ public class BoardClub extends Auditable {
     @Column(name = "CONTACT", nullable = false, length = 100)
     private String contact;
 
+    @Column(name = "PLACE_NAME", nullable = false)
+    private String placeName;
+
+    @Column(name = "ADDRESS_NAME", nullable = false)
+    private String addressName;
+
+    @Column(name = "LATITUDE", nullable = false)
+    private Double latitude;
+
+    @Column(name = "LONGITUDE", nullable = false)
+    private Double longitude;
+
     @Column(name = "VIEW", nullable = false, columnDefinition = "integer default 0")
     private int view;
 
@@ -93,6 +105,18 @@ public class BoardClub extends Auditable {
         }
         if (!boardClub.getContact().isEmpty()) {
             this.contact = boardClub.getContact();
+        }
+        if (!boardClub.getPlaceName().isEmpty()) {
+            this.placeName = boardClub.getPlaceName();
+        }
+        if (!boardClub.getAddressName().isEmpty()) {
+            this.addressName = boardClub.getAddressName();
+        }
+        if (boardClub.getLatitude() != null) {
+            this.latitude = boardClub.getLatitude();
+        }
+        if (boardClub.getLongitude() != null) {
+            this.longitude = boardClub.getLongitude();
         }
         if (boardClub.getBoardClubStatus() != null) {
             this.boardClubStatus = boardClub.getBoardClubStatus();
