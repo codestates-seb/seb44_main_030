@@ -17,6 +17,7 @@ const StyledProfile = styled.div<ProfileProps>`
     width: ${(props) => props.width};
     border-radius: 50px;
     z-index: 200;
+    border: 1px solid rgba(0, 0, 0, 0.3);
 `;
 
 const Profile = ({ width, height, url, onClick }: ProfileProps) => {

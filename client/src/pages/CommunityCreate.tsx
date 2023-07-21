@@ -73,9 +73,9 @@ const CommunityCreate = () => {
             tag: englishTagName,
         };
         const patchPayload = {
-            // title: data.title,
+            title: data.title,
             content: data.content,
-            tag: englishTagName,
+            // tag: englishTagName,
         };
 
         if (location.state === 'EditMode') {
@@ -117,6 +117,7 @@ const CommunityCreate = () => {
     };
 
     const handleCancel = () => {
+        dispatch(reset());
         navigate(-1);
     };
 

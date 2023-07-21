@@ -24,7 +24,7 @@ const Main = () => {
         queryKey: ['mainClub', page],
         queryFn: () => getMainclub(page),
     });
-    console.log(Club);
+
     const Comudata = community?.postData;
 
     if (isLoading) return <Loading />;
@@ -49,9 +49,10 @@ const Main = () => {
                     })}
                 </div>
                 <div style={{ display: 'flex' }}>
-                    {Comudata.map((item: CommunityPostData) => (
-                        <ContentsCard key={`all_${item.standardId}`} communityProps={item} type={'community'} />
-                    ))}
+                    {Comudata &&
+                        Comudata.map((item: CommunityPostData) => (
+                            <ContentsCard key={`all_${item.standardId}`} communityProps={item} type={'community'} />
+                        ))}
                 </div>
             </StyledClub>
         </motion.div>

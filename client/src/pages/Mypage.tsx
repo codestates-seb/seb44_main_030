@@ -7,6 +7,7 @@ import { getInfos } from '../api/getmember';
 import Tabmenu from '../components/Tapmenu';
 import { Loading } from '../components/Lodaing';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { useCookies } from 'react-cookie';
 
 interface member {
     memberId?: number;
@@ -21,7 +22,12 @@ type ErrorType<T> = {
 
 const Mypage = () => {
     const [edit, setEdit] = useState(false);
-    const memberId = 1; //memberId Link로받던가 아니면  header포함해서받던가하기
+    const [validation, setvalidation] = useState('');
+    const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const authorizationToken = cookies.AuthorizationToken;
+    const refreshToken = cookies.RefreshToken;
+
+    const memberId = 2; //memberId Link로받던가 아니면  header포함해서받던가하기
     const { data, isLoading, isError, error } = useQuery<ErrorType<T>>({
         queryKey: ['memberinfo', memberId],
         queryFn: () => getInfos(memberId),
@@ -29,7 +35,14 @@ const Mypage = () => {
 
     const patchInfos = (edit: member) =>
         axios
-            .patch(`http://13.209.142.240:8080/members/${memberId}`, edit)
+            .patch(`http://13.209.142.240:8080/members/${memberId}`, edit, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `${decodeURIComponent(authorizationToken)}`,
+                    Refresh: `${refreshToken}`,
+                    withCredentials: true,
+                },
+            })
             .then(() => {
                 console.log('수정됨');
             })
@@ -39,8 +52,10 @@ const Mypage = () => {
     const updateMutation = useMutation((edit: member) => patchInfos(edit));
 
     const handleUpdate = (member: member) => {
-        updateMutation.mutate(member);
-        location.reload();
+        if (member.nickname && member.bio !== '') {
+            updateMutation.mutate(member);
+            location.reload();
+        } else setvalidation('nopass');
     };
     useEffect(() => {
         if (data) {
@@ -62,7 +77,7 @@ const Mypage = () => {
     console.log(member);
 
     return (
-        <div style={{ width: '100%', height: '100%' }}>
+        <div style={{ width: '100%', height: '100vh' }}>
             <Background>
                 <div style={{ background: 'rgb(105,229,255)', width: '100%', height: '200px' }}>
                     <GridSystem>
@@ -79,9 +94,11 @@ const Mypage = () => {
                                 borderRadius: '20px',
                             }}
                         >
-                            <Block width="500px" height="600px">
+                            <Block width="500px" height="650px">
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <ProfileImage width="100px" height="100px" url="../../public/dummy.png" />
+                                    <div style={{ width: '100px', height: '100px' }}>
+                                        <ProfileImage width="100%" height="100%" url="../../public/user.png" />
+                                    </div>
                                     <Block width="290px" height="140px">
                                         <Infoexplain>
                                             <div className="sort">name</div>
@@ -127,6 +144,9 @@ const Mypage = () => {
                                             )}
                                         </div>
                                     </Block>
+                                    {validation === 'nopass' && (
+                                        <div style={{ color: 'red' }}>내용을 입력해주세요!</div>
+                                    )}
                                     {edit ? (
                                         <Styledbutton onClick={() => handleUpdate(member)}>저장</Styledbutton>
                                     ) : (
@@ -156,7 +176,7 @@ export default Mypage;
 const Background = styled.div`
     background-image: url('../../public/mypage.png');
     background-size: cover;
-    height: 100vh;
+    height: 100%;
     background-position-y: 20%;
     box-shadow: 5px 2px 2px 2px;
     position: relative;
@@ -194,8 +214,8 @@ const Styledbutton = styled.button`
     width: 100px;
     height: 40px;
     border-radius: 15px;
-    position: absolute;
-    bottom: 1%;
+    margin-top: 10px;
+
     background-color: #3884d5;
     color: white;
     cursor: pointer;

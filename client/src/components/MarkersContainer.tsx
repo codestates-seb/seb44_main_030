@@ -4,6 +4,7 @@ import { Info } from '../types/info';
 import Marker from './common/Marker';
 import InfoWindow from './common/InfoWindow';
 import { setSelectionInstance } from '../store/selectinfo';
+import { setToast } from '../store/toastState';
 
 const MarkersContainer = ({ updateClubMap, setShowMap }) => {
     const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const MarkersContainer = ({ updateClubMap, setShowMap }) => {
     const submitHandler = () => {
         console.log(selection);
         updateClubMap(selection);
+        dispatch(setToast(true));
         setShowMap(false);
     };
     console.log(selection);
