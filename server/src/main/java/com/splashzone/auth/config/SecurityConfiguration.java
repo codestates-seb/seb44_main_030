@@ -74,6 +74,10 @@ public class SecurityConfiguration {
                                 .antMatchers(HttpMethod.PATCH, "/clubs").hasRole("USER")
                                 .antMatchers(HttpMethod.GET, "/clubs").permitAll()
                                 .antMatchers(HttpMethod.DELETE, "/clubs").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/clubcomments").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/clubcomments").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/clubcomments").permitAll()
+                                .antMatchers(HttpMethod.GET, "/clubcomments").hasRole("USER")
 //                        .antMatchers(HttpMethod.POST, "/standards").permitAll()
 //                        .antMatchers(HttpMethod.POST, "/clubs").permitAll()
 //                        .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
@@ -103,10 +107,10 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080/",
-                                                      "http://13.209.142.240:8080/",
-                                                      "http://localhost:5173/",
-                                                      "http://127.0.0.1:5173/",
-                                                      "http://localhost:3000"));
+                "http://13.209.142.240:8080/",
+                "http://localhost:5173/",
+                "http://127.0.0.1:5173/",
+                "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Refresh"));
