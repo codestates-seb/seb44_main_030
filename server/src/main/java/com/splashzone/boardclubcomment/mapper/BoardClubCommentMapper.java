@@ -11,9 +11,9 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BoardClubCommentMapper {
-    default BoardClubComment boardClubCommentPostDtotoBoardClubComment(BoardClubCommentDto.Post requestBody) {
-        Member member = new Member();
-        member.setMemberId(requestBody.getMemberId());
+    default BoardClubComment boardClubCommentPostDtotoBoardClubComment(BoardClubCommentDto.Post requestBody, Member member) {
+//        Member member = new Member();
+//        member.setMemberId(requestBody.getMemberId());
 
         BoardClub boardClub = new BoardClub();
         boardClub.setBoardClubId(requestBody.getBoardClubId());
@@ -25,9 +25,9 @@ public interface BoardClubCommentMapper {
                 .build();
     }
 
-    default BoardClubComment boardClubCommentPatchDtotoBoardClubComment(BoardClubCommentDto.Patch requestBody, Long boardClubCommentId) {
-        Member member = new Member();
-        member.setMemberId(requestBody.getMemberId());
+    default BoardClubComment boardClubCommentPatchDtotoBoardClubComment(BoardClubCommentDto.Patch requestBody, Long boardClubCommentId, Member member) {
+//        Member member = new Member();
+//        member.setMemberId(requestBody.getMemberId());
 
         BoardClub boardClub = new BoardClub();
         boardClub.setBoardClubId(requestBody.getBoardClubId());
