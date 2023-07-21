@@ -40,7 +40,7 @@ public class BoardStandardDto {
     @Getter
     @Setter
     public static class Response{
-        private long standardId;
+        private Long standardId;
         private String title;
         private String content;
         private int view;

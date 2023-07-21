@@ -91,36 +91,19 @@ public class BoardClub extends Auditable {
     }
 
     public void changeBoardClub(BoardClub boardClub, List<BoardClubTag> clubTags) {
-        if (!boardClub.getTitle().isEmpty()) {
-            this.title = boardClub.getTitle();
-        }
-        if (!boardClub.getContent().isEmpty()) {
-            this.content = boardClub.getContent();
-        }
-        if (boardClub.getDueDate() != null) {
-            this.dueDate = boardClub.getDueDate();
-        }
-        if (boardClub.getCapacity() != null) {
-            this.capacity = boardClub.getCapacity();
-        }
-        if (!boardClub.getContact().isEmpty()) {
-            this.contact = boardClub.getContact();
-        }
-        if (!boardClub.getPlaceName().isEmpty()) {
-            this.placeName = boardClub.getPlaceName();
-        }
-        if (!boardClub.getAddressName().isEmpty()) {
-            this.addressName = boardClub.getAddressName();
-        }
-        if (boardClub.getLatitude() != null) {
-            this.latitude = boardClub.getLatitude();
-        }
-        if (boardClub.getLongitude() != null) {
-            this.longitude = boardClub.getLongitude();
-        }
-        if (boardClub.getBoardClubStatus() != null) {
-            this.boardClubStatus = boardClub.getBoardClubStatus();
-        }
+
+        this.title = boardClub.getTitle();
+        this.content = boardClub.getContent();
+        this.dueDate = boardClub.getDueDate();
+        this.capacity = boardClub.getCapacity();
+        this.contact = boardClub.getContact();
+
+        this.placeName = boardClub.getPlaceName();
+        this.addressName = boardClub.getAddressName();
+        this.latitude = boardClub.getLatitude();
+        this.longitude = boardClub.getLongitude();
+
+        this.boardClubStatus = boardClub.getBoardClubStatus();
 
         this.boardClubTags.clear();
         this.boardClubTags.addAll(clubTags);

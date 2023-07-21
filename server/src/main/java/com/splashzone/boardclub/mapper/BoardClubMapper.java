@@ -58,6 +58,7 @@ public interface BoardClubMapper {
         return BoardClubDto.Response.builder()
                 .boardClubId(boardClub.getBoardClubId())
 //                .memberId(boardClub.getMember().getMemberId())
+                .nickname(boardClub.getMember().getNickname())
                 .title(boardClub.getTitle())
                 .content(boardClub.getContent())
                 .dueDate(boardClub.getDueDate())
