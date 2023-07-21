@@ -25,7 +25,7 @@ type Params = {
 
 const Community = () => {
     const { tag: currTag, keyword } = useParams<Params>();
-    const [size, setSize] = useState<number>(9);
+    const [size, setSize] = useState<number>(12);
     const [totalPageArr, setTotalPageArr] = useState<Array<number>>([]);
     const [pageArr, setPageArr] = useState<Array<number>>([]);
     const navigate = useNavigate();

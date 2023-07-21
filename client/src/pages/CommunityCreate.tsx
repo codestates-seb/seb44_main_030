@@ -82,7 +82,6 @@ const CommunityCreate = () => {
             try {
                 const response = await axios.patch(`${API_URL}/standards/${postId}`, patchPayload, headers);
                 if (response.status === 200 || response.status === 201) {
-                    dispatch(reset());
                     navigate(-1); // patch 요청 성공 시 이전 페이지로 이동
                 } else {
                     // 오류 처리
@@ -117,12 +116,14 @@ const CommunityCreate = () => {
     };
 
     const handleCancel = () => {
-        dispatch(reset());
         navigate(-1);
     };
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        return () => {
+            dispatch(reset());
+        };
     }, []);
 
     const toolbarOptions = [

@@ -34,7 +34,7 @@ const Login = () => {
             const response = await axios.post(`${API_URL}/auth/login`, data, {
                 withCredentials: true,
             });
-            console.log(response.data);
+            console.log(response.data);//멤버id가 들어와야함
             const Authorization = response.headers.authorization;
             const Refresh = response.headers.refresh;
             if (Authorization && Refresh) {
