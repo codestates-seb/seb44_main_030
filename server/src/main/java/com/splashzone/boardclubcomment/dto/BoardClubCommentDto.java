@@ -13,8 +13,8 @@ public class BoardClubCommentDto {
     @Getter
     @NoArgsConstructor
     public static class Post {
-        @Positive
-        private Long memberId;
+//        @Positive
+//        private Long memberId;
 
         @Positive
         private Long boardClubId;
@@ -26,8 +26,8 @@ public class BoardClubCommentDto {
     @Getter
     @NoArgsConstructor
     public static class Patch {
-        @Positive
-        private Long memberId;
+//        @Positive
+//        private Long memberId;
 
         @Positive
         private Long boardClubId;
