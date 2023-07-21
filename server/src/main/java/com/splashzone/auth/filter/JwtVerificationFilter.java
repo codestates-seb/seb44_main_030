@@ -72,7 +72,6 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     //TODO 이 메서드 다시 확인해보기
     private void setAuthenticationToContext(Map<String, Object> claims) {
-        //TODO username 확인하는게 맞는지 보기 memberId 아님?
         String username = (String) claims.get("username");
         Long memberId = (Long) claims.get("memberId");  //
         System.out.println("setAuthenticationToContext - username: " + username);
