@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 public class TrackerDto {
     @Getter
     public static class Post {
-        @Positive
-        private Long memberId;
+//        @Positive
+//        private Long memberId;
 
 //        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 //        private LocalDate trackerDate;
@@ -31,11 +31,11 @@ public class TrackerDto {
 
     @Getter
     public static class Patch {
-        @Positive
-        private Long memberId;
-
-        @Positive
-        private Long trackerId;
+//        @Positive
+//        private Long memberId;
+//
+//        @Positive
+//        private Long trackerId;
 
 //        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 //        private LocalDate trackerDate;

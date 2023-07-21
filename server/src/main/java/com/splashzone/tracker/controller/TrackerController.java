@@ -1,7 +1,10 @@
 package com.splashzone.tracker.controller;
 
+import com.splashzone.auth.userdetails.MemberDetails;
+import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
+import com.splashzone.member.entity.Member;
 import com.splashzone.member.service.MemberService;
 import com.splashzone.tracker.dto.TrackerDto;
 import com.splashzone.tracker.entity.Tracker;
@@ -12,14 +15,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sound.midi.Track;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/trackers")
@@ -32,19 +39,34 @@ public class TrackerController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity postTracker(@Valid @RequestBody TrackerDto.Post requestBody) throws ParseException {
-        Tracker tracker = trackerService.createTracker(trackerMapper.trackerPostDtoToTracker(requestBody));
-        URI location = UriCreator.createUri(TRACKER_DEFAULT_URL, tracker.getTrackerId());
+    public ResponseEntity postTracker(Authentication authentication,
+                                      @Valid @RequestBody TrackerDto.Post requestBody) throws ParseException {
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        Member member = memberService.findMemberByUsername(memberDetails.getUsername());
+
+        Tracker tracker = trackerMapper.trackerPostDtoToTracker(requestBody);
+        tracker.setMember(member);
+        Tracker postTracker = trackerService.createTracker(tracker);
+        URI location = UriCreator.createUri(TRACKER_DEFAULT_URL, postTracker.getTrackerId());
 
         return ResponseEntity.created(location).build();
     }
 
     @PatchMapping("/{tracker-id}")
-    public ResponseEntity patchTracker(@PathVariable("tracker-id") @Positive Long trackerId,
+    public ResponseEntity patchTracker(Authentication authentication,
+                                       @PathVariable("tracker-id") @Positive Long trackerId,
                                        @Valid @RequestBody TrackerDto.Patch requestBody) throws ParseException {
-        Tracker tracker = trackerService.updateTracker(trackerMapper.trackerPatchDtoToTracker(requestBody, trackerId));
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
-        return new ResponseEntity<>(new SingleResponseDto<>(trackerMapper.trackerToTrackerResponseDto(tracker)), HttpStatus.OK);
+        Member member = memberService.findMemberByUsername(memberDetails.getUsername());
+
+        Tracker tracker = trackerMapper.trackerPatchDtoToTracker(requestBody, trackerId);
+        tracker.setMember(member);
+
+        Tracker patchTracker = trackerService.updateTracker(tracker);
+
+        return new ResponseEntity<>(new SingleResponseDto<>(patchTracker), HttpStatus.OK);
     }
 
     @GetMapping("/{tracker-id}")
@@ -65,7 +87,17 @@ public class TrackerController {
     }
 
     @DeleteMapping("/{tracker-id}")
-    public ResponseEntity deleteTracker(@PathVariable("tracker-id") @Positive Long trackerId) {
+    public ResponseEntity deleteTracker(Authentication authentication,
+                                        @PathVariable("tracker-id") @Positive Long trackerId) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                trackerService.findTracker(trackerId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
         trackerService.deleteTracker(trackerId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

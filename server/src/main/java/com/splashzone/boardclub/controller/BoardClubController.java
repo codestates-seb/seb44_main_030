@@ -28,6 +28,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/clubs")
@@ -73,10 +74,6 @@ public class BoardClubController {
 
         boardClub.setBoardClubId(boardClubId);
 
-
-        //
-
-
         BoardClub patchBoardClub = boardClubService.updateBoardClub(boardClub);
 
         return new ResponseEntity<>(new SingleResponseDto<>(boardClubMapper.boardClubToBoardClubResponseDto(patchBoardClub)), HttpStatus.OK);
@@ -106,6 +103,12 @@ public class BoardClubController {
                                           @PathVariable("club-id") @Positive Long boardClubId) {
         if (authentication == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardClubService.findBoardClub(boardClubId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
         boardClubService.deleteBoardClub(boardClubId);

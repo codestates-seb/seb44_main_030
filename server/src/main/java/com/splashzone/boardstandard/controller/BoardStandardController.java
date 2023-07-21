@@ -43,7 +43,6 @@ public class BoardStandardController {
     @PostMapping
     public ResponseEntity postStandard(Authentication authentication,
                                        @Valid @RequestBody BoardStandardDto.Post postDto) {
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
@@ -102,6 +101,14 @@ public class BoardStandardController {
         if (authentication == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
+
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardStandardService.findStandard(standardId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         boardStandardService.deleteStandard(standardId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
