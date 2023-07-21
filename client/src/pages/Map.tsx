@@ -9,7 +9,7 @@ const Map = ({ setShowMap, updateClubMap }) => {
         <StyledModal>
             <div className="modal" style={{ position: 'relative' }}>
                 <MapContainer></MapContainer>
-                <MarkersContainer updateClubMap={updateClubMap}></MarkersContainer>
+                <MarkersContainer updateClubMap={updateClubMap} setShowMap={setShowMap}></MarkersContainer>
                 <div style={{ position: 'absolute', top: '0px', right: '0%' }}>
                     <Fetching />
                     <StyledButton

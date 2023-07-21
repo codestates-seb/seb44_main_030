@@ -6,7 +6,7 @@ import InfoWindow from './common/InfoWindow';
 import { setSelectionInstance } from '../store/selectinfo';
 import { setToast } from '../store/toastState';
 
-const MarkersContainer = ({ updateClubMap }) => {
+const MarkersContainer = ({ updateClubMap, setShowMap }) => {
     const dispatch = useDispatch();
     const map = useSelector((state: RootState) => state.counter.mapInstance);
     const infos = useSelector((state: RootState) => state.info.infoInstance);
@@ -15,6 +15,7 @@ const MarkersContainer = ({ updateClubMap }) => {
         console.log(selection);
         updateClubMap(selection);
         dispatch(setToast(true));
+        setShowMap(false);
     };
     console.log(selection);
     if (!map || !infos) return null;

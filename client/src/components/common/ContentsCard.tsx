@@ -244,10 +244,11 @@ const TitleContainer = styled.div`
 `;
 const ContentsContainer = styled.div`
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     width: 300px;
-    margin-bottom: 1rem;
+    height: 77px;
+
     overflow: hidden;
     text-overflow: ellipsis;
 
@@ -266,9 +267,9 @@ const InfoContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     border-top: 1px solid #696969;
-    width: 107%;
+    width: 105%;
     margin-top: 1rem;
-    padding: 10px 2px 0 2px;
+    padding: 2px 2px 0 2px;
     ${CardWarp}:hover & {
         border-top: 1px solid #ffffff;
     }

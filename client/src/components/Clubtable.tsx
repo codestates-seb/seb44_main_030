@@ -4,7 +4,7 @@ import moment from 'moment';
 import { useState } from 'react';
 import { Loading } from './Lodaing';
 import PageButton from './PageButton';
-import { getClubdata } from '../Api/MypageApi/getClubApi';
+import { getClubdata } from '../api/MypageApi/getClubApi';
 import { Link } from 'react-router-dom';
 
 const Clubtable = () => {
