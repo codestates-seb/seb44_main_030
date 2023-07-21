@@ -15,11 +15,10 @@ import javax.persistence.*;
 @Getter
 @Builder
 @Entity
-@Table(name = "LIKES")
 public class BoardClubLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeId;
+    private Long boardClubLikeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
@@ -30,12 +29,12 @@ public class BoardClubLike {
     @JoinColumn(name = "BOARD_CLUB_ID")
     private BoardClub boardClub;
 
-    @Column(name = "LIKE_STATUS", nullable = false)
-    private boolean likeStatus; // true = 좋아요, false = 좋아요 취소
+    @Column(name = "CLUB_LIKE_STATUS", nullable = false)
+    private boolean clubLikeStatus; // true = 좋아요, false = 좋아요 취소
 
     public BoardClubLike(BoardClub boardClub, Member member) {
         this.boardClub = boardClub;
         this.member = member;
-        this.likeStatus = true;
+        this.clubLikeStatus = true;
     }
 }
