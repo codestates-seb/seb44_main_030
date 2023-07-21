@@ -5,6 +5,9 @@ import com.splashzone.tracker.dto.TrackerDto;
 import com.splashzone.tracker.entity.Tracker;
 import org.mapstruct.Mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface TrackerMapper {
     default Tracker trackerPostDtoToTracker(TrackerDto.Post requestBody) {
@@ -44,5 +47,13 @@ public interface TrackerMapper {
                 .createdAt(tracker.getCreatedAt())
                 .modifiedAt(tracker.getModifiedAt())
                 .build();
+    }
+
+    default List<TrackerDto.Response> trackersToTrackerResponseDtos(List<Tracker> trackers) {
+        List<TrackerDto.Response> list = new ArrayList<>(trackers.size());
+        for (Tracker tracker : trackers) {
+            list.add(trackerToTrackerResponseDto(tracker));
+        }
+        return list;
     }
 }
