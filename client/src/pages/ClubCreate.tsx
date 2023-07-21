@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -13,6 +13,7 @@ import 'react-quill/dist/quill.snow.css';
 import Map from './Map.tsx';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { useCookies } from 'react-cookie';
+import { usePostHeader } from '../api/getHeader.ts';
 type Position = {
     lat: number;
     lng: number;
@@ -38,8 +39,7 @@ type FormData = {
 };
 
 const ClubCreate = () => {
-    const [cookies] = useCookies();
-    console.log(cookies.AuthorizationToken);
+    const headers = usePostHeader();
     const location = useLocation();
     const clubDetail = location.state?.clubDetail || {};
     const navigate = useNavigate();
@@ -49,8 +49,6 @@ const ClubCreate = () => {
     const [clubMap, setClubMap] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const dispatch = useDispatch();
-
-    console.log(clubMap);
 
     const updateClubMap = (data: any) => {
         setClubMap(data);
@@ -90,7 +88,7 @@ const ClubCreate = () => {
         return Object.keys(object).find((key) => object[key] === value);
     };
 
-    const onSubmit = async (data: FormData) => {
+    const onSubmit = useCallback(async (data: FormData, event) => {
         console.log(data);
         const API_URL = import.meta.env.VITE_KEY;
         const englishTagName = getKeyByValue(tags, data.clubTag);
@@ -109,9 +107,9 @@ const ClubCreate = () => {
         try {
             let response;
             if (clubDetail.boardClubId !== undefined) {
-                response = await axios.patch(`${API_URL}/clubs/${clubDetail.boardClubId}`, payload, {});
+                response = await axios.patch(`${API_URL}/clubs/${clubDetail.boardClubId}`, payload, headers);
             } else {
-                response = await axios.post(`${API_URL}/clubs`, payload, {});
+                response = await axios.post(`${API_URL}/clubs`, payload, headers);
             }
             if (response.status === 200 || response.status === 201) {
                 navigate(-1);
@@ -125,8 +123,7 @@ const ClubCreate = () => {
                 console.log('Error occurred while creating the post', error);
             }
         }
-        console.log(payload);
-    };
+    }, []);
 
     const handleCancel = () => {
         navigate(-1);
@@ -177,7 +174,17 @@ const ClubCreate = () => {
     useEffect(() => {
         setValue('clubMap', clubMap);
     }, [clubMap, setValue]);
-    console.log(clubMap);
+
+    useEffect(() => {
+        const keyDownHandler = (event) => {
+            console.log(event);
+        };
+
+        window.addEventListener('keydown', keyDownHandler);
+        return () => {
+            window.removeEventListener('keydown', keyDownHandler);
+        };
+    }, []);
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

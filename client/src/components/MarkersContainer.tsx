@@ -5,7 +5,7 @@ import Marker from './common/Marker';
 import InfoWindow from './common/InfoWindow';
 import { setSelectionInstance } from '../store/selectinfo';
 
-const MarkersContainer = ({ updateClubMap }) => {
+const MarkersContainer = ({ updateClubMap, setShowMap }) => {
     const dispatch = useDispatch();
     const map = useSelector((state: RootState) => state.counter.mapInstance);
     const infos = useSelector((state: RootState) => state.info.infoInstance);
@@ -13,6 +13,7 @@ const MarkersContainer = ({ updateClubMap }) => {
     const submitHandler = () => {
         console.log(selection);
         updateClubMap(selection);
+        setShowMap(false);
     };
     console.log(selection);
     if (!map || !infos) return null;
