@@ -3,7 +3,7 @@ import LOGO from '../../public/LOGO2.png';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import ProfileImage from './style/ProfileImage';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { reset } from '../store/scroll.ts';
 //토큰 받아오면 logout delet 토큰 처리해줘야됨.
 //Login 버튼 클릭시 로그인 page로 라우팅처리해주기
@@ -64,14 +64,16 @@ const Header = () => {
                     <div onClick={() => setIsLogIn(true)}>Login</div>
                 ) : (
                     <div style={{ position: 'relative' }}>
-                        <ProfileImage
-                            width="70px"
-                            height="65px"
-                            url="../../public/profile.png"
-                            onClick={() => {
-                                setMenu(!menu);
-                            }}
-                        />
+                        <div style={{ width: '70px', height: '65px' }}>
+                            <ProfileImage
+                                width="100%"
+                                height="100%"
+                                url="../../public/ob4.png"
+                                onClick={() => {
+                                    setMenu(!menu);
+                                }}
+                            />
+                        </div>
                         {menu ? <Modal ref={modalRef} setIsLogIn={setIsLogIn} setMenu={setMenu}></Modal> : null}
                     </div>
                 )}
@@ -134,9 +136,8 @@ const StyledHeader = styled.div`
     .header-content div:hover {
         color: rgba(105, 105, 105, 1);
         cursor: pointer;
-    }`
-;
-
+    }
+`;
 const StyledModal = styled.div`
     position: absolute;
     top: 85px;
@@ -159,5 +160,5 @@ const StyledModal = styled.div`
     }
     div:hover {
         color: rgba(105, 105, 105, 1);
-    }`
-;
+    }
+`;

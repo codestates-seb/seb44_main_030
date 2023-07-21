@@ -1,6 +1,6 @@
 //type 일반게시글 이거나 모임게시글이거나
 import styled from 'styled-components';
-import { getCommuity } from '../Api/MypageApi/getCommunityApi';
+import { getCommuity } from '../api/MypageApi/getCommunityApi';
 import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import { useState } from 'react';

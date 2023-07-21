@@ -4,8 +4,9 @@ import { Info } from '../types/info';
 import Marker from './common/Marker';
 import InfoWindow from './common/InfoWindow';
 import { setSelectionInstance } from '../store/selectinfo';
+import { setToast } from '../store/toastState';
 
-const MarkersContainer = ({ updateClubMap }) => {
+const MarkersContainer = ({ updateClubMap, setShowMap }) => {
     const dispatch = useDispatch();
     const map = useSelector((state: RootState) => state.counter.mapInstance);
     const infos = useSelector((state: RootState) => state.info.infoInstance);
@@ -13,6 +14,8 @@ const MarkersContainer = ({ updateClubMap }) => {
     const submitHandler = () => {
         console.log(selection);
         updateClubMap(selection);
+        dispatch(setToast(true));
+        setShowMap(false);
     };
     console.log(selection);
     if (!map || !infos) return null;

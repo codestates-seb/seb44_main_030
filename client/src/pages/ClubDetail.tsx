@@ -11,6 +11,7 @@ import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
 import axios from 'axios';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import { useMutation } from '@tanstack/react-query';
+import { usePostHeader } from '../api/getHeader.ts';
 
 interface BackgroundProps {
     $image: string;
@@ -21,6 +22,7 @@ export interface CommentInput {
 }
 
 const ClubDetail = () => {
+    const headers = usePostHeader();
     const { boardClubId } = useParams<{ boardClubId: string }>();
     const numberBoardClubId = boardClubId ? Number(boardClubId) : 0;
     const { status, data: clubDetail, error } = useClubBoardDetail(numberBoardClubId);
@@ -45,11 +47,11 @@ const ClubDetail = () => {
         navigate(`/mypage`, { state: memberId });
     }, [memberId]);
     const handleEdit = useCallback(() => {
-        navigate(`/club/create/${boardClubId}`, { state: { clubDetail: clubDetail.data } });
+        navigate(`/club/create/${boardClubId}`, { state: { clubDetail: clubDetail.data }, headers });
     }, [clubDetail, boardClubId]);
 
     const mutation = useMutation(
-        (boardClubId: number) => axios.delete(`${import.meta.env.VITE_KEY}/clubs/${boardClubId}`),
+        (boardClubId: number) => axios.delete(`${import.meta.env.VITE_KEY}/clubs/${boardClubId}`, headers),
         {
             onSuccess: () => {
                 alert('게시글이 성공적으로 삭제되었습니다.');
