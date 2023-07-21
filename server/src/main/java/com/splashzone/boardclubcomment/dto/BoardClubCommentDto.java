@@ -32,8 +32,8 @@ public class BoardClubCommentDto {
         @Positive
         private Long boardClubId;
 
-        @Positive
-        private Long boardClubCommentId;
+//        @Positive
+//        private Long boardClubCommentId;
 
         private String content;
     }
