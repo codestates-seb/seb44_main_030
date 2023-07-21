@@ -1,0 +1,12 @@
+INSERT INTO tag (tag_name) VALUES ('SWIMMING');
+INSERT INTO tag (tag_name) VALUES ('SURFING');
+INSERT INTO tag (tag_name) VALUES ('SNORKELING');
+INSERT INTO tag (tag_name) VALUES ('SCUBA_DIVING');
+INSERT INTO tag (tag_name) VALUES ('WATER_SKIING');
+INSERT INTO tag (tag_name) VALUES ('JET_SKIING');
+INSERT INTO tag (tag_name) VALUES ('WINDSURFING');
+INSERT INTO tag (tag_name) VALUES ('KITESURFING');
+INSERT INTO tag (tag_name) VALUES ('FLYBOARDING');
+INSERT INTO tag (tag_name) VALUES ('PARASAILING');
+INSERT INTO tag (tag_name) VALUES ('PADDLING');
+INSERT INTO tag (tag_name) VALUES ('KAYAKING');
