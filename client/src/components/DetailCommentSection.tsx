@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Comment from '../components/Comment.tsx';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
-
+import { usePostHeader } from '../api/getHeader.ts';
 type CommentInput = {
     Content: string;
 };
@@ -22,7 +22,7 @@ interface DetailCommentSectionProps {
 const DetailCommentSection = ({ comment }: DetailCommentSectionProps) => {
     const boardType = location.pathname.split('/')[1] === 'community' ? 'boardcomments' : 'clubcomments';
     const { register, handleSubmit, reset } = useForm<CommentInput>({ mode: 'onSubmit' });
-
+    const headers = usePostHeader(); 
     //댓글 작성 요청
     const onSubmit: SubmitHandler<CommentInput> = (data) => {
         // console.log(data);
@@ -32,7 +32,7 @@ const DetailCommentSection = ({ comment }: DetailCommentSectionProps) => {
             content: `${data.Content}`,
         };
         axios
-            .post(`${API_URL}/${boardType}`, payload)
+            .post(`${API_URL}/${boardType}`, payload, headers)
             .then((res) => console.log(res.status))
             .catch((error) => console.error(error));
         reset();

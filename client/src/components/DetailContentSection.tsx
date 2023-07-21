@@ -42,7 +42,7 @@ const DetailContentSection = ({
         throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
     }
     const { handleDeletePost, boardType } = useDeletePost(postId);
-    const mockMemberId = 1;
+    const mockMemberId = 3;//로그인아이디로 변경
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleEdit = useCallback(() => {
@@ -121,6 +121,7 @@ const ContentSection = styled.section`
     }
     > p {
         line-height: 25px;
+        word-wrap: break-word;
     }
     padding-bottom: 15px;
     border-bottom: 1px solid #d9d9d9;
