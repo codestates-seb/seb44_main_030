@@ -6,6 +6,7 @@ import selectinfo from './selectinfo';
 import scrollReducer from './scroll';
 import userReducer from './user';
 import editDataReducer from './editData';
+import toastState from './toastState';
 export const store = configureStore({
     reducer: {
         counter: mapSlice,
@@ -14,6 +15,7 @@ export const store = configureStore({
         scroll: scrollReducer,
         editData: editDataReducer,
         user: userReducer,
+        toast: toastState,
     },
     middleware: getDefaultMiddleware({
         serializableCheck: false,
@@ -23,4 +25,3 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
