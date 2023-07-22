@@ -13,6 +13,8 @@ import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardclubcomment.repository.BoardClubCommentRepository;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.boardstandard.repository.BoardStandardRepository;
+import com.splashzone.boardstandardcomment.entity.BoardStandardComment;
+import com.splashzone.boardstandardcomment.repository.BoardStandardCommentRepository;
 import com.splashzone.dolphin.Dolphin;
 import com.splashzone.dolphin.DolphinRepository;
 import com.splashzone.exception.BusinessLogicException;
@@ -52,6 +54,7 @@ public class MemberService {
     private final DolphinRepository dolphinRepository;
     private final BoardClubRepository boardClubRepository;
     private final BoardStandardRepository boardStandardRepository;
+    private final BoardStandardCommentRepository boardStandardCommentRepository;
     private final BoardClubCommentRepository boardClubCommentRepository;
     private final TrackerRepository trackerRepository;
     private final AmazonS3 amazonS3;
@@ -143,7 +146,7 @@ public class MemberService {
         return findVerifiedMember(memberId);
     }
 
-    public Page<Member> findMembers(int page, int size) {
+    public Page<Member> findMembers(Integer page, Integer size) {
         return memberRepository.findAll(PageRequest.of(page, size, Sort.by("memberId").descending()));
     }
 
@@ -177,10 +180,14 @@ public class MemberService {
         return boardStandardRepository.findByMember(member, PageRequest.of(page, size, Sort.by("boardStandardId").descending()));
     }
 
-    // memberId로 findByMember 방법 고려 -> clubRepository
     public Page<BoardClub> findClubBoardsByMember(Long memberId, Integer page, Integer size) {
         Member member = findVerifiedMember(memberId);
         return boardClubRepository.findByMember(member, PageRequest.of(page, size, Sort.by("boardClubId").descending()));
+    }
+
+    public  Page<BoardStandardComment> findStandardCommentsByMember(Long memberId, Integer page, Integer size) {
+        Member member = findVerifiedMember(memberId);
+        return boardStandardCommentRepository.findByMember(member, PageRequest.of(page, size, Sort.by("boardStandardCommentId").descending()));
     }
 
     public Page<BoardClubComment> findClubCommentsByMember(Long memberId, Integer page, Integer size) {

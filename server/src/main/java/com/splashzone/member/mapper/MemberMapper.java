@@ -6,6 +6,7 @@ import com.splashzone.boardclubcomment.dto.BoardClubCommentDto;
 import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.boardstandardcomment.entity.BoardStandardComment;
 import com.splashzone.member.dto.MemberDto;
 import com.splashzone.member.entity.Member;
 import com.splashzone.tracker.dto.TrackerDto;
@@ -25,6 +26,8 @@ public interface MemberMapper {
     List<MemberDto.Response> membersToMemberResponses(List<Member> members);
 
     BoardStandardDto.Response boardStandardToBoardStandardResponse(BoardStandard boardStandard);
+
+    BoardStandardDto.Response boardStandardCommentToBoardStandardCommentResponse(BoardStandardComment boardStandardComment);
 
     BoardClubDto.Response boardClubToBoardClubResponse(BoardClub boardClub);
 
