@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import './Marker.css';
 
 interface MarkerProps {
-    map: naver.maps.Map;
+    map: naver.maps.Map | null;
     position: {
         lat: number;
         lng: number;
@@ -31,9 +31,10 @@ const Marker = ({ map, position, content, onClick, loading }: MarkerProps) => {
         }
 
         if (onClick) {
-            naver.maps.Event.addListener(marker, 'click', onClick);
-
-            map.panTo(position);
+            if (map) {
+                naver.maps.Event.addListener(marker, 'click', onClick);
+                map.panTo(position);
+            }
         }
 
         return () => {

@@ -4,7 +4,12 @@ import Wrapper from '../components/style/Wrapper';
 import Fetching from './SearchEngine';
 import styled from 'styled-components';
 
-const Map = ({ setShowMap, updateClubMap }) => {
+interface MapProps {
+    updateClubMap: (data: any) => void;
+    setShowMap: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Map = ({ setShowMap, updateClubMap }: MapProps) => {
     return (
         <StyledModal>
             <div className="modal" style={{ position: 'relative' }}>
@@ -58,7 +63,7 @@ const StyledModal = styled.div`
 
 const StyledButton = styled.button`
     background-color: #ced6df;
-    border: 1px solid rgba(0,0,0,0.1)
+    border: 1px solid rgba(0, 0, 0, 0.1);
     color: white;
     cursor: pointer;
 `;

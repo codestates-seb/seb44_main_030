@@ -3,7 +3,7 @@ import LOGO from '../../public/LOGO2.png';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import ProfileImage from './style/ProfileImage';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { reset } from '../store/scroll.ts';
 //토큰 받아오면 logout delet 토큰 처리해줘야됨.
 //Login 버튼 클릭시 로그인 page로 라우팅처리해주기

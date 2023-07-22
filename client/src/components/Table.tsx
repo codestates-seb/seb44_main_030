@@ -1,6 +1,6 @@
 //type 일반게시글 이거나 모임게시글이거나
 import styled from 'styled-components';
-import { getCommuity } from '../api/MypageApi/getCommunityApi';
+import { getCommuity } from '../Api/MypageApi/getCommunityApi';
 import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import { useState } from 'react';
@@ -11,9 +11,31 @@ import { Link } from 'react-router-dom';
 //클럽,일반게시글 따라서 다르게 보여주기. type을 지정해서
 //체크박스로 전체삭제같은거 구현할수있게하기
 
+type Data = {
+    standardId: number;
+    title: string;
+    content: string;
+    view?: number;
+    createdAt: string;
+    modifiedAt: string;
+    member: {
+        memberId: number;
+        name: string;
+        email: string;
+        nickname: string;
+        profileImageUrl: null;
+        bio: string;
+        memberStatus: string;
+    };
+};
+
+interface CommunityData {
+    post: Data;
+}
+
 const Table = () => {
     const [pagenumber, setPageNumber] = useState(1);
-    const { data, isLoading, isError, error } = useQuery({
+    const { data, isLoading, isError, error } = useQuery<any, Error>({
         queryKey: ['mycommunity', pagenumber],
         queryFn: () => getCommuity(pagenumber),
     });
@@ -55,7 +77,7 @@ const Table = () => {
                 <div>작성일</div>
                 <div>조회</div>
             </Styledwrapper>
-            {data.postData.map((post: any) => {
+            {data.postData.map((post: Data) => {
                 return <Tablecontent post={post}></Tablecontent>;
             })}
             <PageContainer>
@@ -77,7 +99,7 @@ const Table = () => {
 };
 export default Table;
 
-const Tablecontent = ({ post }: any) => {
+const Tablecontent = ({ post }: CommunityData) => {
     const url = `/community/detail/${post.standardId}`;
     return (
         <Styledwrapper>
