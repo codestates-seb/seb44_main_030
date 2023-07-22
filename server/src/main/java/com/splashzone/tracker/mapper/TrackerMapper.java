@@ -11,29 +11,21 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TrackerMapper {
     default Tracker trackerPostDtoToTracker(TrackerDto.Post requestBody) {
-        Member member = new Member();
-        member.setMemberId(requestBody.getMemberId());
-
         return Tracker.builder()
                 .title(requestBody.getTitle())
                 .content(requestBody.getContent())
                 .exerciseStartTime(requestBody.getExerciseStartTime())
                 .exerciseEndTime(requestBody.getExerciseEndTime())
-                .member(member)
                 .build();
     }
 
     default Tracker trackerPatchDtoToTracker(TrackerDto.Patch requestBody, Long trackerId) {
-        Member member = new Member();
-        member.setMemberId(requestBody.getMemberId());
-
         return Tracker.builder()
                 .trackerId(trackerId)
                 .title(requestBody.getTitle())
                 .content(requestBody.getContent())
                 .exerciseStartTime(requestBody.getExerciseStartTime())
                 .exerciseEndTime(requestBody.getExerciseEndTime())
-                .member(member)
                 .build();
     }
 

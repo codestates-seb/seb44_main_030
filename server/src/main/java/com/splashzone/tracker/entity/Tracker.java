@@ -46,6 +46,10 @@ public class Tracker extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
     public Long calculateExerciseTime(String exerciseStartTime, String exerciseEndTime) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMddHHmm");
 
