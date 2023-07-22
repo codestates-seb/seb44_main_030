@@ -49,12 +49,11 @@ const SearchEngine = () => {
         dispatch(setInfoInstance(infos));
     };
 
-    const onKeyPress = (e) => {
-        if ((e.key = 'Enter')) {
+    const onKeyPress = (event) => {
+        if (event.key === 'Enter') {
             onClickHandler();
         }
     };
-
     return (
         <Searchbox>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
