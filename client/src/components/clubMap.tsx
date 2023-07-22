@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import MapContainer from './Mapcontainer';
 import ClubInfoWindow from './common/InfoWindow/clubindex';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const ClubMapContainer = ({ mapdata }) => {
     const map = useSelector((state: RootState) => state.counter.mapInstance);
@@ -19,6 +19,8 @@ const ClubMapContainer = ({ mapdata }) => {
         },
     };
 
+    console.log(data);
+
     const newcenter = new naver.maps.LatLng(data.position.lat, data.position.lng);
     useEffect(() => {
         if (map) {
@@ -30,7 +32,9 @@ const ClubMapContainer = ({ mapdata }) => {
     return (
         <div style={{ width: '960px' }}>
             <MapContainer></MapContainer>
+
             <Marker map={map} position={data.position} content={"<div class='marker'/>"} />
+
             <ClubInfoWindow map={map} selectInfo={data} />
         </div>
     );

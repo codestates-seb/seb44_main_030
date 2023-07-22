@@ -72,6 +72,7 @@ const ClubCreate = () => {
             contact: clubDetail.contact || '',
             dueDate: clubDetail.dueDate || '',
         },
+        mode: 'onChange',
     });
 
     const tags = {
@@ -134,6 +135,12 @@ const ClubCreate = () => {
             }
         }
     }, []);
+
+    const handleFormKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    };
 
     const handleCancel = () => {
         navigate(-1);
@@ -198,7 +205,7 @@ const ClubCreate = () => {
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <FormContainer onSubmit={handleSubmit(onSubmit)}>
+            <FormContainer onSubmit={handleSubmit(onSubmit)} onKeyPress={handleFormKeyPress}>
                 <DetailInfoContainer>
                     <DetailInfoTitle>모임의 기본 정보를 입력해주세요</DetailInfoTitle>
                     <TagContainer>

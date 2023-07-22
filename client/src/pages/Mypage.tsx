@@ -16,9 +16,6 @@ interface member {
     nickname?: string;
     bio?: string;
 }
-type ErrorType<T> = {
-    error: T | unknown;
-};
 
 const Mypage = () => {
     const [edit, setEdit] = useState(false);
@@ -28,7 +25,7 @@ const Mypage = () => {
     const refreshToken = cookies.RefreshToken;
 
     const memberId = 2; //memberId Link로받던가 아니면  header포함해서받던가하기
-    const { data, isLoading, isError, error } = useQuery<ErrorType<T>>({
+    const { data, isLoading, isError, error } = useQuery({
         queryKey: ['memberinfo', memberId],
         queryFn: () => getInfos(memberId),
     });
