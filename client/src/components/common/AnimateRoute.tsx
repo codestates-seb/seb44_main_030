@@ -1,8 +1,6 @@
-import React from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import loadable from '@loadable/component';
 import { AnimatePresence } from 'framer-motion';
-import Table from '../Table';
 import ClubMapContainer from '../clubMap';
 
 const Main = loadable(() => import('../../pages/Main'));
