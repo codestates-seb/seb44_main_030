@@ -27,13 +27,14 @@ const TagWarp = styled.li<TagWarpStyledProps>`
     height: 40px;
     font-family: 'KimjungchulGothic-Bold';
     font-size: 1.1rem;
-    color: #696969;
+    color: white;
+    background-color: #3884d5;
     padding: 15px;
     margin: 5px 5px 5px 0;
     ${({ $isSelected }) =>
         $isSelected &&
         `
-        background-color: #3884d5;
-        color: #dddddd;
+        background-color: white;
+        color: #3884d5;
     `}
 `;

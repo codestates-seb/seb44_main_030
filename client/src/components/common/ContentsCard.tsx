@@ -70,7 +70,6 @@ export default function ContentsCard({
     } = communityProps || {};
 
     const {
-        memberId: clubMemberId,
         title: clubTitle,
         content: clubContent,
         view: clubView,
@@ -79,6 +78,7 @@ export default function ContentsCard({
         tags,
         dueDate,
         boardClubStatus,
+        nickname,
     } = clubProps || {};
 
     const [clubStatus, setClubStatus] = useState(boardClubStatus);
@@ -131,7 +131,6 @@ export default function ContentsCard({
     const datePart = dateStr.split('T')[0];
     const dateArr = datePart.split('-');
     const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
-    const formattedDate = modifiedAt ? `${newDateStr} (수정됨)` : newDateStr;
 
     return (
         <CardWarp isCompleted={isCompleted}>
@@ -153,7 +152,7 @@ export default function ContentsCard({
             <InfoContainer>
                 <UserInfo>
                     <img src={memberProfileImg} className="user-icon" />
-                    <span onClick={handleNavigateProfile}>{name}</span>
+                    <span onClick={handleNavigateProfile}>{nickname}</span>
                 </UserInfo>
                 <ContentsInfo>
                     {communityProps?.like &&
@@ -189,7 +188,7 @@ const CardWarp = styled.div<{ isCompleted: boolean }>`
     margin: 2rem;
     padding: 1.7rem;
     transition: 0.3s;
-    border: ${(props) => (props.isCompleted ? '2px solid rgba(0,0,0,0.5)' : '1px solid #d0d0d0;')};
+    border: ${(props) => (props.isCompleted ? '2px solid rgba(0,0,0,0.5)' : '1px solid rgba(56, 132, 213, 1);')};
     box-shadow: ${(props) =>
         props.isCompleted ? '0px 0px 10px 5px rgba(0,0,0,0.2)' : '0 0 10px rgba(117, 117, 117, 0.3)'};
     opacity: ${(props) => (props.isCompleted ? 0.2 : 1)};
@@ -247,7 +246,7 @@ const ContentsContainer = styled.div`
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     width: 300px;
-    height: 77px;
+    height: 69px;
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -260,6 +259,7 @@ const ContentsContainer = styled.div`
 
 const TagContainer = styled.div`
     display: flex;
+    margin-top: 20px;
 `;
 
 const InfoContainer = styled.div`
@@ -268,8 +268,8 @@ const InfoContainer = styled.div`
     justify-content: space-between;
     border-top: 1px solid #696969;
     width: 105%;
-    margin-top: 1rem;
-    padding: 2px 2px 0 2px;
+    margin-top: 7px;
+    padding: 4px 2px 0 2px;
     ${CardWarp}:hover & {
         border-top: 1px solid #ffffff;
     }
@@ -281,11 +281,11 @@ const UserInfo = styled.div`
     align-items: center;
     padding-top: 10px;
     > img {
-        width: 30px;
-        height: 30px;
+        width: 20px;
+        height: 20px;
     }
     > span {
-        width: 70px;
+        width: 130px;
         margin-left: 10px;
         font-weight: 500;
         text-overflow: ellipsis;
@@ -299,13 +299,13 @@ const ContentsInfo = styled.div`
     align-items: center;
     padding-top: 10px;
     > img {
-        width: 30px;
-        height: 30px;
+        width: 20px;
+        height: 20px;
         margin-left: 20px;
         filter: opacity(0.4) drop-shadow(0 0 0 #565656);
     }
     > span {
-        margin-left: 6px;
+        margin-left: 5px;
         font-weight: 500;
     }
 `;

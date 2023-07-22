@@ -15,17 +15,6 @@ import ConfirmModal from '../components/common/ConfirmModal';
 import { useCookies } from 'react-cookie';
 import { usePostHeader } from '../api/getHeader.ts';
 import { NumberLiteralType } from 'typescript';
-// type Position = {
-//     lat: number;
-//     lng: number;
-// };
-
-// type ClubMapData = {
-//     addressName: string;
-//     id: number;
-//     placeName: string;
-//     position: Position;
-// };
 
 type FormData = {
     capacity: number;
@@ -35,7 +24,6 @@ type FormData = {
     dueDate: string;
     title: string;
     content: string;
-    // clubMap?: ClubMapData;
     date?: Date;
     placeName: string;
     addressName: string;
@@ -113,6 +101,9 @@ const ClubCreate = () => {
             longitude: position.lng,
             ...restClubMap,
         };
+        if (clubDetail.boardClubId !== undefined) {
+            payload['boardClubStatus'] = 'BOARD_CLUB_RECRUITING';
+        }
         console.log(payload);
 
         try {
@@ -281,7 +272,7 @@ const ClubCreate = () => {
                                 )}
                             />
                             {clubMap && <MapPlace>{clubMap.placeName}</MapPlace>}
-                            {showMap ? <Map setShowMap={setShowMap} updateClubMap={updateClubMap} /> : null}
+                            {showMap && <Map setShowMap={setShowMap} updateClubMap={updateClubMap} />}
                         </TagWarp>
                     </TagContainer>
                 </DetailInfoContainer>
