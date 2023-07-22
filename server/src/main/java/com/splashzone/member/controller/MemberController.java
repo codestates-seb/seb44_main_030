@@ -3,6 +3,8 @@ package com.splashzone.member.controller;
 import com.splashzone.auth.userdetails.MemberDetails;
 import com.splashzone.boardclub.dto.BoardClubDto;
 import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.boardclubcomment.dto.BoardClubCommentDto;
+import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.dto.MultiResponseDto;
@@ -144,6 +146,17 @@ public class MemberController {
         return ResponseEntity.ok(new MultiResponseDto<>(boardClubResponses, boardClubPage));
     }
 
+    @GetMapping("/mypage/clubcomments/{member-id}")
+    public ResponseEntity getMyClubComments(@PathVariable("member-id") @Positive Long memberId,
+                                            @Positive @RequestParam int page,
+                                            @Positive @RequestParam int size) {
+
+        Page<BoardClubComment> boardClubCommentPage = memberService.findClubCommentsByMember(memberId, page - 1, size);
+        List<BoardClubCommentDto.Response> boardClubCommentResponses = boardClubCommentPage.getContent().stream()
+                .map(mapper::boardClubCommentToBoardClubCommentResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new MultiResponseDto<>(boardClubCommentResponses, boardClubCommentPage));
+    }
 //    @DeleteMapping("/logout")
 //    public ResponseEntity logout(@RequestHeader("Access") @Positive String accessToken) {
 //        log.info(accessToken);
