@@ -41,7 +41,7 @@ dependencies {
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
 	implementation 'com.google.code.gson:gson:2.9.0'
-
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 //	implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '5.6.9.Final'
 }
 

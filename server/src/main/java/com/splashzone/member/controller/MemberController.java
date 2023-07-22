@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -74,10 +75,17 @@ public class MemberController {
 
         patchDto.setMemberId(memberId);
 
-        Member member =
-                memberService.updateMember(mapper.memberPatchToMember(patchDto));
+        Member member = memberService.updateMember(mapper.memberPatchToMember(patchDto));
 
         return ResponseEntity.ok(mapper.memberToMemberResponse(member));
+    }
+
+    @PatchMapping("/image/{member-id}")
+    public ResponseEntity<String> patchImage( @RequestPart MultipartFile multipartFile,
+                                              @PathVariable("member-id") @Positive Long memberId) {
+        String uploadedFileName = memberService.uploadImage(multipartFile, memberId);
+
+        return new ResponseEntity<>(uploadedFileName, HttpStatus.OK);
     }
 
     @GetMapping("/{member-id}")
