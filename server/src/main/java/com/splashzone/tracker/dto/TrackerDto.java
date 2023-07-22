@@ -1,8 +1,10 @@
 package com.splashzone.tracker.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 
 public class TrackerDto {
     @Getter
+    @NoArgsConstructor
     public static class Post {
         private String title;
 
@@ -19,14 +22,15 @@ public class TrackerDto {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate todayDate;
 
-//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+        @NotBlank
         private String exerciseStartTime;
 
-//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+        @NotBlank
         private String exerciseEndTime;
     }
 
     @Getter
+    @NoArgsConstructor
     public static class Patch {
         private String title;
 
@@ -35,21 +39,19 @@ public class TrackerDto {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate todayDate;
 
-//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private String exerciseStartTime;
 
-//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private String exerciseEndTime;
     }
 
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Response {
-        @Positive
         private Long trackerId;
 
-        @Positive
-        private Long memberId;
+        private String nickname;
 
         private String title;
 

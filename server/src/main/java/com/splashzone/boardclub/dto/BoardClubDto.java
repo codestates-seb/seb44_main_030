@@ -21,9 +21,6 @@ public class BoardClubDto {
     @Getter
     @NoArgsConstructor
     public static class Post {
-//        @Positive
-//        private Long memberId;
-
         @NotBlank(message = "제목을 작성해 주세요.")
         private String title;
 
@@ -57,9 +54,6 @@ public class BoardClubDto {
     @Getter
     @NoArgsConstructor
     public static class Patch {
-//        @Positive
-//        private Long memberId;
-
         @Positive
         private Long boardClubId;
 

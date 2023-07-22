@@ -24,9 +24,8 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class TrackerService {
-    private final TrackerRepository trackerRepository;
-    private final TrackerMapper trackerMapper;
     private final MemberService memberService;
+    private final TrackerRepository trackerRepository;
 
     public Tracker createTracker(Tracker tracker) throws ParseException {
         Member findMember = memberService.findVerifiedMember(tracker.getMember().getMemberId());

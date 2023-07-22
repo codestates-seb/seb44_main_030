@@ -25,7 +25,6 @@ public class BoardStandardComment extends Auditable {
     @JoinColumn(name = "BOARD_STANDARD_ID")
     private BoardStandard boardStandard;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;

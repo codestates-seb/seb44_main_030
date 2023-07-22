@@ -24,9 +24,6 @@ public class Tracker extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long trackerId;
 
-//    @Column(name = "TRACKER_DATE", nullable = false)
-//    private LocalDate trackerDate;
-
     @Column(name = "TITLE", nullable = false, length = 100)
     private String title;
 
@@ -45,13 +42,9 @@ public class Tracker extends Auditable {
     @Column(name = "EXERCISE_TIME", nullable = false)
     private Long exerciseTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
 
     public Long calculateExerciseTime(String exerciseStartTime, String exerciseEndTime) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMddHHmm");
@@ -71,19 +64,11 @@ public class Tracker extends Auditable {
     }
 
     public void changeTracker(Tracker tracker) throws ParseException {
-        if (!tracker.getTitle().isEmpty()) {
-            this.title = tracker.getTitle();
-        }
-        if (!tracker.getContent().isEmpty()) {
-            this.content = tracker.getContent();
-        }
-        if (!tracker.getExerciseStartTime().isEmpty()) {
-            this.exerciseStartTime = tracker.getExerciseStartTime();
-        }
-        if (!tracker.getExerciseEndTime().isEmpty()) {
-            this.exerciseEndTime = tracker.getExerciseEndTime();
-        }
-
+        this.title = tracker.getTitle();
+        this.content = tracker.getContent();
+        this.todayDate = tracker.getTodayDate();
+        this.exerciseStartTime = tracker.getExerciseStartTime();
+        this.exerciseEndTime = tracker.getExerciseEndTime();
         this.exerciseTime = calculateExerciseTime(exerciseStartTime, exerciseEndTime);
     }
 }
