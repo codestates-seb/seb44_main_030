@@ -4,6 +4,8 @@ package com.splashzone.member.service;
 import com.splashzone.auth.utils.CustomAuthorityUtils;
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.boardclub.repository.BoardClubRepository;
+import com.splashzone.boardclubcomment.entity.BoardClubComment;
+import com.splashzone.boardclubcomment.repository.BoardClubCommentRepository;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.boardstandard.repository.BoardStandardRepository;
 import com.splashzone.dolphin.Dolphin;
@@ -36,7 +38,7 @@ public class MemberService {
     private final DolphinRepository dolphinRepository;
     private final BoardClubRepository boardClubRepository;
     private final BoardStandardRepository boardStandardRepository;
-
+    private final BoardClubCommentRepository boardClubCommentRepository;
 
     @Autowired
     public MemberService(MemberRepository memberRepository,
@@ -44,7 +46,8 @@ public class MemberService {
                          CustomAuthorityUtils authorityUtils,
                          DolphinRepository dolphinRepository,
                          BoardClubRepository boardClubRepository,
-                         BoardStandardRepository boardStandardRepository) {
+                         BoardStandardRepository boardStandardRepository,
+                         BoardClubCommentRepository boardClubCommentRepository) {
 
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
@@ -52,6 +55,7 @@ public class MemberService {
         this.dolphinRepository = dolphinRepository;
         this.boardClubRepository = boardClubRepository;
         this.boardStandardRepository = boardStandardRepository;
+        this.boardClubCommentRepository = boardClubCommentRepository;
     }
 
     public Member createMember(Member member) {
@@ -136,5 +140,10 @@ public class MemberService {
     public Page<BoardClub> findClubBoardsByMember(Long memberId, int page, int size) {
         Member member = findVerifiedMember(memberId);
         return boardClubRepository.findByMember(member, PageRequest.of(page, size, Sort.by("boardClubId").descending()));
+    }
+
+    public Page<BoardClubComment> findClubCommentsByMember(Long memberId, int page, int size) {
+        Member member = findVerifiedMember(memberId);
+        return boardClubCommentRepository.findByMember(member, PageRequest.of(page, size, Sort.by("boardClubCommentId").descending()));
     }
 }
