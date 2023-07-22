@@ -2,10 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 interface PageButtonProps {
     data: {
-        value: string | number;
-        page: number;
+        value?: string | number;
+        page?: number;
     };
-    onClick: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
+    onClick?: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 }
 interface PageButtonStyledProps {
     $isCurrPage: boolean;

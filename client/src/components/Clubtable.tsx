@@ -4,12 +4,31 @@ import moment from 'moment';
 import { useState } from 'react';
 import { Loading } from './Lodaing';
 import PageButton from './PageButton';
-import { getClubdata } from '../api/MypageApi/getClubApi';
+import { getClubdata } from '../Api/MypageApi/getClubApi';
 import { Link } from 'react-router-dom';
+
+type Data = {
+    boardClubId?: number;
+    memberId?: string;
+    title?: string;
+    content?: string;
+    dueDate?: string;
+    capacity?: string;
+    contact?: string;
+    view?: 0;
+    tags?: null;
+    boardClubStatus?: string;
+    createdAt?: string;
+    modifiedAt?: string;
+};
+
+interface Clubdata {
+    post: Data;
+}
 
 const Clubtable = () => {
     const [pagenumber, setPageNumber] = useState(1);
-    const { data, isLoading, isError, error } = useQuery({
+    const { data, isLoading, isError, error } = useQuery<any, Error>({
         queryKey: ['myclub', pagenumber],
         queryFn: () => getClubdata(pagenumber),
     });
@@ -38,7 +57,7 @@ const Clubtable = () => {
         }
     };
 
-    const CurrentPageHandler = (number) => {
+    const CurrentPageHandler = (number: number) => {
         setPageNumber(number);
     };
     return (
@@ -50,7 +69,7 @@ const Clubtable = () => {
                 <div>조회</div>
                 <div>상태</div>
             </Styledwrapper>
-            {data.postData.map((post) => {
+            {data.postData.map((post: Data) => {
                 return <Tablecontent post={post}></Tablecontent>;
             })}
             <PageContainer>
@@ -71,7 +90,7 @@ const Clubtable = () => {
     );
 };
 
-const Tablecontent = ({ post }) => {
+const Tablecontent = ({ post }: Clubdata) => {
     const url = `/club/detail/${post.boardClubId}`;
     return (
         <Styledwrapper>

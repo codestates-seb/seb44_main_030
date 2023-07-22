@@ -1,10 +1,18 @@
-import { Info } from '../../../types/info';
 import { useState, useEffect } from 'react';
 import './InfoWindow.css';
 
+interface Clubmapdata {
+    addressName: string;
+    placeName: string;
+    position: {
+        lat: number;
+        lng: number;
+    };
+}
+
 interface InfoWindowProps {
-    map: naver.maps.Map;
-    selectInfo: Info | null;
+    map: naver.maps.Map | null;
+    selectInfo: Clubmapdata | null;
 }
 
 const ClubInfoWindow = ({ map, selectInfo }: InfoWindowProps) => {
@@ -36,7 +44,7 @@ const ClubInfoWindow = ({ map, selectInfo }: InfoWindowProps) => {
     return null;
 };
 
-function InfoWindowMaker(selectInfo: Info) {
+function InfoWindowMaker(selectInfo: Clubmapdata) {
     const infoWindowBox = document.createElement('div');
     infoWindowBox.className = 'infoBox';
 

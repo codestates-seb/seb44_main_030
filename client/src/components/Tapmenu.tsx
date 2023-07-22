@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Block from './style/Wrapper';
 import Calendar from 'react-calendar';
 import moment from 'moment';
@@ -39,7 +39,7 @@ const Tabmenu = () => {
     );
 };
 const Tabcomponent0 = () => {
-    const [value, onChange] = useState(new Date());
+    const [value, setValue] = useState(new Date());
     const mark = ['2023-07-08', '2023-07-10', '2023-07-15'];
     const [modal, setModal] = useState(false);
 
@@ -70,10 +70,10 @@ const Tabcomponent0 = () => {
             <div style={{ display: 'flex', position: 'relative' }}>
                 <ReactCalander>
                     <Calendar
-                        onChange={onChange}
+                        onChange={setValue}
                         value={value}
                         formatDay={(locale, date) => moment(date).format('D')}
-                        tileContent={({ date, view }) => {
+                        tileContent={({ date }) => {
                             const html = [];
 
                             if (mark.find((x) => x === moment(date).format('YYYY-MM-DD'))) {
@@ -92,7 +92,7 @@ const Tabcomponent0 = () => {
                         }}
                         onClickDay={HandleClickDay}
                     />
-                    <div>{moment(value).format('YYYY년 MM월 DD일')}</div>
+                    <div>{moment(value).format('YYYY-MM-DD')}</div>
                 </ReactCalander>
                 {modal && <Modal setModal={setModal} value={value} mark={mark}></Modal>}
             </div>

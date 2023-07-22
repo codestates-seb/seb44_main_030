@@ -10,6 +10,7 @@ import { CookiesProvider } from 'react-cookie';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import Toast from './components/common/ToastUI/toast';
+import { Link } from 'react-router-dom';
 
 function App() {
     const location = useLocation();
@@ -26,6 +27,7 @@ function App() {
                     {!hideHeaderFooter && <Header></Header>}
                     {!hideHeaderFooter && <div style={{ paddingTop: '85px' }}></div>}
                     <AnimateRoute />
+                    <Link to="/signup"> 클릭</Link>
                     {!hideHeaderFooter && <Footer></Footer>}
                 </div>
             </QueryClientProvider>

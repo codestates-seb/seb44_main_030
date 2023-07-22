@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import ContentsCard from '../components/common/ContentsCard';
 import { useQuery } from '@tanstack/react-query';
-import { getMaincommunity } from '../api/MainApi/MainClubApi';
-import getMainclub from '../api/MainApi/MainClubApi';
+import { getMaincommunity } from '../Api/MainApi/MainClubApi';
+import getMainclub from '../Api/MainApi/MainClubApi';
 import { Loading } from '../components/Lodaing';
 import { CommunityPostData } from '../types/CommunityTypes';
+import { ClubBoardData } from '../types/ClubData';
 
 const Main = () => {
     const [page, setPage] = useState(1);
@@ -20,7 +21,7 @@ const Main = () => {
         isLoading,
         isError,
         error,
-    } = useQuery({
+    } = useQuery<any, Error>({
         queryKey: ['mainClub', page],
         queryFn: () => getMainclub(page),
     });
@@ -44,7 +45,7 @@ const Main = () => {
             </StyledMain>
             <StyledClub>
                 <div style={{ display: 'flex' }}>
-                    {Club.map((clubData) => {
+                    {Club.map((clubData: ClubBoardData) => {
                         return <ContentsCard key={clubData.boardClubId} clubProps={clubData} type={'club'} />;
                     })}
                 </div>
