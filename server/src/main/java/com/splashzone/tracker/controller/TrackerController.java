@@ -40,7 +40,7 @@ public class TrackerController {
 
     @PostMapping
     public ResponseEntity postTracker(Authentication authentication,
-                                      @Valid @RequestBody TrackerDto.Post requestBody) throws ParseException {
+                                      @Valid @RequestBody TrackerDto.Post requestBody) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
@@ -56,7 +56,7 @@ public class TrackerController {
     @PatchMapping("/{tracker-id}")
     public ResponseEntity patchTracker(Authentication authentication,
                                        @PathVariable("tracker-id") @Positive Long trackerId,
-                                       @Valid @RequestBody TrackerDto.Patch requestBody) throws ParseException {
+                                       @Valid @RequestBody TrackerDto.Patch requestBody) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
