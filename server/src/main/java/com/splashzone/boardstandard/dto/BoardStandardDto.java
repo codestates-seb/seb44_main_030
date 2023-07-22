@@ -26,13 +26,13 @@ public class BoardStandardDto {
 //        @Positive
 //        private Long memberId;
 //        @Positive
-//        private long standardId;
+//        private long boardStandardId;
         private String title;
         private String content;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-//        public void setStandardId(Long standardId) {
-//            this.standardId = standardId;
+//        public void setBoardStandardId(Long boardStandardId) {
+//            this.boardStandardId = boardStandardId;
 //        }
 
     }
@@ -40,7 +40,7 @@ public class BoardStandardDto {
     @Getter
     @Setter
     public static class Response{
-        private Long standardId;
+        private Long boardStandardId;
         private String title;
         private String content;
         private int view;
@@ -57,11 +57,10 @@ public class BoardStandardDto {
     @Getter
     @Setter
     public static class CommentResponse{
-        private long standardId;
+        private long boardStandardId;
         private String standardContent;
         private LocalDateTime dateCreated;
         private LocalDateTime dateModified;
         private MemberDto.Response member;
-
     }
 }

@@ -2,6 +2,8 @@ package com.splashzone.member.mapper;
 
 import com.splashzone.boardclub.dto.BoardClubDto;
 import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.boardclubcomment.dto.BoardClubCommentDto;
+import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.member.dto.MemberDto;
@@ -24,4 +26,5 @@ public interface MemberMapper {
 
     BoardClubDto.Response boardClubToBoardClubResponse(BoardClub boardClub);
 
+    BoardClubCommentDto.Response boardClubCommentToBoardClubCommentResponse(BoardClubComment boardClubComment);
 }

@@ -3,6 +3,8 @@ package com.splashzone.member.controller;
 import com.splashzone.auth.userdetails.MemberDetails;
 import com.splashzone.boardclub.dto.BoardClubDto;
 import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.boardclubcomment.dto.BoardClubCommentDto;
+import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.dto.MultiResponseDto;
@@ -22,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -49,7 +52,7 @@ public class MemberController {
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
         Member member = mapper.memberPostToMember(requestBody);
         member.setMemberStatus(Member.MemberStatus.ACTIVE);
-
+        member.setProfileImageUrl("image/default.png");
         Member createdMember = memberService.createMember(member);
         URI location = UriCreator.createUri(MEMBER_DEFAULT_URL, createdMember.getMemberId());
 
@@ -72,10 +75,17 @@ public class MemberController {
 
         patchDto.setMemberId(memberId);
 
-        Member member =
-                memberService.updateMember(mapper.memberPatchToMember(patchDto));
+        Member member = memberService.updateMember(mapper.memberPatchToMember(patchDto));
 
         return ResponseEntity.ok(mapper.memberToMemberResponse(member));
+    }
+
+    @PatchMapping("/image/{member-id}")
+    public ResponseEntity<String> patchImage( @RequestPart MultipartFile multipartFile,
+                                              @PathVariable("member-id") @Positive Long memberId) {
+        String uploadedFileName = memberService.uploadImage(multipartFile, memberId);
+
+        return new ResponseEntity<>(uploadedFileName, HttpStatus.OK);
     }
 
     @GetMapping("/{member-id}")
@@ -144,6 +154,17 @@ public class MemberController {
         return ResponseEntity.ok(new MultiResponseDto<>(boardClubResponses, boardClubPage));
     }
 
+    @GetMapping("/mypage/clubcomments/{member-id}")
+    public ResponseEntity getMyClubComments(@PathVariable("member-id") @Positive Long memberId,
+                                            @Positive @RequestParam int page,
+                                            @Positive @RequestParam int size) {
+
+        Page<BoardClubComment> boardClubCommentPage = memberService.findClubCommentsByMember(memberId, page - 1, size);
+        List<BoardClubCommentDto.Response> boardClubCommentResponses = boardClubCommentPage.getContent().stream()
+                .map(mapper::boardClubCommentToBoardClubCommentResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new MultiResponseDto<>(boardClubCommentResponses, boardClubCommentPage));
+    }
 //    @DeleteMapping("/logout")
 //    public ResponseEntity logout(@RequestHeader("Access") @Positive String accessToken) {
 //        log.info(accessToken);

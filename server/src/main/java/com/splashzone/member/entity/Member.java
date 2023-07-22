@@ -3,6 +3,7 @@ package com.splashzone.member.entity;
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.boardstandardcomment.entity.BoardStandardComment;
 import com.splashzone.tracker.entity.Tracker;
 import lombok.*;
 
@@ -58,29 +59,6 @@ public class Member {
     @Column(name = "MEMBER_STATUS", nullable = false)
     private MemberStatus memberStatus;
 
-
-
-//    @Enumerated(value = EnumType.STRING)
-//    @Column(name = "MEMBER_STATUS", length = 20, nullable = false)
-//    private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
-
-//    public enum MemberStatus{
-//        MEMBER_ACTIVE("활동중"),
-//        MEMBER_SLEEP("휴면 상태"),
-//        MEMBER_QUIT("탈퇴 상태");
-//
-//        @Getter
-//        private String status;
-//
-//        MemberStatus(String status) {
-//            this.status = status;
-//        }
-//    }
-//    public enum MemberRole {
-//        ROLE_USER,
-//        ROLE_ADMIN
-//    }
-
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<BoardStandard> boardStandards = new ArrayList<>();
@@ -91,15 +69,15 @@ public class Member {
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private List<BoardStandardComment> boardStandardComments = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<BoardClubComment> boardClubComments = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<Tracker> trackers = new ArrayList<>();
-
-//    @Builder.Default
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
-//    private List<Like> likes = new ArrayList<>();
 
 //    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
 //    private Dolphin dolphin;
@@ -115,16 +93,14 @@ public class Member {
             this.status = status;
         }
     }
+
     public Member(String email, String name, String password, String nickname, String profileImageUrl) {
         this.email = email;
         this.name = name;
         this.password = password;
         this.nickname = nickname;
         this.memberStatus = MemberStatus.ACTIVE;
-
-        this.profileImageUrl = (profileImageUrl != null && !profileImageUrl.isEmpty())
-                ? profileImageUrl
-                : "default.png";
+        this.profileImageUrl = "image/default.png";
     }
 
     @ElementCollection(fetch = FetchType.EAGER)

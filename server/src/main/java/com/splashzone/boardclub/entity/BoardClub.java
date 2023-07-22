@@ -73,7 +73,6 @@ public class BoardClub extends Auditable {
 //    @OneToMany(mappedBy = "boardClub")
 //    private List<Like> likes = new ArrayList<>();
 
-//    @Builder.Default
     @Column(name = "LIKE_COUNT", nullable = true)
     private int likeCount;
 
@@ -91,7 +90,6 @@ public class BoardClub extends Auditable {
     }
 
     public void changeBoardClub(BoardClub boardClub, List<BoardClubTag> clubTags) {
-
         this.title = boardClub.getTitle();
         this.content = boardClub.getContent();
         this.dueDate = boardClub.getDueDate();

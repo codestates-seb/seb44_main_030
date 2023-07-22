@@ -15,9 +15,6 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface BoardClubMapper {
     default BoardClub boardClubPostDtotoBoardClub(BoardClubDto.Post requestBody) {
-//        Member member = new Member();
-//        member.setMemberId(requestBody.getMemberId());
-
         return BoardClub.builder()
                 .title(requestBody.getTitle())
                 .content(requestBody.getContent())
@@ -34,9 +31,6 @@ public interface BoardClubMapper {
     }
 
     default BoardClub boardClubPatchDtotoBoardClub(BoardClubDto.Patch requestBody, Long boardClubId) {
-//        Member member = new Member();
-//        member.setMemberId(requestBody.getMemberId());
-
         return BoardClub.builder()
                 .boardClubId(boardClubId)
                 .title(requestBody.getTitle())
@@ -78,7 +72,7 @@ public interface BoardClubMapper {
     }
 
     default List<BoardClubDto.Response> boardClubsToBoardClubResponseDtos(List<BoardClub> boardClubs) {
-        List<BoardClubDto.Response> list = new ArrayList<BoardClubDto.Response>(boardClubs.size());
+        List<BoardClubDto.Response> list = new ArrayList<>(boardClubs.size());
         for (BoardClub boardClub : boardClubs) {
             list.add(boardClubToBoardClubResponseDto(boardClub));
         }

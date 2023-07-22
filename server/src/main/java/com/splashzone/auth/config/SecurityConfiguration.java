@@ -78,6 +78,10 @@ public class SecurityConfiguration {
                                 .antMatchers(HttpMethod.PATCH, "/clubcomments").hasRole("USER")
                                 .antMatchers(HttpMethod.GET, "/clubcomments").permitAll()
                                 .antMatchers(HttpMethod.DELETE, "/clubcomments").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/standardcomments").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/standardcomments").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/standardcomments").permitAll()
+                                .antMatchers(HttpMethod.DELETE, "/standardcomments").hasRole("USER")
                                 .antMatchers(HttpMethod.POST, "/trackers").hasRole("USER")
                                 .antMatchers(HttpMethod.PATCH, "/trackers").hasRole("USER")
                                 .antMatchers(HttpMethod.GET, "/trackers").permitAll()
@@ -110,11 +114,12 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080/",
-                "http://13.209.142.240:8080/",
-                "http://localhost:5173/",
-                "http://127.0.0.1:5173/",
-                "http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("https://qwerasdfzxcvasdf.netlify.app/ ",
+                                                      "http://13.209.142.240:8080/",
+                                                      "http://127.0.0.1:5173/",
+                                                      "http://localhost:5173/",
+                                                      "http://localhost:8080/",
+                                                      "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Refresh"));

@@ -40,13 +40,13 @@ public class TrackerController {
 
     @PostMapping
     public ResponseEntity postTracker(Authentication authentication,
-                                      @Valid @RequestBody TrackerDto.Post requestBody) throws ParseException {
+                                      @Valid @RequestBody TrackerDto.Post requestBody) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
 
-        Tracker tracker = trackerMapper.trackerPostDtoToTracker(requestBody);
-        tracker.setMember(member);
+        Tracker tracker = trackerMapper.trackerPostDtoToTracker(requestBody, member);
+
         Tracker postTracker = trackerService.createTracker(tracker);
         URI location = UriCreator.createUri(TRACKER_DEFAULT_URL, postTracker.getTrackerId());
 
@@ -56,24 +56,25 @@ public class TrackerController {
     @PatchMapping("/{tracker-id}")
     public ResponseEntity patchTracker(Authentication authentication,
                                        @PathVariable("tracker-id") @Positive Long trackerId,
-                                       @Valid @RequestBody TrackerDto.Patch requestBody) throws ParseException {
+                                       @Valid @RequestBody TrackerDto.Patch requestBody) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
 
-        Tracker tracker = trackerMapper.trackerPatchDtoToTracker(requestBody, trackerId);
-        tracker.setMember(member);
+        Tracker tracker = trackerMapper.trackerPatchDtoToTracker(requestBody, trackerId, member);
 
         Tracker patchTracker = trackerService.updateTracker(tracker);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(patchTracker), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(trackerMapper.trackerToTrackerResponseDto(patchTracker)), HttpStatus.OK);
     }
 
     @GetMapping("/{tracker-id}")
     public ResponseEntity getTracker(@PathVariable("tracker-id") @Positive Long trackerId) {
         Tracker tracker = trackerService.findTracker(trackerId);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(trackerMapper.trackerToTrackerResponseDto(tracker)), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(trackerMapper.trackerToTrackerResponseDto(tracker)), HttpStatus.OK);
     }
 
     @GetMapping
@@ -92,12 +93,14 @@ public class TrackerController {
         if (authentication == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
                 trackerService.findTracker(trackerId).getMember())) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
+
         trackerService.deleteTracker(trackerId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
