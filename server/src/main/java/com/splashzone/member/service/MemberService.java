@@ -112,6 +112,11 @@ public class MemberService {
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member fm = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        String preImageUrl = fm.getProfileImageUrl();
+
+        if(!"image/default.png".equals(preImageUrl)) {
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, preImageUrl));
+        }
         fm.setProfileImageUrl(fileName);
         memberRepository.save(fm);
 
