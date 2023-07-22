@@ -14,6 +14,8 @@ import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
 import com.splashzone.member.entity.Member;
 import com.splashzone.member.repository.MemberRepository;
+import com.splashzone.tracker.entity.Tracker;
+import com.splashzone.tracker.repository.TrackerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,33 +32,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
     private final DolphinRepository dolphinRepository;
     private final BoardClubRepository boardClubRepository;
     private final BoardStandardRepository boardStandardRepository;
     private final BoardClubCommentRepository boardClubCommentRepository;
-
-    @Autowired
-    public MemberService(MemberRepository memberRepository,
-                         PasswordEncoder passwordEncoder,
-                         CustomAuthorityUtils authorityUtils,
-                         DolphinRepository dolphinRepository,
-                         BoardClubRepository boardClubRepository,
-                         BoardStandardRepository boardStandardRepository,
-                         BoardClubCommentRepository boardClubCommentRepository) {
-
-        this.memberRepository = memberRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authorityUtils = authorityUtils;
-        this.dolphinRepository = dolphinRepository;
-        this.boardClubRepository = boardClubRepository;
-        this.boardStandardRepository = boardStandardRepository;
-        this.boardClubCommentRepository = boardClubCommentRepository;
-    }
+    private final TrackerRepository trackerRepository;
 
     public Member createMember(Member member) {
         Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
@@ -131,19 +117,24 @@ public class MemberService {
         return findMember;
     }
 
-    public Page<BoardStandard> findStandardBoardsByMember(Long memberId, int page, int size) {
+    public Page<BoardStandard> findStandardBoardsByMember(Long memberId, Integer page, Integer size) {
         Member member = findVerifiedMember(memberId);
         return boardStandardRepository.findByMember(member, PageRequest.of(page, size, Sort.by("boardStandardId").descending()));
     }
 
     // memberId로 findByMember 방법 고려 -> clubRepository
-    public Page<BoardClub> findClubBoardsByMember(Long memberId, int page, int size) {
+    public Page<BoardClub> findClubBoardsByMember(Long memberId, Integer page, Integer size) {
         Member member = findVerifiedMember(memberId);
         return boardClubRepository.findByMember(member, PageRequest.of(page, size, Sort.by("boardClubId").descending()));
     }
 
-    public Page<BoardClubComment> findClubCommentsByMember(Long memberId, int page, int size) {
+    public Page<BoardClubComment> findClubCommentsByMember(Long memberId, Integer page, Integer size) {
         Member member = findVerifiedMember(memberId);
         return boardClubCommentRepository.findByMember(member, PageRequest.of(page, size, Sort.by("boardClubCommentId").descending()));
+    }
+
+    public Page<Tracker> findTrackersByMember(Long memberId, Integer page, Integer size) {
+        Member member = findVerifiedMember(memberId);
+        return trackerRepository.findByMember(member, PageRequest.of(page, size, Sort.by("trackerId").descending()));
     }
 }

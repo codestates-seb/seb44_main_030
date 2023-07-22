@@ -15,7 +15,11 @@ import com.splashzone.member.dto.MemberDto;
 import com.splashzone.member.mapper.MemberMapper;
 import com.splashzone.member.service.MemberService;
 import com.splashzone.member.entity.Member;
+import com.splashzone.tracker.dto.TrackerDto;
+import com.splashzone.tracker.entity.Tracker;
+import com.splashzone.tracker.mapper.TrackerMapper;
 import com.splashzone.utils.UriCreator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,18 +39,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/members")
-@Slf4j
+@Validated
+@RequiredArgsConstructor
 public class MemberController {
     private final static String MEMBER_DEFAULT_URL = "/members";
     private final MemberService memberService;
     private final MemberMapper mapper;
-
-    @Autowired
-    public MemberController(MemberService memberService,
-                            MemberMapper mapper) {
-        this.memberService = memberService;
-        this.mapper = mapper;
-    }
+    private final TrackerMapper trackerMapper;
 
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
@@ -88,8 +88,8 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity getMembers(@Positive @RequestParam int page,
-                                     @Positive @RequestParam int size) {
+    public ResponseEntity getMembers(@Positive @RequestParam Integer page,
+                                     @Positive @RequestParam Integer size) {
         Page<Member> pageMembers = memberService.findMembers(page - 1, size);
         List<Member> members = pageMembers.getContent();
         return ResponseEntity.ok(new MultiResponseDto(mapper.membersToMemberResponses(members), pageMembers));
@@ -110,8 +110,8 @@ public class MemberController {
     @GetMapping("/mypage/standards/{member-id}")
     public ResponseEntity getMyStandardBoards(Authentication authentication,
                                               @PathVariable("member-id") @Positive Long memberId,
-                                              @Positive @RequestParam int page,
-                                              @Positive @RequestParam int size) {
+                                              @Positive @RequestParam Integer page,
+                                              @Positive @RequestParam Integer size) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
@@ -129,15 +129,14 @@ public class MemberController {
     @GetMapping("/mypage/clubs/{member-id}")
     public ResponseEntity getMyClubBoards(Authentication authentication,
                                           @PathVariable("member-id") @Positive Long memberId,
-                                          @Positive @RequestParam int page,
-                                          @Positive @RequestParam int size) {
+                                          @Positive @RequestParam Integer page,
+                                          @Positive @RequestParam Integer size) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
                 memberService.findMember(memberId))) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
-
 
         Page<BoardClub> boardClubPage = memberService.findClubBoardsByMember(memberId, page - 1, size);
         List<BoardClubDto.Response> boardClubResponses = boardClubPage.getContent().stream()
@@ -147,9 +146,16 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/clubcomments/{member-id}")
-    public ResponseEntity getMyClubComments(@PathVariable("member-id") @Positive Long memberId,
-                                            @Positive @RequestParam int page,
-                                            @Positive @RequestParam int size) {
+    public ResponseEntity getMyClubComments(Authentication authentication,
+                                            @PathVariable("member-id") @Positive Long memberId,
+                                            @Positive @RequestParam Integer page,
+                                            @Positive @RequestParam Integer size) {
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                memberService.findMember(memberId))) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
         Page<BoardClubComment> boardClubCommentPage = memberService.findClubCommentsByMember(memberId, page - 1, size);
         List<BoardClubCommentDto.Response> boardClubCommentResponses = boardClubCommentPage.getContent().stream()
@@ -157,10 +163,30 @@ public class MemberController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new MultiResponseDto<>(boardClubCommentResponses, boardClubCommentPage));
     }
+
+    @GetMapping("/mypage/trackers/{member-id}")
+    public ResponseEntity getMyTrackers(Authentication authentication,
+                                        @PathVariable("member-id") @Positive Long memberId,
+                                        @Positive @RequestParam Integer page,
+                                        @Positive @RequestParam Integer size) {
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                memberService.findMember(memberId))) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
+        Page<Tracker> pageTrackers = memberService.findTrackersByMember(memberId, page - 1, size);
+        List<Tracker> trackers = pageTrackers.getContent();
+
+        return ResponseEntity.ok(new MultiResponseDto<>(trackerMapper.trackersToTrackerResponseDtos(trackers), pageTrackers));
+    }
+
 //    @DeleteMapping("/logout")
 //    public ResponseEntity logout(@RequestHeader("Access") @Positive String accessToken) {
 //        log.info(accessToken);
 //        accessTokenService.deleteAccessToken(accessToken);
 //        return new ResponseEntity(HttpStatus.OK);
 //    }
+
 }

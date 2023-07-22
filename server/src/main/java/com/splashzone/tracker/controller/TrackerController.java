@@ -77,6 +77,7 @@ public class TrackerController {
                 new SingleResponseDto<>(trackerMapper.trackerToTrackerResponseDto(tracker)), HttpStatus.OK);
     }
 
+    /*
     @GetMapping
     public ResponseEntity getTrackers(@Positive @RequestParam Integer page,
                                       @Positive @RequestParam Integer size) {
@@ -86,6 +87,7 @@ public class TrackerController {
         return new ResponseEntity<>(
                 new MultiResponseDto<>(trackerMapper.trackersToTrackerResponseDtos(trackers), pageTrackers), HttpStatus.OK);
     }
+     */
 
     @DeleteMapping("/{tracker-id}")
     public ResponseEntity deleteTracker(Authentication authentication,

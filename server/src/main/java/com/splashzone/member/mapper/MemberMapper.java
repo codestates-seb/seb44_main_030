@@ -8,6 +8,8 @@ import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.member.dto.MemberDto;
 import com.splashzone.member.entity.Member;
+import com.splashzone.tracker.dto.TrackerDto;
+import com.splashzone.tracker.entity.Tracker;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -27,4 +29,6 @@ public interface MemberMapper {
     BoardClubDto.Response boardClubToBoardClubResponse(BoardClub boardClub);
 
     BoardClubCommentDto.Response boardClubCommentToBoardClubCommentResponse(BoardClubComment boardClubComment);
+
+    TrackerDto.Response trackerTotrackerResponse(Tracker tracker);
 }
