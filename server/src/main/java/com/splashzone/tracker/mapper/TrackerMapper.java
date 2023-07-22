@@ -10,17 +10,18 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface TrackerMapper {
-    default Tracker trackerPostDtoToTracker(TrackerDto.Post requestBody) {
+    default Tracker trackerPostDtoToTracker(TrackerDto.Post requestBody, Member member) {
         return Tracker.builder()
                 .title(requestBody.getTitle())
                 .content(requestBody.getContent())
                 .todayDate(requestBody.getTodayDate())
                 .exerciseStartTime(requestBody.getExerciseStartTime())
                 .exerciseEndTime(requestBody.getExerciseEndTime())
+                .member(member)
                 .build();
     }
 
-    default Tracker trackerPatchDtoToTracker(TrackerDto.Patch requestBody, Long trackerId) {
+    default Tracker trackerPatchDtoToTracker(TrackerDto.Patch requestBody, Long trackerId, Member member) {
         return Tracker.builder()
                 .trackerId(trackerId)
                 .title(requestBody.getTitle())
@@ -28,13 +29,14 @@ public interface TrackerMapper {
                 .todayDate(requestBody.getTodayDate())
                 .exerciseStartTime(requestBody.getExerciseStartTime())
                 .exerciseEndTime(requestBody.getExerciseEndTime())
+                .member(member)
                 .build();
     }
 
     default TrackerDto.Response trackerToTrackerResponseDto(Tracker tracker) {
         return TrackerDto.Response.builder()
                 .trackerId(tracker.getTrackerId())
-                .memberId(tracker.getMember().getMemberId())
+                .nickname(tracker.getMember().getNickname())
                 .title(tracker.getTitle())
                 .content(tracker.getContent())
                 .todayDate(tracker.getTodayDate())

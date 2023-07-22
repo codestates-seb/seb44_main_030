@@ -24,34 +24,41 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class TrackerService {
-    private final TrackerRepository trackerRepository;
-    private final TrackerMapper trackerMapper;
     private final MemberService memberService;
+    private final TrackerRepository trackerRepository;
 
-    public Tracker createTracker(Tracker tracker) throws ParseException {
-        Member findMember = memberService.findVerifiedMember(tracker.getMember().getMemberId());
+    public Tracker createTracker(Tracker tracker) {
+        try {
+            Member findMember = memberService.findVerifiedMember(tracker.getMember().getMemberId());
 
-        Tracker reBuildTracker = Tracker.builder()
-                .title(tracker.getTitle())
-                .content(tracker.getContent())
-                .todayDate(tracker.getTodayDate())
-                .exerciseStartTime(tracker.getExerciseStartTime())
-                .exerciseEndTime(tracker.getExerciseEndTime())
-                .exerciseTime(tracker.calculateExerciseTime(tracker.getExerciseStartTime(), tracker.getExerciseEndTime()))
-                .member(findMember)
-                .build();
+            Tracker reBuildTracker = Tracker.builder()
+                    .title(tracker.getTitle())
+                    .content(tracker.getContent())
+                    .todayDate(tracker.getTodayDate())
+                    .exerciseStartTime(tracker.getExerciseStartTime())
+                    .exerciseEndTime(tracker.getExerciseEndTime())
+                    .exerciseTime(tracker.calculateExerciseTime(tracker.getExerciseStartTime(), tracker.getExerciseEndTime()))
+                    .member(findMember)
+                    .build();
 
-        findMember.getTrackers().add(reBuildTracker);
+            findMember.getTrackers().add(reBuildTracker);
 
-        return trackerRepository.save(reBuildTracker);
+            return trackerRepository.save(reBuildTracker);
+        } catch (ParseException parseException) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_DATE_FORMAT);
+        }
     }
 
-    public Tracker updateTracker(Tracker tracker) throws ParseException {
-        Tracker findTracker = findVerifiedTracker(tracker.getTrackerId());
+    public Tracker updateTracker(Tracker tracker) {
+        try {
+            Tracker findTracker = findVerifiedTracker(tracker.getTrackerId());
 
-        findTracker.changeTracker(tracker);
+            findTracker.changeTracker(tracker);
 
-        return trackerRepository.save(findTracker);
+            return trackerRepository.save(findTracker);
+        } catch (ParseException parseException) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_DATE_FORMAT);
+        }
     }
 
     @Transactional(readOnly = true)

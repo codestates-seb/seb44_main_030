@@ -14,6 +14,7 @@ public enum ExceptionCode {
     LIKE_EXISTS(409, "Like exists"),
     LIKE_NOT_FOUND(404, "Like not found"),
     TRACKER_NOT_FOUND(404, "Tracker not found"),
+    INVALID_DATE_FORMAT(400, "Invalid date format"),
     DOLPHIN_NOT_FOUND(404, "Dolphin not found");
 
     private final int status;
