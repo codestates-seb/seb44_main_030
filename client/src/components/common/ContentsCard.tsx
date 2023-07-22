@@ -150,8 +150,8 @@ export default function ContentsCard({
             </TitleContentsTagWarp>
             <InfoContainer>
                 <UserInfo>
-                    <img src={memberProfileImg} className="user-icon" />
-                    <span onClick={handleNavigateProfile}>{nickname}</span>
+                    <img src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${member?.profileImageUrl}`} className="user-icon" />
+                    <span onClick={handleNavigateProfile}>{member.nickname}</span>
                 </UserInfo>
                 <ContentsInfo>
                     {communityProps?.like &&

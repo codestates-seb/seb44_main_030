@@ -108,10 +108,10 @@ const Comment = ({ commentData, boardStandardId }: CommentProps) => {
         }
     };
 
-    const handleCancelEdit = useCallback(() => {
+    const handleCancelEdit = () => {
         reset();
         setIsEditOn((prev) => !prev);
-    }, []);
+    };
 
     // 날짜 어떻게 받을 건지 상의 필요.(포맷팅 된 상태 or Not)
     // 날짜 포맷팅 임의로

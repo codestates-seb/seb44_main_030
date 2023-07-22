@@ -50,7 +50,7 @@ const CommunityDetail = () => {
     }, []);
 
     const handleNavigateProfile = useCallback(() => {
-        navigate(`/mypage`);
+        navigate(`/mypage`,{state: detailCommunityData?.member?.memberId});
     }, [detailCommunityData?.member?.memberId]);
 
     useEffect(() => {

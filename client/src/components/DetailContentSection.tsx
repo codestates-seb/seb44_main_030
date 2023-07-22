@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import {useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import LikeIcon from '../assets/Like.svg';
@@ -41,15 +41,19 @@ const DetailContentSection = ({
     if (!postId) {
         throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
     }
+
     const { handleDeletePost, boardType } = useDeletePost(postId);
-    const mockMemberId = 3;//로그인아이디로 변경
+    const mockMemberId = 3; //로그인아이디로 변경
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const handleEdit = useCallback(() => {
+
+    //게시글 수정: store에 데이터를 저장하고, create 페이지로 이동.
+    const handleEdit = () => {
         dispatch(savePostData({ postId, tag, title, content }));
         const boardTypeParam = boardType === 'standards' ? 'community' : 'club';
         navigate(`/${boardTypeParam}/create`, { state: 'EditMode' });
-    }, [boardType]);
+    };
+
     return (
         <ContentSection>
             <h1>내용</h1>

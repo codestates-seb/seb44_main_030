@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-const initialState = { postId: '', tag: '', title: '', content: '' };
+type initailType = { postId: string, tag: string, title:string, content: string}
+const initialState:initailType = { postId: '', tag: '', title: '', content: '' };
 
 const editDataSlice = createSlice({
   name: 'editData',

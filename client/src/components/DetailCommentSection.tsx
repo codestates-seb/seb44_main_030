@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import Comment from '../components/Comment.tsx';
 import { useForm, SubmitHandler } from 'react-hook-form';
