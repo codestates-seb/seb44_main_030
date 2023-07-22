@@ -12,15 +12,12 @@ import java.time.LocalDateTime;
 public class TrackerDto {
     @Getter
     public static class Post {
-//        @Positive
-//        private Long memberId;
-
-//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-//        private LocalDate trackerDate;
-
         private String title;
 
         private String content;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+        private LocalDate todayDate;
 
 //        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private String exerciseStartTime;
@@ -31,18 +28,12 @@ public class TrackerDto {
 
     @Getter
     public static class Patch {
-//        @Positive
-//        private Long memberId;
-//
-//        @Positive
-//        private Long trackerId;
-
-//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-//        private LocalDate trackerDate;
-
         private String title;
 
         private String content;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+        private LocalDate todayDate;
 
 //        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private String exerciseStartTime;
@@ -60,12 +51,12 @@ public class TrackerDto {
         @Positive
         private Long memberId;
 
-//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-//        private LocalDate trackerDate;
-
         private String title;
 
         private String content;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+        private LocalDate todayDate;
 
         private Long exerciseTime;
 

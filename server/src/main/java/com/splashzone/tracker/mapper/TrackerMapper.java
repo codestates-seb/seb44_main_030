@@ -14,6 +14,7 @@ public interface TrackerMapper {
         return Tracker.builder()
                 .title(requestBody.getTitle())
                 .content(requestBody.getContent())
+                .todayDate(requestBody.getTodayDate())
                 .exerciseStartTime(requestBody.getExerciseStartTime())
                 .exerciseEndTime(requestBody.getExerciseEndTime())
                 .build();
@@ -24,6 +25,7 @@ public interface TrackerMapper {
                 .trackerId(trackerId)
                 .title(requestBody.getTitle())
                 .content(requestBody.getContent())
+                .todayDate(requestBody.getTodayDate())
                 .exerciseStartTime(requestBody.getExerciseStartTime())
                 .exerciseEndTime(requestBody.getExerciseEndTime())
                 .build();
@@ -35,6 +37,7 @@ public interface TrackerMapper {
                 .memberId(tracker.getMember().getMemberId())
                 .title(tracker.getTitle())
                 .content(tracker.getContent())
+                .todayDate(tracker.getTodayDate())
                 .exerciseTime(tracker.getExerciseTime())
                 .createdAt(tracker.getCreatedAt())
                 .modifiedAt(tracker.getModifiedAt())
