@@ -12,6 +12,7 @@ import axios from 'axios';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
 import { useMutation } from '@tanstack/react-query';
 import { usePostHeader } from '../api/getHeader.ts';
+import ClubMapContainer from '../components/clubMap.tsx';
 
 interface BackgroundProps {
     $image: string;
@@ -27,11 +28,42 @@ const ClubDetail = () => {
     const numberBoardClubId = boardClubId ? Number(boardClubId) : 0;
     const { status, data: clubDetail, error } = useClubBoardDetail(numberBoardClubId);
 
-    let boardClubStatus, contact, content, capacity, createdAt, dueDate, memberId, modifiedAt, tags, title, view;
+    let boardClubStatus,
+        contact,
+        content,
+        capacity,
+        createdAt,
+        dueDate,
+        memberId,
+        modifiedAt,
+        tags,
+        title,
+        view,
+        addressName,
+        placeName,
+        latitude,
+        likeCount,
+        longitude;
 
     if (clubDetail && clubDetail.data) {
-        ({ boardClubStatus, contact, content, capacity, createdAt, dueDate, memberId, modifiedAt, tags, title, view } =
-            clubDetail.data);
+        ({
+            boardClubStatus,
+            contact,
+            content,
+            capacity,
+            createdAt,
+            dueDate,
+            memberId,
+            modifiedAt,
+            tags,
+            title,
+            view,
+            addressName,
+            placeName,
+            latitude,
+            likeCount,
+            longitude,
+        } = clubDetail.data);
     }
     console.log(clubDetail);
 
@@ -77,6 +109,14 @@ const ClubDetail = () => {
         window.scrollTo(0, 0);
     }, []);
 
+    const mapdata = {
+        addressName,
+        placeName,
+        latitude,
+        longitude,
+    };
+    console.log(mapdata);
+
     return (
         <Background $image={backgroundImg} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <PostContainer>
@@ -114,6 +154,7 @@ const ClubDetail = () => {
                         </div> */}
                     </ContentInfo>
                 </TitleSection>
+                <ClubMapContainer mapdata={mapdata} />
                 <ContentSection>
                     <h1>내용</h1>
                     <p dangerouslySetInnerHTML={{ __html: content }} />
