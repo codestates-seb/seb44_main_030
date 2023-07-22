@@ -81,8 +81,8 @@ public class MemberController {
     }
 
     @PatchMapping("/image/{member-id}")
-    public ResponseEntity<String> patchImage( @RequestPart MultipartFile multipartFile,
-                                              @PathVariable("member-id") @Positive Long memberId) {
+    public ResponseEntity<String> patchImage(@RequestPart MultipartFile multipartFile,
+                                             @PathVariable("member-id") @Positive Long memberId) {
         String uploadedFileName = memberService.uploadImage(multipartFile, memberId);
 
         return new ResponseEntity<>(uploadedFileName, HttpStatus.OK);
@@ -155,9 +155,17 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/clubcomments/{member-id}")
-    public ResponseEntity getMyClubComments(@PathVariable("member-id") @Positive Long memberId,
+    public ResponseEntity getMyClubComments(Authentication authentication,
+                                            @PathVariable("member-id") @Positive Long memberId,
                                             @Positive @RequestParam int page,
                                             @Positive @RequestParam int size) {
+
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                memberService.findMember(memberId))) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
         Page<BoardClubComment> boardClubCommentPage = memberService.findClubCommentsByMember(memberId, page - 1, size);
         List<BoardClubCommentDto.Response> boardClubCommentResponses = boardClubCommentPage.getContent().stream()
@@ -165,6 +173,8 @@ public class MemberController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new MultiResponseDto<>(boardClubCommentResponses, boardClubCommentPage));
     }
+
+
 //    @DeleteMapping("/logout")
 //    public ResponseEntity logout(@RequestHeader("Access") @Positive String accessToken) {
 //        log.info(accessToken);

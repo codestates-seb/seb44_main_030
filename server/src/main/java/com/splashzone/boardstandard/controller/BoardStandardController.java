@@ -61,7 +61,16 @@ public class BoardStandardController {
     public ResponseEntity patchStandard(Authentication authentication,
                                         @PathVariable("standard-id") @Positive Long boardStandardId,
                                         @Valid @RequestBody BoardStandardDto.Patch patchDto) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardStandardService.findStandard(boardStandardId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
         System.out.println("patchStandard MEMBER: " + member);

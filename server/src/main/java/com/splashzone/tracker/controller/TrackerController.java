@@ -57,7 +57,16 @@ public class TrackerController {
     public ResponseEntity patchTracker(Authentication authentication,
                                        @PathVariable("tracker-id") @Positive Long trackerId,
                                        @Valid @RequestBody TrackerDto.Patch requestBody) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                trackerService.findTracker(trackerId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
 

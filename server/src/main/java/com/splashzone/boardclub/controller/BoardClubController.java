@@ -64,7 +64,16 @@ public class BoardClubController {
     public ResponseEntity patchBoardClub(Authentication authentication,
                                          @PathVariable("club-id") @Positive Long boardClubId,
                                          @Valid @RequestBody BoardClubDto.Patch patchDto) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardClubService.findBoardClub(boardClubId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
         System.out.println("patchClub MEMBER: " + member);

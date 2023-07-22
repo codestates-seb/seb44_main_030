@@ -55,7 +55,16 @@ public class BoardStandardCommentController {
     public ResponseEntity patchBoardStandardComment(Authentication authentication,
                                                     @PathVariable("standard-comment-id") @Positive Long boardStandardCommentId,
                                                     @Valid @RequestBody BoardStandardCommentDto.Patch requestBody) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardStandardCommentService.findBoardStandardComment(boardStandardCommentId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
 
