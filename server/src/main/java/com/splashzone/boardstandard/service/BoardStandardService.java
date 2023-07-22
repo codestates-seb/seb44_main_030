@@ -44,13 +44,13 @@ public class BoardStandardService {
     }
 
     public BoardStandard updateStandard(BoardStandard boardStandard) {
-        BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandard.getStandardId());
+        BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandard.getBoardStandardId());
         findBoardStandard.changeBoardStandard(boardStandard);
         return boardStandardRepository.save(findBoardStandard);
     }
 
-    public BoardStandard findStandard(Long standardId) {
-        BoardStandard boardStandard = boardStandardRepository.findById(standardId).orElseThrow(() -> new RuntimeException());
+    public BoardStandard findStandard(Long boardStandardId) {
+        BoardStandard boardStandard = boardStandardRepository.findById(boardStandardId).orElseThrow(() -> new RuntimeException());
         //뷰수 추가
         boardStandard.setView(boardStandard.getView() + 1);
         boardStandardRepository.save(boardStandard);
@@ -58,14 +58,14 @@ public class BoardStandardService {
     }
 
     public Page<BoardStandard> findStandards(int page, int size) {
-        return boardStandardRepository.findByBoardStandard(PageRequest.of(page, size, Sort.by("standardId").descending()));
+        return boardStandardRepository.findByBoardStandard(PageRequest.of(page, size, Sort.by("boardStandardId").descending()));
     }
 
     //TODO 실제 삭제 말고 상태만 바뀌게 코드 변경하기
-    public void deleteStandard(Long standardId) {
-        BoardStandard boardStandard = boardStandardRepository.findById(standardId).orElseThrow(() -> new RuntimeException());
+    public void deleteStandard(Long boardStandardId) {
+        BoardStandard boardStandard = boardStandardRepository.findById(boardStandardId).orElseThrow(() -> new RuntimeException());
         boardStandardRepository.delete(boardStandard);
-//        BoardStandard findBoardStandard = findVerifiedBoardStandard(standardId);
+//        BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandardId);
 //        boardStandardRepository.delete(findBoardStandard);
     }
 
@@ -75,12 +75,12 @@ public class BoardStandardService {
     }
 
     //조회수 증가
-    public int increaseViews(Long standardId) {
-        return boardStandardRepository.updateViews(standardId);
+    public int increaseViews(Long boardStandardId) {
+        return boardStandardRepository.updateViews(boardStandardId);
     }
 
-    public BoardStandard findVerifiedBoardStandard(Long standardId) {
-        Optional<BoardStandard> optionalBoardStandard = boardStandardRepository.findById(standardId);
+    public BoardStandard findVerifiedBoardStandard(Long boardStandardId) {
+        Optional<BoardStandard> optionalBoardStandard = boardStandardRepository.findById(boardStandardId);
         BoardStandard findBoardStandard = optionalBoardStandard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_STANDARD_NOT_FOUND));
         return findBoardStandard;
     }

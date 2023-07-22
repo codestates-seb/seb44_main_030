@@ -78,7 +78,7 @@ public interface BoardClubMapper {
     }
 
     default List<BoardClubDto.Response> boardClubsToBoardClubResponseDtos(List<BoardClub> boardClubs) {
-        List<BoardClubDto.Response> list = new ArrayList<BoardClubDto.Response>(boardClubs.size());
+        List<BoardClubDto.Response> list = new ArrayList<>(boardClubs.size());
         for (BoardClub boardClub : boardClubs) {
             list.add(boardClubToBoardClubResponseDto(boardClub));
         }

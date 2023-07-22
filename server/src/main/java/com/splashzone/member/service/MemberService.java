@@ -133,7 +133,7 @@ public class MemberService {
 
     public Page<BoardStandard> findStandardBoardsByMember(Long memberId, int page, int size) {
         Member member = findVerifiedMember(memberId);
-        return boardStandardRepository.findByMember(member, PageRequest.of(page, size, Sort.by("StandardId").descending()));
+        return boardStandardRepository.findByMember(member, PageRequest.of(page, size, Sort.by("boardStandardId").descending()));
     }
 
     // memberId로 findByMember 방법 고려 -> clubRepository

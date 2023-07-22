@@ -34,6 +34,7 @@ public class TrackerService {
         Tracker reBuildTracker = Tracker.builder()
                 .title(tracker.getTitle())
                 .content(tracker.getContent())
+                .todayDate(tracker.getTodayDate())
                 .exerciseStartTime(tracker.getExerciseStartTime())
                 .exerciseEndTime(tracker.getExerciseEndTime())
                 .exerciseTime(tracker.calculateExerciseTime(tracker.getExerciseStartTime(), tracker.getExerciseEndTime()))

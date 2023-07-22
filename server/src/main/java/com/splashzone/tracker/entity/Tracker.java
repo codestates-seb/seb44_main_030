@@ -33,6 +33,9 @@ public class Tracker extends Auditable {
     @Column(name = "CONTENT", nullable = false, length = 200)
     private String content;
 
+    @Column(name = "TODAY_DATE", nullable = false)
+    private LocalDate todayDate;
+
     @Column(name = "EXERCISE_START_TIME", nullable = false)
     private String exerciseStartTime;
 
