@@ -100,10 +100,7 @@ public class Member {
         this.password = password;
         this.nickname = nickname;
         this.memberStatus = MemberStatus.ACTIVE;
-
-        this.profileImageUrl = (profileImageUrl != null && !profileImageUrl.isEmpty())
-                ? profileImageUrl
-                : "default.png";
+        this.profileImageUrl = "image/default.png";
     }
 
     @ElementCollection(fetch = FetchType.EAGER)
