@@ -5,7 +5,6 @@ import PageButton from '../components/PageButton';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import ScrollBanner from '../components/common/ScrollBanner.tsx';
 import ContentsCard from '../components/common/ContentsCard.tsx';
-import PopularContentsSection from '../components/common/PopularContentsSection.tsx';
 import TagSearchSection from '../components/common/TagSearchSection.tsx';
 import { motion } from 'framer-motion';
 import { getTotalCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
@@ -59,7 +58,7 @@ const Community = () => {
             staleTime: 10000, // 10초
         },
     );
-
+    console.log(allCommunityData)
     //페이지버튼 관련 상태 업데이트
     useEffect(() => {
         if (allCommunityData) {
@@ -138,7 +137,7 @@ const Community = () => {
                 <BottomSection>
                     <AllPostContainer>
                         {allCommunityData?.postData.map((item: CommunityPostData) => (
-                            <ContentsCard key={`all_${item.standardId}`} communityProps={item} type={'community'} />
+                            <ContentsCard key={`all_${item.boardStandardId}`} communityProps={item} type={'community'} />
                         ))}
                     </AllPostContainer>
                     <PageContainer>

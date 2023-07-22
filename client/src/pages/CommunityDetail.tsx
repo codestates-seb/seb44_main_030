@@ -14,11 +14,12 @@ type BackgroundStyledProps = {
 };
 
 const CommunityDetail = () => {
-    const { standardId } = useParams<RouteParams>();
-    if (!standardId) {
+    const { boardStandardId } = useParams<RouteParams>();
+    console.log(boardStandardId, 'asdfasdf');
+    if (!boardStandardId) {
         throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
     }
-    const mockMemberId = 1; //useSelector 사용
+    const mockMemberId = 1;
     const navigate = useNavigate();
 
     const {
@@ -26,10 +27,10 @@ const CommunityDetail = () => {
         error: errorData,
         data,
     } = useQuery(
-        ['communityDetail', standardId],
+        ['communityDetail', boardStandardId],
         () => {
-            console.log(`게시글ID:${standardId}데이터를 가져옵니다.`);
-            return getDetailCommunityPost(standardId);
+            console.log(`게시글ID:${boardStandardId}데이터를 가져옵니다.`);
+            return getDetailCommunityPost(boardStandardId);
         },
         {
             staleTime: 10000, // 10초
@@ -93,10 +94,10 @@ const CommunityDetail = () => {
                     isLiked={detailCommunityData?.isLiked}
                     likeCount={detailCommunityData?.likeCount}
                     memberId={detailCommunityData?.member?.memberId}
-                    standardId={detailCommunityData?.standardId}
+                    boardStandardId={detailCommunityData?.boardStandardId}
                     tag={detailCommunityData?.tag}
                 />
-                <DetailCommentSection comment={detailCommunityData?.comment} />
+                <DetailCommentSection comment={detailCommunityData?.comment} boardStandardId={boardStandardId}/>
             </PostContainer>
         </Background>
     );

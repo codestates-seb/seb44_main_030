@@ -42,6 +42,7 @@ const CommunityCreate = () => {
             content,
             tag: tag || '전체',
         },
+        mode: 'onBlur',
     });
 
     const tags = {
@@ -162,7 +163,7 @@ const CommunityCreate = () => {
                             {...register('title', {
                                 required: '제목을 입력해주세요',
                                 minLength: { value: 5, message: '5자 이상 입력해주세요' },
-                                maxLength: { value: 20, message: '20자 이내로 입력해주세요' },
+                                maxLength: { value: 20, message: '40자 이내로 입력해주세요' },
                             })}
                         />
                         {errors.title && <ErrorMessage>{errors?.title.message}</ErrorMessage>}
@@ -172,10 +173,11 @@ const CommunityCreate = () => {
                             placeholder="모임에 대해 소개해주세요!"
                             {...register('content', {
                                 required: '내용을 입력해주세요',
-                                minLength: { value: 30, message: '30자 이상 입력해주세요' },
+                                minLength: { value: 10, message: '10자 이상 입력해주세요' },
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
                         />
+                        {errors.content && <ErrorMessage>{errors?.content.message}</ErrorMessage>}
                         {/* <Controller
                             name="content"
                             control={control}

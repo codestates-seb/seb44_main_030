@@ -18,17 +18,18 @@ type Comment = {
 
 interface DetailCommentSectionProps {
     comment: Comment[];
+    boardStandardId: string;
 }
-const DetailCommentSection = ({ comment }: DetailCommentSectionProps) => {
-    const boardType = location.pathname.split('/')[1] === 'community' ? 'boardcomments' : 'clubcomments';
-    const { register, handleSubmit, reset } = useForm<CommentInput>({ mode: 'onSubmit' });
-    const headers = usePostHeader(); 
+const DetailCommentSection = ({ comment, boardStandardId }: DetailCommentSectionProps) => {
+    const boardType = location.pathname.split('/')[1] === 'community' ? 'standardcomments' : 'clubcomments';
+    const { register, handleSubmit, reset } = useForm<CommentInput>({ mode: 'onSubmit' });//댓글작성 폼
+    const headers = usePostHeader(); //api 요청 헤더
+
     //댓글 작성 요청
     const onSubmit: SubmitHandler<CommentInput> = (data) => {
-        // console.log(data);
-        // 댓글 작성 post api 요청
         const API_URL = import.meta.env.VITE_KEY;
         const payload = {
+            boardStandardId: Number(boardStandardId),
             content: `${data.Content}`,
         };
         axios
@@ -56,7 +57,7 @@ const DetailCommentSection = ({ comment }: DetailCommentSectionProps) => {
             </CreateCommentSpace>
             <div>
                 {comment?.map((commentData) => (
-                    <Comment commentData={commentData} />
+                    <Comment commentData={commentData} boardStandardId={boardStandardId}/>
                 ))}
             </div>
         </CommentSection>

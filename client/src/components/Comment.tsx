@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -15,18 +15,19 @@ type CommentProps = {
         registeredAt: string;
         modifiedAt: string | null;
     };
+    boardStandardId: string;
 };
 type CommentInput = {
     Content: string;
 };
-const Comment = ({ commentData }: CommentProps) => {
+const Comment = ({ commentData, boardStandardId }: CommentProps) => {
     const { commentId, memberId, name, memberProfileImg, content, registeredAt, modifiedAt } = commentData;
     const navigate = useNavigate();
     const [modifiedDate, setModifiedAt] = useState<string | null>(modifiedAt);
     const [isEditOn, setIsEditOn] = useState<boolean>(false);
     const [commentContent, setCommentContent] = useState<string>(content);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const headers = usePostHeader(); 
+    const headers = usePostHeader();
     const location = useLocation();
     const boardType = location.pathname.split('/')[1] === 'community' ? 'boardcomments' : 'clubcomments';
 
@@ -52,6 +53,7 @@ const Comment = ({ commentData }: CommentProps) => {
     const onSubmit: SubmitHandler<CommentInput> = async (data) => {
         // console.log(data);
         const payload = {
+            boardStandardId: Number(boardStandardId),
             content: `${data.Content}`,
         };
         const API_URL = import.meta.env.VITE_KEY;
@@ -90,7 +92,7 @@ const Comment = ({ commentData }: CommentProps) => {
     // 댓글 삭제 Delete 요청
     const handleDelete = async () => {
         try {
-            const response = await axios.delete(`${import.meta.env.VITE_KEY}/${boardType}/${commentId}`,headers);
+            const response = await axios.delete(`${import.meta.env.VITE_KEY}/${boardType}/${commentId}`, headers);
             if (response.status === 200 || response.status === 204) {
                 console.log('삭제 성공');
             } else {

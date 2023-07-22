@@ -16,7 +16,7 @@ type DetailProps = {
     commentCount: number;
     memberId: number;
     clubId?: number;
-    standardId?: number;
+    boardStandardId?: number;
     likeCount?: number;
     handleLike?: () => void;
     isLiked?: boolean;
@@ -32,12 +32,12 @@ const DetailContentSection = ({
     isLiked,
     likeCount,
     memberId,
-    standardId,
+    boardStandardId,
     clubId,
     tag,
 }: DetailProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const postId = standardId || clubId; //club데이터일 때는 clubId
+    const postId = boardStandardId || clubId; //club데이터일 때는 clubId
     if (!postId) {
         throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
     }
