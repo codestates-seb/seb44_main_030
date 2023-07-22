@@ -1,29 +1,20 @@
 import styled from 'styled-components';
-import { useCallback, useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { SubmitHandler } from 'react-hook-form';
 import { motion } from 'framer-motion';
-
 import BackgroundImg from '../assets/oceanbeach.png';
 import ScrollBanner from '../components/common/ScrollBanner';
 import ContentsCard from '../components/common/ContentsCard';
 import TagSearchSection from '../components/common/TagSearchSection.tsx';
-import PopularContentsSection from '../components/common/PopularContentsSection.tsx';
 import useClubBoardData from '../api/ClubApi/ClubDataHooks.ts';
 import { ClubBoardData } from '../types/ClubData.ts';
-
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../store/store.tsx';
-
-type SearchInput = {
-    Keyword: string;
-};
 
 function Club() {
     const { tag: currTag } = useParams();
     const navigate = useNavigate();
     const scrollPosition = useSelector((state: RootState) => state.scroll);
-    const dispatch = useDispatch();
 
     const handleNavigateCreate = () => {
         navigate('/club/create', { state: 'club' });
@@ -34,7 +25,7 @@ function Club() {
             window.scrollTo(0, scrollPosition);
         }, 500); // 0.5초 후에 실행
         return () => clearTimeout(timer);
-    }, []);
+    }, [scrollPosition]);
 
     const { status, data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } = useClubBoardData();
     console.log(data);
@@ -62,7 +53,6 @@ function Club() {
         <ClubWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ScrollBanner bannerImg={BackgroundImg} />
             <ContentContainer>
-                {/* <PopularContentsSection /> */}
                 <TagSearchSection currTag={currTag} handleNavigateCreate={handleNavigateCreate} />
                 <CardSection>
                     {status === 'loading' ? (

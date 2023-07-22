@@ -17,7 +17,7 @@ interface FormInput {
 }
 
 const Login = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const [cookies, setCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
     const {
         register,
         handleSubmit,

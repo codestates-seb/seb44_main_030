@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-scroll';
@@ -27,10 +26,8 @@ export default function ScrollBanner({ bannerImg }: { bannerImg: string }) {
         const observerCallback = (entries: IntersectionObserverEntry[]) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    // console.log('RollBanner is now in viewport');
                     setIsRollBannerInViewPort(true);
                 } else {
-                    // console.log('RollBanner is now out of viewport');
                     setIsRollBannerInViewPort(false);
                 }
             });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -6,15 +6,13 @@ import { Calendar } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { motion } from 'framer-motion';
 import { reset } from '../store/editData.ts';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import axios, { AxiosError } from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Map from './Map.tsx';
 import ConfirmModal from '../components/common/ConfirmModal';
-import { useCookies } from 'react-cookie';
 import { usePostHeader } from '../api/getHeader.ts';
-import { NumberLiteralType } from 'typescript';
 
 type FormData = {
     capacity: number;
@@ -29,6 +27,7 @@ type FormData = {
     addressName: string;
     latitude: number;
     longitude: number;
+    clubMap?: object;
 };
 
 const ClubCreate = () => {
@@ -63,71 +62,77 @@ const ClubCreate = () => {
         mode: 'onChange',
     });
 
-    const tags = {
-        SWIMMING: '수영',
-        SURFING: '서핑',
-        SNORKELING: '스노쿨링',
-        SCUBA_DIVING: '스쿠버 다이빙',
-        WATER_SKIING: '수상스키',
-        JET_SKIING: '제트스키',
-        WINDSURFING: '윈드서핑',
-        KITESURFING: '카이트서핑',
-        FLYBOARDING: '플라이보드',
-        PARASAILING: '패러세일링',
-        PADDLING: '패들보드',
-        KAYAKING: '카약',
-    };
+    const tags = useMemo(
+        () => ({
+            SWIMMING: '수영',
+            SURFING: '서핑',
+            SNORKELING: '스노쿨링',
+            SCUBA_DIVING: '스쿠버 다이빙',
+            WATER_SKIING: '수상스키',
+            JET_SKIING: '제트스키',
+            WINDSURFING: '윈드서핑',
+            KITESURFING: '카이트서핑',
+            FLYBOARDING: '플라이보드',
+            PARASAILING: '패러세일링',
+            PADDLING: '패들보드',
+            KAYAKING: '카약',
+        }),
+        [],
+    );
 
     const getKeyByValue = (object: any, value: string) => {
         return Object.keys(object).find((key) => object[key] === value);
     };
 
-    const onSubmit = useCallback(async (data: FormData) => {
-        console.log(data);
-        console.log(clubMap);
-        const API_URL = import.meta.env.VITE_KEY;
-        const englishTagName = getKeyByValue(tags, data.clubTag);
-        const { id, position, ...restClubMap } = data.clubMap;
-        const payload = {
-            // 이 부분은 로그인한 유저의 ID로 수정
-            capacity: Number(data.capacity),
-            title: data.title,
-            content: data.content,
-            dueDate: data.dueDate,
-            contact: data.contact, //{ [data.contactRoute]: data.contact },
-            tags: [{ tagName: englishTagName }],
+    const onSubmit = useCallback(
+        async (data: FormData) => {
+            console.log(data);
+            console.log(clubMap);
+            const API_URL = import.meta.env.VITE_KEY;
+            const englishTagName = getKeyByValue(tags, data.clubTag);
+            const { id, position, ...restClubMap } = data.clubMap;
+            const payload = {
+                // 이 부분은 로그인한 유저의 ID로 수정
+                capacity: Number(data.capacity),
+                title: data.title,
+                content: data.content,
+                dueDate: data.dueDate,
+                contact: data.contact, //{ [data.contactRoute]: data.contact },
+                tags: [{ tagName: englishTagName }],
 
-            latitude: position.lat,
-            longitude: position.lng,
-            ...restClubMap,
-        };
-        if (clubDetail.boardClubId !== undefined) {
-            payload['boardClubStatus'] = 'BOARD_CLUB_RECRUITING';
-        }
-        console.log(payload);
-
-        try {
-            let response;
+                latitude: position.lat,
+                longitude: position.lng,
+                ...restClubMap,
+            };
             if (clubDetail.boardClubId !== undefined) {
-                response = await axios.patch(`${API_URL}/clubs/${clubDetail.boardClubId}`, payload, headers);
-            } else {
-                response = await axios.post(`${API_URL}/clubs`, payload, headers);
+                payload['boardClubStatus'] = 'BOARD_CLUB_RECRUITING';
             }
-            if (response.status === 200 || response.status === 201) {
-                navigate(-1);
-            } else {
-                console.log('포스트 요청을 실패했습니다');
-            }
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                console.log('Axios Error occurred while creating the post', (error as AxiosError).response?.data);
-            } else {
-                console.log('Error occurred while creating the post', error);
-            }
-        }
-    }, []);
+            console.log(payload);
 
-    const handleFormKeyPress = (event) => {
+            try {
+                let response;
+                if (clubDetail.boardClubId !== undefined) {
+                    response = await axios.patch(`${API_URL}/clubs/${clubDetail.boardClubId}`, payload, headers);
+                } else {
+                    response = await axios.post(`${API_URL}/clubs`, payload, headers);
+                }
+                if (response.status === 200 || response.status === 201) {
+                    navigate(-1);
+                } else {
+                    console.log('포스트 요청을 실패했습니다');
+                }
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error)) {
+                    console.log('Axios Error occurred while creating the post', (error as AxiosError).response?.data);
+                } else {
+                    console.log('Error occurred while creating the post', error);
+                }
+            }
+        },
+        [clubDetail.boardClubId, clubMap, headers, navigate, tags],
+    );
+
+    const handleFormKeyPress = (event: { key: string; preventDefault: () => void }) => {
         if (event.key === 'Enter') {
             event.preventDefault();
         }
@@ -145,7 +150,7 @@ const ClubCreate = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         dispatch(reset());
-    }, []);
+    }, [dispatch]);
 
     const calendarRef = useRef(null);
     const [today, setToday] = useState(new Date());
@@ -182,17 +187,6 @@ const ClubCreate = () => {
     useEffect(() => {
         setValue('clubMap', clubMap);
     }, [clubMap, setValue]);
-
-    useEffect(() => {
-        const keyDownHandler = (event) => {
-            console.log(event);
-        };
-
-        window.addEventListener('keydown', keyDownHandler);
-        return () => {
-            window.removeEventListener('keydown', keyDownHandler);
-        };
-    }, []);
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

@@ -42,16 +42,19 @@ const TagSearchSection = ({ currTag, handleNavigateCreate }: TagSearchSectionPro
     });
 
     //태그선택
-    const handleTagSelect = useCallback((e: React.MouseEvent<HTMLLIElement>) => {
-        const selectedTagName = e.currentTarget.innerText;
-        dispatch(savePosition(window.scrollY));
-        if (boardType === 'community') {
-            navigate(`/${boardType}/${selectedTagName}/${keyword}`);
-        }
-        if (boardType === 'club') {
-            navigate(`/${boardType}/${selectedTagName}/${keyword}`);
-        }
-    }, []);
+    const handleTagSelect = useCallback(
+        (e: React.MouseEvent<HTMLLIElement>) => {
+            const selectedTagName = e.currentTarget.innerText;
+            dispatch(savePosition(window.scrollY));
+            if (boardType === 'community') {
+                navigate(`/${boardType}/${selectedTagName}/${keyword}`);
+            }
+            if (boardType === 'club') {
+                navigate(`/${boardType}/${selectedTagName}/${keyword}`);
+            }
+        },
+        [boardType, dispatch, keyword, navigate],
+    );
 
     //검색
     const onSubmit: SubmitHandler<SearchInput> = (data) => {
