@@ -5,16 +5,17 @@ import MapContainer from './Mapcontainer';
 import ClubInfoWindow from './common/InfoWindow/clubindex';
 import { useEffect } from 'react';
 
-const ClubMapContainer = () => {
+const ClubMapContainer = ({ mapdata }) => {
     const map = useSelector((state: RootState) => state.counter.mapInstance);
+    const { addressName, placeName, latitude: lat, longitude: lng } = mapdata;
 
     const data = {
-        id: 1,
-        addressName: '서울 용산구 동자동 43-205',
-        placeName: '서울역',
+        // id: 1,
+        addressName,
+        placeName,
         position: {
-            lat: 37.5546788388674,
-            lng: 126.970606917394,
+            lat,
+            lng,
         },
     };
 
@@ -27,7 +28,7 @@ const ClubMapContainer = () => {
     }, [map]);
 
     return (
-        <div style={{ width: '600px' }}>
+        <div style={{ width: '960px' }}>
             <MapContainer></MapContainer>
             <Marker map={map} position={data.position} content={"<div class='marker'/>"} />
             <ClubInfoWindow map={map} selectInfo={data} />
