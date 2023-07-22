@@ -3,10 +3,20 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import MapContainer from './Mapcontainer';
 import ClubInfoWindow from './common/InfoWindow/clubindex';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
-const ClubMapContainer = ({ mapdata }) => {
+interface ClubMapProps {
+    mapdata: {
+        addressName: string;
+        placeName: string;
+        latitude: number;
+        longitude: number;
+    };
+}
+
+const ClubMapContainer = ({ mapdata }: ClubMapProps) => {
     const map = useSelector((state: RootState) => state.counter.mapInstance);
+    console.log(mapdata);
     const { addressName, placeName, latitude: lat, longitude: lng } = mapdata;
 
     const data = {

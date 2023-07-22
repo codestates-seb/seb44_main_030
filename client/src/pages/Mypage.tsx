@@ -155,6 +155,7 @@ const Mypage = () => {
                                             수정
                                         </Styledbutton>
                                     )}
+                                    <Styledbutton>탈퇴</Styledbutton>
                                 </div>
                             </Block>
                             <Block width="1000px" height="800px">
