@@ -118,6 +118,7 @@ const StyledHeader = styled.div`
     min-width: 817px;
     height: 85px;
     display: flex;
+    align-items: center;
     font-size: 1.5rem;
     color: white;
     font-family: 'Monomaniac One', sans-serif;
@@ -126,7 +127,10 @@ const StyledHeader = styled.div`
     justify-content: space-evenly;
     z-index: 999;
     img {
-        height: 85px;
+        height: 70px;
+        &:hover {
+            cursor: pointer;
+        }
     }
     .header-content {
         display: flex;
