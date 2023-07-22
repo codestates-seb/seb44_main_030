@@ -3,6 +3,7 @@ package com.splashzone.member.entity;
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.boardstandardcomment.entity.BoardStandardComment;
 import com.splashzone.tracker.entity.Tracker;
 import lombok.*;
 
@@ -58,29 +59,6 @@ public class Member {
     @Column(name = "MEMBER_STATUS", nullable = false)
     private MemberStatus memberStatus;
 
-
-
-//    @Enumerated(value = EnumType.STRING)
-//    @Column(name = "MEMBER_STATUS", length = 20, nullable = false)
-//    private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
-
-//    public enum MemberStatus{
-//        MEMBER_ACTIVE("활동중"),
-//        MEMBER_SLEEP("휴면 상태"),
-//        MEMBER_QUIT("탈퇴 상태");
-//
-//        @Getter
-//        private String status;
-//
-//        MemberStatus(String status) {
-//            this.status = status;
-//        }
-//    }
-//    public enum MemberRole {
-//        ROLE_USER,
-//        ROLE_ADMIN
-//    }
-
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<BoardStandard> boardStandards = new ArrayList<>();
@@ -88,6 +66,10 @@ public class Member {
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<BoardClub> boardClubs = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private List<BoardStandardComment> boardStandardComments = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)

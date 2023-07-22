@@ -1,5 +1,6 @@
 package com.splashzone.boardstandard.entity;
 
+import com.splashzone.boardstandardcomment.entity.BoardStandardComment;
 import com.splashzone.member.entity.Member;
 import com.splashzone.audit.Auditable;
 import lombok.*;
@@ -7,6 +8,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +20,7 @@ public class BoardStandard extends Auditable {
     @Id
     @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long standardId;
+    private Long boardStandardId;
 
     @Column(name = "TITLE", nullable = false)
     private String title;
@@ -35,21 +38,21 @@ public class BoardStandard extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "boardStandard", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<BoardStandardComment> boardStandardComments = new ArrayList<>();
 
-    public BoardStandard(Long standardId, String title, String content, int view) {
-        this.standardId = standardId;
+
+    public BoardStandard(Long boardStandardId, String title, String content, int view) {
+        this.boardStandardId = boardStandardId;
         this.title = title;
         this.content = content;
         this.view = view;
     }
 
     public void changeBoardStandard(BoardStandard boardStandard) {
-        if (!boardStandard.getTitle().isEmpty()) {
-            this.title = boardStandard.getTitle();
-        }
-        if (!boardStandard.getContent().isEmpty()) {
-            this.content = boardStandard.getContent();
-        }
+        this.title = boardStandard.getTitle();
+        this.content = boardStandard.getContent();
     }
 
     public void setMember(Member member) {

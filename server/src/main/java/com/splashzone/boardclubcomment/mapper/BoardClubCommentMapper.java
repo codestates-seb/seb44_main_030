@@ -52,7 +52,7 @@ public interface BoardClubCommentMapper {
     }
 
     default List<BoardClubCommentDto.Response> boardClubCommentsToBoardClubCommentResponseDtos(List<BoardClubComment> boardClubComments) {
-        List<BoardClubCommentDto.Response> list = new ArrayList<BoardClubCommentDto.Response>(boardClubComments.size());
+        List<BoardClubCommentDto.Response> list = new ArrayList<>(boardClubComments.size());
         for (BoardClubComment boardClubComment : boardClubComments) {
             list.add(boardClubCommentToBoardClubCommentResponseDto(boardClubComment));
         }

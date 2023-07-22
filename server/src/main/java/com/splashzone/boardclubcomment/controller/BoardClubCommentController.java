@@ -43,7 +43,6 @@ public class BoardClubCommentController {
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
 
         BoardClubComment boardClubComment = boardClubCommentMapper.boardClubCommentPostDtotoBoardClubComment(requestBody, member);
-        boardClubComment.setMember(member);
 
         BoardClubComment postBoardClubComment = boardClubCommentService.createBoardClubComment(boardClubComment);
 
@@ -61,12 +60,11 @@ public class BoardClubCommentController {
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
 
         BoardClubComment boardClubComment = boardClubCommentMapper.boardClubCommentPatchDtotoBoardClubComment(requestBody, boardClubCommentId, member);
-        boardClubComment.setMember(member);
 
-        BoardClubComment postBoardClubComment = boardClubCommentService.updateBoardClubComment(boardClubComment);
+        BoardClubComment patchBoardClubComment = boardClubCommentService.updateBoardClubComment(boardClubComment);
 
         return new ResponseEntity<>(
-                new SingleResponseDto<>(boardClubCommentMapper.boardClubCommentToBoardClubCommentResponseDto(postBoardClubComment)),
+                new SingleResponseDto<>(boardClubCommentMapper.boardClubCommentToBoardClubCommentResponseDto(patchBoardClubComment)),
                 HttpStatus.OK);
     }
 
@@ -105,7 +103,6 @@ public class BoardClubCommentController {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        //
         boardClubCommentService.deleteBoardClubComment(boardClubCommentId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
