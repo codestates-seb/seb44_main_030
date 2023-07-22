@@ -16,9 +16,6 @@ interface member {
     nickname?: string;
     bio?: string;
 }
-type ErrorType<T> = {
-    error: T | unknown;
-};
 
 //useEffect로 토큰 인증 => 다르면 방어하도록
 //공통컴포넌트로 관리
@@ -36,7 +33,7 @@ const Mypage = () => {
     const refreshToken = cookies.RefreshToken;
 
     const memberId = 2; //memberId Link로받던가 아니면  header포함해서받던가하기
-    const { data, isLoading, isError, error } = useQuery<ErrorType<T>>({
+    const { data, isLoading, isError, error } = useQuery({
         queryKey: ['memberinfo', memberId],
         queryFn: () => getInfos(memberId),
     });
