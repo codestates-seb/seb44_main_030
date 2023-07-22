@@ -14,17 +14,18 @@ import Map from './Map.tsx';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { useCookies } from 'react-cookie';
 import { usePostHeader } from '../api/getHeader.ts';
-type Position = {
-    lat: number;
-    lng: number;
-};
+import { NumberLiteralType } from 'typescript';
+// type Position = {
+//     lat: number;
+//     lng: number;
+// };
 
-type ClubMapData = {
-    addressName: string;
-    id: number;
-    placeName: string;
-    position: Position;
-};
+// type ClubMapData = {
+//     addressName: string;
+//     id: number;
+//     placeName: string;
+//     position: Position;
+// };
 
 type FormData = {
     capacity: number;
@@ -34,8 +35,12 @@ type FormData = {
     dueDate: string;
     title: string;
     content: string;
-    clubMap?: ClubMapData;
+    // clubMap?: ClubMapData;
     date?: Date;
+    placeName: string;
+    addressName: string;
+    latitude: number;
+    longitude: number;
 };
 
 const ClubCreate = () => {
@@ -88,21 +93,26 @@ const ClubCreate = () => {
         return Object.keys(object).find((key) => object[key] === value);
     };
 
-    const onSubmit = useCallback(async (data: FormData, event) => {
+    const onSubmit = useCallback(async (data: FormData) => {
         console.log(data);
+        console.log(clubMap);
         const API_URL = import.meta.env.VITE_KEY;
         const englishTagName = getKeyByValue(tags, data.clubTag);
-        const { id, ...clubMapWithoutId } = data.clubMap;
+        const { id, position, ...restClubMap } = data.clubMap;
         const payload = {
-            memberId: 1, // 이 부분은 로그인한 유저의 ID로 수정
-            capacity: data.capacity,
+            // 이 부분은 로그인한 유저의 ID로 수정
+            capacity: Number(data.capacity),
             title: data.title,
             content: data.content,
             dueDate: data.dueDate,
             contact: data.contact, //{ [data.contactRoute]: data.contact },
             tags: [{ tagName: englishTagName }],
-            clubMap: clubMapWithoutId,
+
+            latitude: position.lat,
+            longitude: position.lng,
+            ...restClubMap,
         };
+        console.log(payload);
 
         try {
             let response;
