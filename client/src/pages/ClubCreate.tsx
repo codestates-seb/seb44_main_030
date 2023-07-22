@@ -112,6 +112,9 @@ const ClubCreate = () => {
             longitude: position.lng,
             ...restClubMap,
         };
+        if (clubDetail.boardClubId !== undefined) {
+            payload['boardClubStatus'] = 'BOARD_CLUB_RECRUITING';
+        }
         console.log(payload);
 
         try {
@@ -274,7 +277,7 @@ const ClubCreate = () => {
                                 )}
                             />
                             {clubMap && <MapPlace>{clubMap.placeName}</MapPlace>}
-                            {showMap ? <Map setShowMap={setShowMap} updateClubMap={updateClubMap} /> : null}
+                            {showMap && <Map setShowMap={setShowMap} updateClubMap={updateClubMap} />}
                         </TagWarp>
                     </TagContainer>
                 </DetailInfoContainer>

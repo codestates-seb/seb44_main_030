@@ -43,7 +43,8 @@ const ClubDetail = () => {
         placeName,
         latitude,
         likeCount,
-        longitude;
+        longitude,
+        nickname;
 
     if (clubDetail && clubDetail.data) {
         ({
@@ -63,6 +64,7 @@ const ClubDetail = () => {
             latitude,
             likeCount,
             longitude,
+            nickname,
         } = clubDetail.data);
     }
     console.log(clubDetail);
@@ -122,7 +124,9 @@ const ClubDetail = () => {
             <PostContainer>
                 <TitleSection>
                     <button onClick={hanldeNavigatePrev}>목록</button>
-                    <h1>{title}</h1>
+                    <Title>
+                        <h1>{title}</h1>
+                    </Title>
                     <ContentInfo>
                         <div>
                             <h3>관련 태그: </h3>
@@ -145,13 +149,7 @@ const ClubDetail = () => {
                             <h3>연락 방법: </h3>
                             <span onClick={handleNavigateContact}>링크</span>
                         </div>
-                        {/* <div>
-                            <span className="date">{formattedDate}</span>
-                            <img src={memberProfileImg} />
-                            <span className="name" onClick={handleNavigateProfile}>
-                                {name}
-                            </span>
-                        </div> */}
+                        <UserInfo>{nickname}</UserInfo>
                     </ContentInfo>
                 </TitleSection>
                 <ClubMapContainer mapdata={mapdata} />
@@ -205,6 +203,8 @@ const PostContainer = styled.div`
     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.25);
 `;
 const TitleSection = styled.section`
+    margin-bottom: 19px;
+
     > button {
         font-weight: 600;
         color: #696969;
@@ -259,6 +259,15 @@ const TitleSection = styled.section`
         }
     }
     border-bottom: 1px solid #d9d9d9;
+`;
+
+const Title = styled.div`
+    h1 {
+        font-size: 35px;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 `;
 
 const ContentInfo = styled.div`
@@ -323,4 +332,9 @@ const EditContainer = styled.div`
             cursor: pointer;
         }
     }
+`;
+
+const UserInfo = styled.div`
+    font-weight: bold;
+    margin-left: 250px;
 `;
