@@ -1,4 +1,3 @@
-import react from 'react';
 import styled from 'styled-components';
 
 type ModalPropsType = {
@@ -79,7 +78,7 @@ const Styledmodal = styled.div`
         background-color: #3884d5;
         color: #ffffff;
         cursor: pointer;
-        &:hover{
+        &:hover {
             background-color: #5797dc;
         }
     }

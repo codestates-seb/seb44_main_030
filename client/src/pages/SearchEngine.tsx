@@ -1,10 +1,8 @@
 import axios from 'axios';
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setInfoInstance } from '../store/info';
-import Wrapper from '../components/style/Wrapper';
-import { RootState } from '../store/store';
 
 interface SearchResponse {
     documents: {
@@ -26,7 +24,6 @@ interface SearchResponse {
 const SearchEngine = () => {
     const [keyword, setKeyword] = useState('');
     const dispatch = useDispatch();
-    const infodata = useSelector((state: RootState) => state.info.infoInstance);
 
     const onClickHandler = async () => {
         const result = axios.get<SearchResponse>(
@@ -49,12 +46,11 @@ const SearchEngine = () => {
         dispatch(setInfoInstance(infos));
     };
 
-    const onKeyPress = (e) => {
-        if ((e.key = 'Enter')) {
+    const onKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
             onClickHandler();
         }
     };
-
     return (
         <Searchbox>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import moment from 'moment';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setToast } from '../store/toastState';
+import { useCookies } from 'react-cookie';
 
 interface InputProps {
     height?: string;
@@ -18,16 +19,28 @@ interface DataProps {
     content: string;
     exerciseStartTime: string;
     exerciseEndTime: string;
+    todayDate: string;
 }
 
-const Modal = ({ setModal, value, mark }) => {
+interface ModalProps {
+    setModal: React.Dispatch<React.SetStateAction<boolean>>;
+    value: any;
+    mark: any;
+}
+
+const Modal = ({ setModal, value, mark }: ModalProps) => {
     const dispatch = useDispatch();
     const dae = moment(value).format('YYYYMMDD');
+    const todayDate = moment(value).format('YYYY-MM-DD');
+    console.log(todayDate);
 
     const [startType, setStartType] = useState('');
 
     const [isFinished, setIsFinished] = useState(false);
     const { register, handleSubmit, watch } = useForm();
+    const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const authorizationToken = cookies.AuthorizationToken;
+    const refreshToken = cookies.RefreshToken;
 
     const handleClose = () => {
         setModal(false);
@@ -52,7 +65,7 @@ const Modal = ({ setModal, value, mark }) => {
             </option>,
         );
     }
-    const handleStartTypeChange = (e) => {
+    const handleStartTypeChange = (e: any) => {
         const selectedValue = e.target.value;
         setStartType(selectedValue);
     };
@@ -73,11 +86,19 @@ const Modal = ({ setModal, value, mark }) => {
         data.memberId = 1;
         data.exerciseStartTime = modifiedValue;
         data.exerciseEndTime = modfied2Value;
+        data.todayDate = todayDate;
         const url = 'http://13.209.142.240:8080/trackers';
         console.log(data);
 
         try {
-            const response = await axios.post(url, data);
+            const response = await axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `${decodeURIComponent(authorizationToken)}`,
+                    Refresh: `${refreshToken}`,
+                    withCredentials: true,
+                },
+            });
             console.log(response);
             dispatch(setToast(true));
             setModal(false);

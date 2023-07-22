@@ -14,17 +14,7 @@ import Map from './Map.tsx';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { useCookies } from 'react-cookie';
 import { usePostHeader } from '../api/getHeader.ts';
-type Position = {
-    lat: number;
-    lng: number;
-};
-
-type ClubMapData = {
-    addressName: string;
-    id: number;
-    placeName: string;
-    position: Position;
-};
+import { NumberLiteralType } from 'typescript';
 
 type FormData = {
     capacity: number;
@@ -34,8 +24,11 @@ type FormData = {
     dueDate: string;
     title: string;
     content: string;
-    clubMap?: ClubMapData;
     date?: Date;
+    placeName: string;
+    addressName: string;
+    latitude: number;
+    longitude: number;
 };
 
 const ClubCreate = () => {
@@ -67,6 +60,7 @@ const ClubCreate = () => {
             contact: clubDetail.contact || '',
             dueDate: clubDetail.dueDate || '',
         },
+        mode: 'onChange',
     });
 
     const tags = {
@@ -88,21 +82,29 @@ const ClubCreate = () => {
         return Object.keys(object).find((key) => object[key] === value);
     };
 
-    const onSubmit = useCallback(async (data: FormData, event) => {
+    const onSubmit = useCallback(async (data: FormData) => {
         console.log(data);
+        console.log(clubMap);
         const API_URL = import.meta.env.VITE_KEY;
         const englishTagName = getKeyByValue(tags, data.clubTag);
-        const { id, ...clubMapWithoutId } = data.clubMap;
+        const { id, position, ...restClubMap } = data.clubMap;
         const payload = {
-            memberId: 1, // 이 부분은 로그인한 유저의 ID로 수정
-            capacity: data.capacity,
+            // 이 부분은 로그인한 유저의 ID로 수정
+            capacity: Number(data.capacity),
             title: data.title,
             content: data.content,
             dueDate: data.dueDate,
             contact: data.contact, //{ [data.contactRoute]: data.contact },
             tags: [{ tagName: englishTagName }],
-            clubMap: clubMapWithoutId,
+
+            latitude: position.lat,
+            longitude: position.lng,
+            ...restClubMap,
         };
+        if (clubDetail.boardClubId !== undefined) {
+            payload['boardClubStatus'] = 'BOARD_CLUB_RECRUITING';
+        }
+        console.log(payload);
 
         try {
             let response;
@@ -124,6 +126,12 @@ const ClubCreate = () => {
             }
         }
     }, []);
+
+    const handleFormKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    };
 
     const handleCancel = () => {
         navigate(-1);
@@ -188,7 +196,7 @@ const ClubCreate = () => {
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <FormContainer onSubmit={handleSubmit(onSubmit)}>
+            <FormContainer onSubmit={handleSubmit(onSubmit)} onKeyPress={handleFormKeyPress}>
                 <DetailInfoContainer>
                     <DetailInfoTitle>모임의 기본 정보를 입력해주세요</DetailInfoTitle>
                     <TagContainer>
@@ -264,7 +272,7 @@ const ClubCreate = () => {
                                 )}
                             />
                             {clubMap && <MapPlace>{clubMap.placeName}</MapPlace>}
-                            {showMap ? <Map setShowMap={setShowMap} updateClubMap={updateClubMap} /> : null}
+                            {showMap && <Map setShowMap={setShowMap} updateClubMap={updateClubMap} />}
                         </TagWarp>
                     </TagContainer>
                 </DetailInfoContainer>

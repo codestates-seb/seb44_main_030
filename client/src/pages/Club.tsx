@@ -58,8 +58,6 @@ function Club() {
         };
     }, [hasNextPage, fetchNextPage]);
 
-    console.log(data);
-
     return (
         <ClubWarp initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ScrollBanner bannerImg={BackgroundImg} />

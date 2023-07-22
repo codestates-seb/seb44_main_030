@@ -6,7 +6,12 @@ import InfoWindow from './common/InfoWindow';
 import { setSelectionInstance } from '../store/selectinfo';
 import { setToast } from '../store/toastState';
 
-const MarkersContainer = ({ updateClubMap, setShowMap }) => {
+interface MarkersContaierProps {
+    updateClubMap: (data: any) => void;
+    setShowMap: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const MarkersContainer = ({ updateClubMap, setShowMap }: MarkersContaierProps) => {
     const dispatch = useDispatch();
     const map = useSelector((state: RootState) => state.counter.mapInstance);
     const infos = useSelector((state: RootState) => state.info.infoInstance);

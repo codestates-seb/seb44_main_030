@@ -2,16 +2,17 @@ import { useEffect } from 'react';
 import './Marker.css';
 
 interface MarkerProps {
-    map: naver.maps.Map;
+    map: naver.maps.Map | null;
     position: {
         lat: number;
         lng: number;
     };
     content: string;
+    loading?: boolean;
     onClick?: () => void;
 }
 
-const Marker = ({ map, position, content, onClick }: MarkerProps) => {
+const Marker = ({ map, position, content, onClick, loading }: MarkerProps) => {
     useEffect(() => {
         let marker: naver.maps.Marker | null = null;
 
@@ -30,15 +31,16 @@ const Marker = ({ map, position, content, onClick }: MarkerProps) => {
         }
 
         if (onClick) {
-            naver.maps.Event.addListener(marker, 'click', onClick);
-
-            map.panTo(position);
+            if (map) {
+                naver.maps.Event.addListener(marker, 'click', onClick);
+                map.panTo(position);
+            }
         }
 
         return () => {
             marker?.setMap(null);
         };
-    }, [map]);
+    }, [map, loading]);
     return null;
 };
 

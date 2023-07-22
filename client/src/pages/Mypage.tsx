@@ -16,9 +16,14 @@ interface member {
     nickname?: string;
     bio?: string;
 }
-type ErrorType<T> = {
-    error: T | unknown;
-};
+
+//useEffect로 토큰 인증 => 다르면 방어하도록
+//공통컴포넌트로 관리
+//HOC => 컴포넌트를 함수의 인자로 받아서 작업을 처리해서 처리가 완료된 컴포넌트를 리턴하는 HOC => 정말 정말 유용함, 효율적인 개발
+//로그인 처리가 필요한 HOC를 만들어냄
+//많이들 쓰기 때문에 검색하면 정보가 많음
+//hoc 말고도 커스텀훅을 만들거나 다 같은 원리
+//이외에도 프라이빗 라우트 등이 있음
 
 const Mypage = () => {
     const [edit, setEdit] = useState(false);
@@ -28,7 +33,7 @@ const Mypage = () => {
     const refreshToken = cookies.RefreshToken;
 
     const memberId = 2; //memberId Link로받던가 아니면  header포함해서받던가하기
-    const { data, isLoading, isError, error } = useQuery<ErrorType<T>>({
+    const { data, isLoading, isError, error } = useQuery({
         queryKey: ['memberinfo', memberId],
         queryFn: () => getInfos(memberId),
     });
@@ -158,6 +163,7 @@ const Mypage = () => {
                                             수정
                                         </Styledbutton>
                                     )}
+                                    <Styledbutton>탈퇴</Styledbutton>
                                 </div>
                             </Block>
                             <Block width="1000px" height="800px">
