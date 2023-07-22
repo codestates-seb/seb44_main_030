@@ -15,7 +15,7 @@ type BackgroundStyledProps = {
 
 const CommunityDetail = () => {
     const { boardStandardId } = useParams<RouteParams>();
-    console.log(boardStandardId, 'asdfasdf');
+
     if (!boardStandardId) {
         throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
     }
@@ -74,7 +74,7 @@ const CommunityDetail = () => {
                     <div>
                         <div>
                             <h3>관련태그: </h3>
-                            <span className="tag">{/* {tag} */}</span>{' '}
+                            <span className="tag">{/* {tag} */}</span>
                         </div>
                         <div>
                             <span className="date">{detailCommunityData?.createdAt}</span>

@@ -43,7 +43,7 @@ const DetailContentSection = ({
     }
 
     const { handleDeletePost, boardType } = useDeletePost(postId);
-    const mockMemberId = 3; //로그인아이디로 변경
+    const mockMemberId = 2; //로그인아이디로 변경
     const navigate = useNavigate();
     const dispatch = useDispatch();
 

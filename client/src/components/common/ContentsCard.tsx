@@ -151,7 +151,7 @@ export default function ContentsCard({
             <InfoContainer>
                 <UserInfo>
                     <img src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${member?.profileImageUrl}`} className="user-icon" />
-                    <span onClick={handleNavigateProfile}>{member.nickname}</span>
+                    <span onClick={handleNavigateProfile}>{member?.nickname}</span>
                 </UserInfo>
                 <ContentsInfo>
                     {communityProps?.like &&
