@@ -2,6 +2,7 @@ package com.splashzone.auth.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.splashzone.auth.userdetails.MemberDetails;
 import com.splashzone.member.entity.Member;
 import com.splashzone.auth.dto.LoginDto;
 import com.splashzone.auth.jwt.JwtTokenizer;
@@ -9,6 +10,7 @@ import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -23,7 +25,6 @@ import java.util.Map;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
-
 
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtTokenizer jwtTokenizer) {
@@ -52,6 +53,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.setHeader("Refresh", refreshToken);
+        response.setHeader("MemberId", member.getMemberId().toString());
 
 //        this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
