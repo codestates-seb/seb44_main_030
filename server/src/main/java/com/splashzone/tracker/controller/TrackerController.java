@@ -70,13 +70,26 @@ public class TrackerController {
     }
 
     @GetMapping("/{tracker-id}")
-    public ResponseEntity getTracker(@PathVariable("tracker-id") @Positive Long trackerId) {
+    public ResponseEntity getTracker(Authentication authentication,
+                                     @PathVariable("tracker-id") @Positive Long trackerId) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                trackerService.findTracker(trackerId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         Tracker tracker = trackerService.findTracker(trackerId);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(trackerMapper.trackerToTrackerResponseDto(tracker)), HttpStatus.OK);
     }
 
+    /*
     @GetMapping
     public ResponseEntity getTrackers(@Positive @RequestParam Integer page,
                                       @Positive @RequestParam Integer size) {
@@ -86,6 +99,7 @@ public class TrackerController {
         return new ResponseEntity<>(
                 new MultiResponseDto<>(trackerMapper.trackersToTrackerResponseDtos(trackers), pageTrackers), HttpStatus.OK);
     }
+     */
 
     @DeleteMapping("/{tracker-id}")
     public ResponseEntity deleteTracker(Authentication authentication,
