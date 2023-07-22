@@ -8,10 +8,11 @@ interface MarkerProps {
         lng: number;
     };
     content: string;
+    loading?: boolean;
     onClick?: () => void;
 }
 
-const Marker = ({ map, position, content, onClick }: MarkerProps) => {
+const Marker = ({ map, position, content, onClick, loading }: MarkerProps) => {
     useEffect(() => {
         let marker: naver.maps.Marker | null = null;
 
@@ -38,7 +39,7 @@ const Marker = ({ map, position, content, onClick }: MarkerProps) => {
         return () => {
             marker?.setMap(null);
         };
-    }, [map]);
+    }, [map, loading]);
     return null;
 };
 
