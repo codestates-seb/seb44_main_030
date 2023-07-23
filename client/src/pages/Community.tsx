@@ -58,7 +58,7 @@ const Community = () => {
             staleTime: 10000, // 10초
         },
     );
-    console.log(allCommunityData)
+    console.log(allCommunityData);
     //페이지버튼 관련 상태 업데이트
     useEffect(() => {
         if (allCommunityData) {
@@ -137,7 +137,11 @@ const Community = () => {
                 <BottomSection>
                     <AllPostContainer>
                         {allCommunityData?.postData.map((item: CommunityPostData) => (
-                            <ContentsCard key={`all_${item.boardStandardId}`} communityProps={item} type={'community'} />
+                            <ContentsCard
+                                key={`all_${item.boardStandardId}`}
+                                communityProps={item}
+                                type={'community'}
+                            />
                         ))}
                     </AllPostContainer>
                     <PageContainer>
