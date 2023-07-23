@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import backgroundImg from '../assets/Community_background.png';
@@ -46,13 +46,13 @@ const CommunityDetail = () => {
     //     setIsLiked((prev) => !prev);
     // }, [isLiked]);
 
-    const hanldeNavigatePrev = useCallback(() => {
+    const hanldeNavigatePrev = () => {
         navigate(-1);
-    }, []);
+    }
 
-    const handleNavigateProfile = useCallback(() => {
+    const handleNavigateProfile = () => {
         navigate(`/mypage`, { state: detailCommunityData?.memberId });
-    }, [detailCommunityData?.memberId]);
+    }
 
     useEffect(() => {
         window.scrollTo(0, 0);
