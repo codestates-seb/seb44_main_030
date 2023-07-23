@@ -9,44 +9,44 @@ import LikeFilledIcon from '../../assets/Like_filled.svg';
 import { savePosition } from '../../store/scroll.ts';
 import { useDispatch } from 'react-redux';
 
-interface PostProps {
-    memberId: number;
-    title: string;
-    content: string;
-    view: number;
-    commentCount: number;
-    type: string;
-    profileImageUrl: string;
-    nickname: string;
-}
+// interface PostProps {
+//     memberId: number;
+//     title: string;
+//     content: string;
+//     view: number;
+//     commentCount: number;
+//     type: string;
+//     profileImageUrl: string;
+//     nickname: string;
+// }
 
-interface CommunityPostProps extends PostProps {
-    communityProps: {
-        memberProfileImg: string; //[작성자 프로필 이미지 소스]
-        name: string; //[작성자 닉네임]
-        tag: string;
-        registeredAt: string;
-        modifiedAt: string | null;
-        like: number; //[게시글에 대한 좋아요 갯수]
-        memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
-        boardStandardId: number; //[게시글 자체에 대한 ID]
-    };
-}
+// interface CommunityPostProps extends PostProps {
+//     communityProps: {
+//         memberProfileImg: string; //[작성자 프로필 이미지 소스]
+//         name: string; //[작성자 닉네임]
+//         tag: string;
+//         registeredAt: string;
+//         modifiedAt: string | null;
+//         like: number; //[게시글에 대한 좋아요 갯수]
+//         memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
+//         boardStandardId: number; //[게시글 자체에 대한 ID]
+//     };
+// }
 
-interface ClubPostProps extends PostProps {
-    clubProps: {
-        boardClubId: number;
-        tags: { tagName: string }[];
-        dueDate: string;
-        boardClubStatus: string;
-        likeCount: number;
-        memberLiked: Array<number>;
-    };
-}
+// interface ClubPostProps extends PostProps {
+//     clubProps: {
+//         boardClubId: number;
+//         tags: { tagName: string }[];
+//         dueDate: string;
+//         boardClubStatus: string;
+//         likeCount: number;
+//         memberLiked: Array<number>;
+//     };
+// }
 
-type CardProps = CommunityPostProps | ClubPostProps;
+// type CardProps = CommunityPostProps | ClubPostProps;
 
-export default function ContentsCard({ memberId, communityProps, clubProps, type }: CardProps) {
+export default function ContentsCard({ memberId, communityProps, clubProps, type }: any) {
     const {
         // memberId: communityMemberId,
         title: communityTitle,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -71,7 +71,7 @@ const CommunityCreate = () => {
             memberId: 3, // 이 부분은 로그인한 유저의 ID로 수정
             title: data.title,
             content: data.content,
-            tags: [{tagName: englishTagName}],
+            tags: [{ tagName: englishTagName }],
         };
         const patchPayload = {
             title: data.title,
