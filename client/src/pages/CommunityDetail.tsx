@@ -51,8 +51,8 @@ const CommunityDetail = () => {
     }, []);
 
     const handleNavigateProfile = useCallback(() => {
-        navigate(`/mypage`, { state: detailCommunityData?.member?.memberId });
-    }, [detailCommunityData?.member?.memberId]);
+        navigate(`/mypage`, { state: detailCommunityData?.memberId });
+    }, [detailCommunityData?.memberId]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -80,10 +80,10 @@ const CommunityDetail = () => {
                         <div>
                             <span className="date">{moment(detailCommunityData?.createdAt).format('YYYY-MM-DD')}</span>
                             <img
-                                src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${detailCommunityData.member?.profileImageUrl}`}
+                                src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${detailCommunityData?.profileImageUrl}`}
                             />
                             <span className="name" onClick={handleNavigateProfile}>
-                                {detailCommunityData?.member.nickname}
+                                {detailCommunityData?.nickname}
                             </span>
                         </div>
                     </div>
@@ -100,7 +100,7 @@ const CommunityDetail = () => {
                     boardStandardId={detailCommunityData?.boardStandardId}
                     tag={detailCommunityData?.tag}
                 />
-                <DetailCommentSection boardStandardClubId={boardStandardId} />
+                <DetailCommentSection boardStandardClubId={Number(boardStandardId)} />
             </PostContainer>
         </Background>
     );
