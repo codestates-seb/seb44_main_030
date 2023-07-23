@@ -3,11 +3,13 @@ package com.splashzone.member.controller;
 import com.splashzone.auth.userdetails.MemberDetails;
 import com.splashzone.boardclub.dto.BoardClubDto;
 import com.splashzone.boardclub.entity.BoardClub;
+import com.splashzone.boardclub.mapper.BoardClubMapper;
 import com.splashzone.boardclubcomment.dto.BoardClubCommentDto;
 import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardclubcomment.mapper.BoardClubCommentMapper;
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.boardstandard.mapper.BoardStandardMapper;
 import com.splashzone.boardstandardcomment.dto.BoardStandardCommentDto;
 import com.splashzone.boardstandardcomment.entity.BoardStandardComment;
 import com.splashzone.boardstandardcomment.mapper.BoardStandardCommentMapper;
@@ -50,9 +52,11 @@ public class MemberController {
     private final static String MEMBER_DEFAULT_URL = "/members";
     private final MemberService memberService;
     private final MemberMapper mapper;
-    private final TrackerMapper trackerMapper;
-    private final BoardClubCommentMapper boardClubCommentMapper;
+    private final BoardStandardMapper boardStandardMapper;
+    private final BoardClubMapper boardClubMapper;
     private final BoardStandardCommentMapper boardStandardCommentMapper;
+    private final BoardClubCommentMapper boardClubCommentMapper;
+    private final TrackerMapper trackerMapper;
 
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
@@ -135,11 +139,11 @@ public class MemberController {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        Page<BoardStandard> boardStandardPage = memberService.findStandardBoardsByMember(memberId, page - 1, size);
-        List<BoardStandardDto.Response> boardStandardResponses = boardStandardPage.getContent().stream()
-                .map(mapper::boardStandardToBoardStandardResponseDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(new MultiResponseDto<>(boardStandardResponses, boardStandardPage));
+        Page<BoardStandard> pageBoardStandards = memberService.findStandardBoardsByMember(memberId, page - 1, size);
+        List<BoardStandard> boardStandards = pageBoardStandards.getContent();
+
+        return ResponseEntity.ok(new MultiResponseDto<>(
+                boardStandardMapper.boardStandardsToBoardStandardResponseDtos(boardStandards), pageBoardStandards));
     }
 
     @GetMapping("/mypage/clubs/{member-id}")
@@ -154,11 +158,11 @@ public class MemberController {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        Page<BoardClub> boardClubPage = memberService.findClubBoardsByMember(memberId, page - 1, size);
-        List<BoardClubDto.Response> boardClubResponses = boardClubPage.getContent().stream()
-                .map(mapper::boardClubToBoardClubResponseDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(new MultiResponseDto<>(boardClubResponses, boardClubPage));
+        Page<BoardClub> pageBoardClubs = memberService.findClubBoardsByMember(memberId, page - 1, size);
+        List<BoardClub> boardClubs = pageBoardClubs.getContent();
+
+        return ResponseEntity.ok(new MultiResponseDto<>(
+                boardClubMapper.boardClubsToBoardClubResponseDtos(boardClubs), pageBoardClubs));
     }
 
     @GetMapping("/mypage/standardcomments/{member-id}")
@@ -173,11 +177,11 @@ public class MemberController {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        Page<BoardStandardComment> boardStandardCommentPage = memberService.findStandardCommentsByMember(memberId, page - 1, size);
-        List<BoardStandardComment> boardStandardComments = boardStandardCommentPage.getContent();
+        Page<BoardStandardComment> pageBoardStandardComments = memberService.findStandardCommentsByMember(memberId, page - 1, size);
+        List<BoardStandardComment> boardStandardComments = pageBoardStandardComments.getContent();
 
         return ResponseEntity.ok(new MultiResponseDto<>(
-                boardStandardCommentMapper.boardStandardCommentsToBoardStandardCommentResponseDtos(boardStandardComments), boardStandardCommentPage));
+                boardStandardCommentMapper.boardStandardCommentsToBoardStandardCommentResponseDtos(boardStandardComments), pageBoardStandardComments));
     }
 
     @GetMapping("/mypage/clubcomments/{member-id}")
@@ -192,11 +196,11 @@ public class MemberController {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        Page<BoardClubComment> boardClubCommentPage = memberService.findClubCommentsByMember(memberId, page - 1, size);
-        List<BoardClubComment> boardClubComments = boardClubCommentPage.getContent();
+        Page<BoardClubComment> pageBoardClubComments = memberService.findClubCommentsByMember(memberId, page - 1, size);
+        List<BoardClubComment> boardClubComments = pageBoardClubComments.getContent();
 
         return ResponseEntity.ok(new MultiResponseDto<>(
-                boardClubCommentMapper.boardClubCommentsToBoardClubCommentResponseDtos(boardClubComments), boardClubCommentPage));
+                boardClubCommentMapper.boardClubCommentsToBoardClubCommentResponseDtos(boardClubComments), pageBoardClubComments));
     }
 
     @GetMapping("/mypage/trackers/{member-id}")
@@ -211,10 +215,11 @@ public class MemberController {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        Page<Tracker> trackerPage = memberService.findTrackersByMember(memberId, page - 1, size);
-        List<Tracker> trackers = trackerPage.getContent();
+        Page<Tracker> pageTrackers = memberService.findTrackersByMember(memberId, page - 1, size);
+        List<Tracker> trackers = pageTrackers.getContent();
 
-        return ResponseEntity.ok(new MultiResponseDto<>(trackerMapper.trackersToTrackerResponseDtos(trackers), trackerPage));
+        return ResponseEntity.ok(new MultiResponseDto<>(
+                trackerMapper.trackersToTrackerResponseDtos(trackers), pageTrackers));
     }
 
     /*
