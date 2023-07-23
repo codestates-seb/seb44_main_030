@@ -36,10 +36,11 @@ public interface BoardStandardCommentMapper {
 
     default BoardStandardCommentDto.Response boardStandardCommentToBoardStandardCommentResponseDto(BoardStandardComment boardStandardComment) {
         return BoardStandardCommentDto.Response.builder()
-                .boardStandardCommentId(boardStandardComment.getBoardStandardCommentId())
-                .memberId(boardStandardComment.getMember().getMemberId())
                 .boardStandardId(boardStandardComment.getBoardStandard().getBoardStandardId())
+                .boardStandardCommentId(boardStandardComment.getBoardStandardCommentId())
                 .content(boardStandardComment.getContent())
+                .profileImageUrl(boardStandardComment.getMember().getProfileImageUrl())
+                .nickname(boardStandardComment.getMember().getNickname())
                 .createdAt(boardStandardComment.getCreatedAt())
                 .modifiedAt(boardStandardComment.getModifiedAt())
                 .build();

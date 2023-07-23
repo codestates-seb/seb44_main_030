@@ -77,6 +77,7 @@ public class BoardStandardCommentController {
                 HttpStatus.OK);
     }
 
+    /*
     @GetMapping
     public ResponseEntity getBoardStandardComments(@Positive @RequestParam Integer page,
                                                    @Positive @RequestParam Integer size) {
@@ -85,6 +86,16 @@ public class BoardStandardCommentController {
 
         return new ResponseEntity<>(
                 new MultiResponseDto<>(boardStandardCommentMapper.boardStandardCommentsToBoardStandardCommentResponseDtos(boardStandardComments), pageBoardStandardComments),
+                HttpStatus.OK);
+    }
+     */
+
+    @GetMapping("/standards/{standard-id}")
+    public ResponseEntity getBoardStandardCommentsByBoardStandard(@PathVariable("standard-id") @Positive Long boardStandardId) {
+        List<BoardStandardComment> boardStandardComments = boardStandardCommentService.findBoardStandardComments(boardStandardId);
+
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(boardStandardCommentMapper.boardStandardCommentsToBoardStandardCommentResponseDtos(boardStandardComments)),
                 HttpStatus.OK);
     }
 

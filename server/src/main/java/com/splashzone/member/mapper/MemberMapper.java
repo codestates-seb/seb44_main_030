@@ -28,16 +28,5 @@ public interface MemberMapper {
 
     BoardStandardDto.Response boardStandardToBoardStandardResponseDto(BoardStandard boardStandard);
 
-    default BoardStandardCommentDto.Response boardStandardCommentToBoardStandardCommentResponseDto(BoardStandardComment boardStandardComment){
-        return BoardStandardCommentDto.Response.builder()
-                .boardStandardCommentId(boardStandardComment.getBoardStandardCommentId())
-                .memberId(boardStandardComment.getMember().getMemberId())
-                .boardStandardId(boardStandardComment.getBoardStandard().getBoardStandardId())
-                .content(boardStandardComment.getContent())
-                .createdAt(boardStandardComment.getCreatedAt())
-                .modifiedAt(boardStandardComment.getModifiedAt())
-                .build();
-    }
-
     BoardClubDto.Response boardClubToBoardClubResponseDto(BoardClub boardClub);
 }

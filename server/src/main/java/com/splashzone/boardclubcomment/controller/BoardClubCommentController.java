@@ -90,7 +90,7 @@ public class BoardClubCommentController {
     }
      */
 
-    @GetMapping("/boardclubs/{club-id}")
+    @GetMapping("/clubs/{club-id}")
     public ResponseEntity getBoardClubCommentsByBoardClub(@PathVariable("club-id") @Positive Long boardClubId) {
         List<BoardClubComment> boardClubComments = boardClubCommentService.findBoardClubComments(boardClubId);
 

@@ -34,13 +34,15 @@ public class BoardStandardCommentDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
-        private Long boardStandardCommentId;
-
-        private Long memberId;
-
         private Long boardStandardId;
 
+        private Long boardStandardCommentId;
+
         private String content;
+
+        private String profileImageUrl;
+
+        private String nickname;
 
         private LocalDateTime createdAt;
 

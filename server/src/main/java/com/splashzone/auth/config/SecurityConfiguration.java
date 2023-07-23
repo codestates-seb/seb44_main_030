@@ -84,7 +84,7 @@ public class SecurityConfiguration {
                                 .antMatchers(HttpMethod.DELETE, "/standardcomments").hasRole("USER")
                                 .antMatchers(HttpMethod.POST, "/trackers").hasRole("USER")
                                 .antMatchers(HttpMethod.PATCH, "/trackers").hasRole("USER")
-                                .antMatchers(HttpMethod.GET, "/trackers").permitAll()
+                                .antMatchers(HttpMethod.GET, "/trackers").hasRole("USER")
                                 .antMatchers(HttpMethod.DELETE, "/trackers").hasRole("USER")
 //                        .antMatchers(HttpMethod.POST, "/standards").permitAll()
 //                        .antMatchers(HttpMethod.POST, "/clubs").permitAll()

@@ -41,8 +41,6 @@ public class BoardClubCommentService {
         findBoardClub.getBoardClubComments().add(reBuildBoardClubComment);
 
         return boardClubCommentRepository.save(reBuildBoardClubComment);
-
-        // score 증가 로직 추가 예정
     }
 
     public BoardClubComment updateBoardClubComment(BoardClubComment boardClubComment) {
@@ -66,10 +64,10 @@ public class BoardClubCommentService {
 
     public List<BoardClubComment> findBoardClubComments(Long boardClubId) {
         BoardClub findBoardClub = boardClubService.findVerifiedBoardClub(boardClubId);
-        return findAllBoardClubCommentsByBoardClub(findBoardClub);
+        return findAllCommentsByBoardClub(findBoardClub);
     }
 
-    public List<BoardClubComment> findAllBoardClubCommentsByBoardClub(BoardClub boardClub) {
+    public List<BoardClubComment> findAllCommentsByBoardClub(BoardClub boardClub) {
         return boardClubCommentRepository.findAllBoardClubCommentsByBoardClub(boardClub);
     }
 
