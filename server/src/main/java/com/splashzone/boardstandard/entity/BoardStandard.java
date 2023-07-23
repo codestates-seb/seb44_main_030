@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Builder
 @Entity
@@ -22,17 +22,19 @@ public class BoardStandard extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardStandardId;
 
-    @Column(name = "TITLE", nullable = false)
+    @Column(name = "TITLE", nullable = false, length = 100)
     private String title;
 
     @Column(name = "CONTENT", nullable = false)
+    @Lob
     private String content;
 
     @Setter
     @Column(name = "VIEW", nullable = false, columnDefinition = "integer default 0")
     private int view;
 
-    //TODO tagId mapping,likeCount 추가 해야됨!!
+    @Column(name = "LIKE_COUNT", nullable = true)
+    private int likeCount;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
@@ -40,19 +42,26 @@ public class BoardStandard extends Auditable {
 
     @Builder.Default
     @OneToMany(mappedBy = "boardStandard", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<BoardStandardTag> boardStandardTags = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "boardStandard", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BoardStandardComment> boardStandardComments = new ArrayList<>();
 
-
-    public BoardStandard(Long boardStandardId, String title, String content, int view) {
-        this.boardStandardId = boardStandardId;
-        this.title = title;
-        this.content = content;
-        this.view = view;
-    }
-
-    public void changeBoardStandard(BoardStandard boardStandard) {
+    public void changeBoardStandard(BoardStandard boardStandard, List<BoardStandardTag> standardTags) {
         this.title = boardStandard.getTitle();
         this.content = boardStandard.getContent();
+
+        this.boardStandardTags.clear();
+        this.boardStandardTags.addAll(standardTags);
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
     }
 
     public void setMember(Member member) {

@@ -39,6 +39,7 @@ public interface BoardClubCommentMapper {
                 .boardClubId(boardClubComment.getBoardClub().getBoardClubId())
                 .boardClubCommentId(boardClubComment.getBoardClubCommentId())
                 .content(boardClubComment.getContent())
+                .memberId(boardClubComment.getMember().getMemberId())
                 .profileImageUrl(boardClubComment.getMember().getProfileImageUrl())
                 .nickname((boardClubComment.getMember().getNickname()))
                 .createdAt(boardClubComment.getCreatedAt())

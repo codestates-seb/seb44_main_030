@@ -30,16 +30,16 @@ public class BoardStandardCommentService {
         Member findMember = memberService.findVerifiedMember(boardStandardComment.getMember().getMemberId());
         BoardStandard findBoardStandard = boardStandardService.findVerifiedBoardStandard(boardStandardComment.getBoardStandard().getBoardStandardId());
 
-        BoardStandardComment reBuildBoardStandardComment = BoardStandardComment.builder()
+        BoardStandardComment postBoardStandardComment = BoardStandardComment.builder()
                 .content(boardStandardComment.getContent())
                 .member(findMember)
                 .boardStandard(findBoardStandard)
                 .build();
 
-        findMember.getBoardStandardComments().add(reBuildBoardStandardComment);
-        findBoardStandard.getBoardStandardComments().add(reBuildBoardStandardComment);
+        findMember.getBoardStandardComments().add(postBoardStandardComment);
+        findBoardStandard.getBoardStandardComments().add(postBoardStandardComment);
 
-        return boardStandardCommentRepository.save(reBuildBoardStandardComment);
+        return boardStandardCommentRepository.save(postBoardStandardComment);
     }
 
     public BoardStandardComment updateBoardStandardComment(BoardStandardComment boardStandardComment) {

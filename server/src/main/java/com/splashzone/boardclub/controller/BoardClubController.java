@@ -39,8 +39,8 @@ public class BoardClubController {
     private static final int RECOMMEND_LIKE_COUNT = 1;
     private final BoardClubService boardClubService;
     private final BoardClubMapper boardClubMapper;
-    private final MemberService memberService;
     private final BoardClubRepository boardClubRepository;
+    private final MemberService memberService;
 
     @PostMapping
     public ResponseEntity postBoardClub(Authentication authentication,
@@ -53,7 +53,6 @@ public class BoardClubController {
         BoardClub boardClub = boardClubMapper.boardClubPostDtotoBoardClub(postDto);
         boardClub.setMember(member);
 
-        //
         BoardClub postBoardClub = boardClubService.createBoardClub(boardClub);
         URI location = UriCreator.createUri(BOARD_CLUB_DEFAULT_URL, postBoardClub.getBoardClubId());
 

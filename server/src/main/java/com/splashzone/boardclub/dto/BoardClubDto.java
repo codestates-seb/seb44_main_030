@@ -54,9 +54,6 @@ public class BoardClubDto {
     @Getter
     @NoArgsConstructor
     public static class Patch {
-        @Positive
-        private Long boardClubId;
-
         private String title;
 
         private String content;
@@ -80,10 +77,6 @@ public class BoardClubDto {
         private List<TagDto> tags;
 
         private BoardClub.BoardClubStatus boardClubStatus;
-
-//        public void setBoardClubId(Long boardClubId) {
-//            this.boardClubId = boardClubId;
-//        }
     }
 
     @Getter
@@ -93,7 +86,10 @@ public class BoardClubDto {
     public static class Response {
         private Long boardClubId;
 
-//        private Long memberId;
+        private Long memberId;
+
+        private String profileImageUrl;
+
         private String nickname;
 
         private String title;

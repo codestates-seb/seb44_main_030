@@ -2,12 +2,18 @@ package com.splashzone.boardstandard.service;
 
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.boardstandard.entity.BoardStandardLike;
+import com.splashzone.boardstandard.entity.BoardStandardTag;
 import com.splashzone.boardstandard.mapper.BoardStandardMapper;
+import com.splashzone.boardstandard.repository.BoardStandardLikeRepository;
 import com.splashzone.boardstandard.repository.BoardStandardRepository;
+import com.splashzone.boardstandard.repository.BoardStandardTagRepository;
 import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
 import com.splashzone.member.entity.Member;
 import com.splashzone.member.service.MemberService;
+import com.splashzone.tag.entity.Tag;
+import com.splashzone.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,68 +21,69 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class BoardStandardService {
-    private final BoardStandardMapper boardStandardMapper;
-    private final BoardStandardRepository boardStandardRepository;
+    private static final String SUCCESS_LIKE_BOARD_STANDARD = "좋아요 처리 완료";
+    private static final String SUCCESS_UNLIKE_BOARD_STANDARD = "좋아요 취소 완료";
     private final MemberService memberService;
+    private final BoardStandardRepository boardStandardRepository;
+    private final BoardStandardTagRepository boardStandardTagRepository;
+    private final BoardStandardLikeRepository boardStandardLikeRepository;
+    private final TagService tagService;
 
-    public BoardStandard createStandard(BoardStandard boardStandard) {
-        Member member = memberService.findMember(boardStandard.getMember().getMemberId());
-        BoardStandard reBuildBoardStandard = BoardStandard.builder()
+    public BoardStandard createBoardStandard(BoardStandard boardStandard) {
+        Member findMember = memberService.findVerifiedMember(boardStandard.getMember().getMemberId());
+
+        BoardStandard postBoardStandard = BoardStandard.builder()
                 .title(boardStandard.getTitle())
                 .content(boardStandard.getContent())
-                .member(member)
+                .member(findMember)
                 .build();
 
-        member.getBoardStandards().add(reBuildBoardStandard);
+        findMember.getBoardStandards().add(postBoardStandard);
 
-        return boardStandardRepository.save(reBuildBoardStandard);
+        bridgeTagToBoardStandard(boardStandard, postBoardStandard);
 
-//        BoardStandard boardStandard = boardStandardMapper.postDtoToBoardStandard(postDto);
-//        boardStandard.setMember(member);
-//        boardStandardRepository.save(boardStandard);
-//        return boardStandard;
+        return boardStandardRepository.save(postBoardStandard);
     }
 
-    public BoardStandard updateStandard(BoardStandard boardStandard) {
+    public BoardStandard updateBoardStandard(BoardStandard boardStandard) {
         BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandard.getBoardStandardId());
-        findBoardStandard.changeBoardStandard(boardStandard);
+
+        List<BoardStandardTag> standardTags = boardStandard.getBoardStandardTags().stream()
+                        .map(boardStandardTag -> {
+                            Tag dbTag = tagService.findVerifiedTagByTagName(boardStandardTag.getTag().getTagName());
+                            return BoardStandardTag.builder()
+                                    .boardStandard(findBoardStandard)
+                                    .tag(dbTag).build();
+                        })
+                        .collect(Collectors.toList());
+
+        findBoardStandard.changeBoardStandard(boardStandard, standardTags);
+
         return boardStandardRepository.save(findBoardStandard);
     }
 
-    public BoardStandard findStandard(Long boardStandardId) {
-        BoardStandard boardStandard = boardStandardRepository.findById(boardStandardId).orElseThrow(() -> new RuntimeException());
-        //뷰수 추가
-        boardStandard.setView(boardStandard.getView() + 1);
-        boardStandardRepository.save(boardStandard);
-        return boardStandard;
+    @Transactional(readOnly = true)
+    public BoardStandard findBoardStandard(Long boardStandardId) {
+        return findVerifiedBoardStandard(boardStandardId);
     }
 
-    public Page<BoardStandard> findStandards(int page, int size) {
+    @Transactional(readOnly = true)
+    public Page<BoardStandard> findBoardStandards(Integer page, Integer size) {
         return boardStandardRepository.findByBoardStandard(PageRequest.of(page, size, Sort.by("boardStandardId").descending()));
     }
 
-    //TODO 실제 삭제 말고 상태만 바뀌게 코드 변경하기
-    public void deleteStandard(Long boardStandardId) {
-        BoardStandard boardStandard = boardStandardRepository.findById(boardStandardId).orElseThrow(() -> new RuntimeException());
-        boardStandardRepository.delete(boardStandard);
-//        BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandardId);
-//        boardStandardRepository.delete(findBoardStandard);
-    }
+    public void deleteBoardStandard(Long boardStandardId) {
+        BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandardId);
 
-    //회원이 존재하는지 확인
-    private void verifyBoardStandard(BoardStandard boardStandard) {
-        memberService.findMember(boardStandard.getMember().getMemberId());
-    }
-
-    //조회수 증가
-    public int increaseViews(Long boardStandardId) {
-        return boardStandardRepository.updateViews(boardStandardId);
+        boardStandardRepository.delete(findBoardStandard);
     }
 
     public BoardStandard findVerifiedBoardStandard(Long boardStandardId) {
@@ -87,6 +94,57 @@ public class BoardStandardService {
                         new BusinessLogicException(ExceptionCode.BOARD_STANDARD_NOT_FOUND));
 
         return findBoardStandard;
+    }
+
+    private void bridgeTagToBoardStandard(BoardStandard boardStandard, BoardStandard postBoardStandard) {
+        boardStandard.getBoardStandardTags().stream()
+                .forEach(boardStandardTag -> {
+                    Tag dbTag = tagService.findVerifiedTagByTagName(boardStandardTag.getTag().getTagName());
+                    BoardStandardTag reBuildBoardStandardTag =
+                            BoardStandardTag.builder()
+                                    .boardStandard(postBoardStandard)
+                                    .tag(dbTag).build();
+                    boardStandardTagRepository.save(reBuildBoardStandardTag);
+                });
+    }
+
+    //조회수 증가
+    public int updateViews(Long boardStandardId) {
+        return boardStandardRepository.updateViews(boardStandardId);
+    }
+
+    public String updateLikeOfBoardStandard(Long boardStandardId, Long memberId) {
+        BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandardId);
+
+        Member findMember = memberService.findVerifiedMember(memberId);
+
+        if (!hasBoardStandardLike(findBoardStandard, findMember)) {
+            findBoardStandard.increaseLikeCount();
+            return createBoardStandardLike(findBoardStandard, findMember);
+        }
+
+        findBoardStandard.decreaseLikeCount();
+        return removeBoardStandardLike(findBoardStandard, findMember);
+    }
+
+    public String createBoardStandardLike(BoardStandard boardStandard, Member member) {
+        BoardStandardLike boardStandardLike = new BoardStandardLike(boardStandard, member);
+        boardStandardLikeRepository.save(boardStandardLike);
+        return SUCCESS_LIKE_BOARD_STANDARD;
+    }
+
+    public String removeBoardStandardLike(BoardStandard boardStandard, Member member) {
+        BoardStandardLike boardStandardLike = boardStandardLikeRepository.findByBoardStandardAndMember(boardStandard, member)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.LIKE_NOT_FOUND));
+
+        boardStandardLikeRepository.delete(boardStandardLike);
+
+        return SUCCESS_UNLIKE_BOARD_STANDARD;
+    }
+
+    public boolean hasBoardStandardLike(BoardStandard boardStandard, Member member) {
+        return boardStandardLikeRepository.findByBoardStandardAndMember(boardStandard, member)
+                .isPresent();
     }
 
     //총 질문 수 카운트

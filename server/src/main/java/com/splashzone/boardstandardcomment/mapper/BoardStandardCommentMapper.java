@@ -39,6 +39,7 @@ public interface BoardStandardCommentMapper {
                 .boardStandardId(boardStandardComment.getBoardStandard().getBoardStandardId())
                 .boardStandardCommentId(boardStandardComment.getBoardStandardCommentId())
                 .content(boardStandardComment.getContent())
+                .memberId(boardStandardComment.getMember().getMemberId())
                 .profileImageUrl(boardStandardComment.getMember().getProfileImageUrl())
                 .nickname(boardStandardComment.getMember().getNickname())
                 .createdAt(boardStandardComment.getCreatedAt())

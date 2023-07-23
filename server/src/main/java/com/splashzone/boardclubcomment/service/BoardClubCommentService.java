@@ -31,16 +31,16 @@ public class BoardClubCommentService {
         Member findMember = memberService.findVerifiedMember(boardClubComment.getMember().getMemberId());
         BoardClub findBoardClub = boardClubService.findVerifiedBoardClub(boardClubComment.getBoardClub().getBoardClubId());
 
-        BoardClubComment reBuildBoardClubComment = BoardClubComment.builder()
+        BoardClubComment postBoardClubComment = BoardClubComment.builder()
                 .content(boardClubComment.getContent())
                 .member(findMember)
                 .boardClub(findBoardClub)
                 .build();
 
-        findMember.getBoardClubComments().add(reBuildBoardClubComment);
-        findBoardClub.getBoardClubComments().add(reBuildBoardClubComment);
+        findMember.getBoardClubComments().add(postBoardClubComment);
+        findBoardClub.getBoardClubComments().add(postBoardClubComment);
 
-        return boardClubCommentRepository.save(reBuildBoardClubComment);
+        return boardClubCommentRepository.save(postBoardClubComment);
     }
 
     public BoardClubComment updateBoardClubComment(BoardClubComment boardClubComment) {
