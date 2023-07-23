@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import Splashzone from '../../public/Splashzone.png';
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import ContentsCard from '../components/common/ContentsCard';
 import { useQuery } from '@tanstack/react-query';
@@ -11,7 +10,7 @@ import { CommunityPostData } from '../types/CommunityTypes';
 import { ClubBoardData } from '../types/ClubData';
 
 const Main = () => {
-    const [page, setPage] = useState(1);
+    const page = 1;
     const { data: community } = useQuery({
         queryKey: ['maincommunity'],
         queryFn: () => getMaincommunity(),

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { clearToast } from '../../../store/toastState';
+import { RootState } from '../../../store/store';
 
 const Toast = () => {
     const [status, setStatus] = useState('start');

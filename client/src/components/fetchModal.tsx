@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
+import { useForm, FieldValues } from 'react-hook-form';
 import moment from 'moment';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -9,17 +9,8 @@ import { useCookies } from 'react-cookie';
 
 interface InputProps {
     height?: string;
-    onChange?: () => void;
+    onChange?: any;
     value?: string;
-}
-
-interface DataProps {
-    memberId?: number;
-    title: string;
-    content: string;
-    exerciseStartTime: string;
-    exerciseEndTime: string;
-    todayDate: string;
 }
 
 interface ModalProps {
@@ -29,12 +20,13 @@ interface ModalProps {
 }
 
 const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
-    const [prev, setPrev] = useState();
+    const [prev, setPrev] = useState({ exerciseTime: 0, title: '', content: '' });
     const dispatch = useDispatch();
     const dae = moment(value).format('YYYYMMDD');
     const todayDate = moment(value).format('YYYY-MM-DD');
+    const API_URL = import.meta.env.VITE_KEY;
 
-    const foundObject = caldata.find((item) => item.todayDate === todayDate);
+    const foundObject = caldata.find((item: any) => item.todayDate === todayDate);
 
     const trackerIdValue = foundObject.trackerId;
 
@@ -50,7 +42,7 @@ const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
     };
     useEffect(() => {
         axios
-            .get(`http://13.209.142.240:8080/trackers/${trackerIdValue}`, {
+            .get(`${API_URL}/trackers/${trackerIdValue}`, {
                 headers: {
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
                     Refresh: `${refreshToken}`,
@@ -97,14 +89,13 @@ const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
     const watchStartTime = watch('exerciseStartTime');
     const watchEndTime = watch('exerciseEndTime');
 
-    const onSubmitHandler = async (data: DataProps) => {
+    const onSubmitHandler = async (data: FieldValues) => {
         const modifiedValue = `${dae}${watchStartTime.replace(':', '')}`;
         const modfied2Value = `${dae}${watchEndTime.replace(':', '')}`;
-        data.memberId = 1;
         data.exerciseStartTime = modifiedValue;
         data.exerciseEndTime = modfied2Value;
         data.todayDate = todayDate;
-        const url = `http://13.209.142.240:8080/trackers/${trackerIdValue}`;
+        const url = `${API_URL}/trackers/${trackerIdValue}`;
         console.log(data);
 
         try {
@@ -163,15 +154,14 @@ const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
                                 height="30px"
                                 {...register('title')}
                                 value={prev.title}
-                                onChange={(e) => {
-                                    setPrev((prev) => ({ ...prev, title: e.target.value }));
+                                onChange={(e: any) => {
+                                    setPrev((prev: any) => ({ ...prev, title: e.target.value }));
                                 }}
                             ></StyledInput>
                             <Styledtextarea
-                                height="300px"
                                 {...register('content')}
                                 value={prev.content}
-                                onChange={(e) => {
+                                onChange={(e: any) => {
                                     setPrev((prev) => ({ ...prev, content: e.target.value }));
                                 }}
                             ></Styledtextarea>
