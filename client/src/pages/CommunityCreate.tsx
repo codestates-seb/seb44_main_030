@@ -71,7 +71,7 @@ const CommunityCreate = () => {
             memberId: 3, // 이 부분은 로그인한 유저의 ID로 수정
             title: data.title,
             content: data.content,
-            tag: englishTagName,
+            tags: [{tagName: englishTagName}],
         };
         const patchPayload = {
             title: data.title,
