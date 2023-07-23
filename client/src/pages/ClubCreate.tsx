@@ -275,8 +275,16 @@ const ClubCreate = () => {
                                 name="clubMap"
                                 control={control}
                                 defaultValue={clubMap}
-                                render={({ field }) => (
-                                    <StyledButton {...field} onClick={() => setShowMap(!showMap)}>
+                                render={({ field: { onChange, onBlur, value, name, ref } }) => (
+                                    <StyledButton
+                                        name={name}
+                                        ref={ref}
+                                        onClick={() => {
+                                            setShowMap(!showMap);
+                                            onChange(value); // If necessary, notify react-hook-form about the change
+                                        }}
+                                        onBlur={onBlur}
+                                    >
                                         위치 검색
                                     </StyledButton>
                                 )}
