@@ -7,6 +7,8 @@ import com.splashzone.boardclubcomment.dto.BoardClubCommentDto;
 import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.boardstandardcomment.dto.BoardStandardCommentDto;
+import com.splashzone.boardstandardcomment.entity.BoardStandardComment;
 import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
 import com.splashzone.exception.BusinessLogicException;
@@ -129,7 +131,7 @@ public class MemberController {
 
         Page<BoardStandard> boardStandardPage = memberService.findStandardBoardsByMember(memberId, page - 1, size);
         List<BoardStandardDto.Response> boardStandardResponses = boardStandardPage.getContent().stream()
-                .map(mapper::boardStandardToBoardStandardResponse)
+                .map(mapper::boardStandardToBoardStandardResponseDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new MultiResponseDto<>(boardStandardResponses, boardStandardPage));
     }
@@ -148,11 +150,21 @@ public class MemberController {
 
         Page<BoardClub> boardClubPage = memberService.findClubBoardsByMember(memberId, page - 1, size);
         List<BoardClubDto.Response> boardClubResponses = boardClubPage.getContent().stream()
-                .map(mapper::boardClubToBoardClubResponse)
+                .map(mapper::boardClubToBoardClubResponseDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new MultiResponseDto<>(boardClubResponses, boardClubPage));
     }
 
+    @GetMapping("/mypage/standardcomments/{member-id}")
+    public ResponseEntity geyMyStandardComments(@PathVariable("member-id") Long memberId,
+                                                @Positive @RequestParam Integer page,
+                                                @Positive @RequestParam Integer size) {
+        Page<BoardStandardComment> boardStandardCommentPage = memberService.findStandardCommentsByMember(memberId, page - 1, size);
+        List<BoardStandardCommentDto.Response> boardStandardCommentResponses = boardStandardCommentPage.getContent().stream()
+                .map(mapper::boardStandardCommentToBoardStandardCommentResponseDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new MultiResponseDto<>(boardStandardCommentResponses, boardStandardCommentPage));
+    }
     @GetMapping("/mypage/clubcomments/{member-id}")
     public ResponseEntity getMyClubComments(Authentication authentication,
                                             @PathVariable("member-id") @Positive Long memberId,
@@ -167,7 +179,7 @@ public class MemberController {
 
         Page<BoardClubComment> boardClubCommentPage = memberService.findClubCommentsByMember(memberId, page - 1, size);
         List<BoardClubCommentDto.Response> boardClubCommentResponses = boardClubCommentPage.getContent().stream()
-                .map(mapper::boardClubCommentToBoardClubCommentResponse)
+                .map(mapper::boardClubCommentToBoardClubCommentResponseDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new MultiResponseDto<>(boardClubCommentResponses, boardClubCommentPage));
     }

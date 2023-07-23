@@ -6,6 +6,8 @@ import com.splashzone.boardclubcomment.dto.BoardClubCommentDto;
 import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.boardstandardcomment.dto.BoardStandardCommentDto;
+import com.splashzone.boardstandardcomment.entity.BoardStandardComment;
 import com.splashzone.member.dto.MemberDto;
 import com.splashzone.member.entity.Member;
 import com.splashzone.tracker.dto.TrackerDto;
@@ -24,11 +26,31 @@ public interface MemberMapper {
 
     List<MemberDto.Response> membersToMemberResponses(List<Member> members);
 
-    BoardStandardDto.Response boardStandardToBoardStandardResponse(BoardStandard boardStandard);
+    BoardStandardDto.Response boardStandardToBoardStandardResponseDto(BoardStandard boardStandard);
 
-    BoardClubDto.Response boardClubToBoardClubResponse(BoardClub boardClub);
+    default BoardStandardCommentDto.Response boardStandardCommentToBoardStandardCommentResponseDto(BoardStandardComment boardStandardComment){
+        return BoardStandardCommentDto.Response.builder()
+                .boardStandardCommentId(boardStandardComment.getBoardStandardCommentId())
+                .memberId(boardStandardComment.getMember().getMemberId())
+                .boardStandardId(boardStandardComment.getBoardStandard().getBoardStandardId())
+                .content(boardStandardComment.getContent())
+                .createdAt(boardStandardComment.getCreatedAt())
+                .modifiedAt(boardStandardComment.getModifiedAt())
+                .build();
+    }
 
-    BoardClubCommentDto.Response boardClubCommentToBoardClubCommentResponse(BoardClubComment boardClubComment);
+    BoardClubDto.Response boardClubToBoardClubResponseDto(BoardClub boardClub);
+
+    default BoardClubCommentDto.Response boardClubCommentToBoardClubCommentResponseDto(BoardClubComment boardClubComment){
+        return BoardClubCommentDto.Response.builder()
+                .boardClubCommentId(boardClubComment.getBoardClubCommentId())
+                .memberId(boardClubComment.getMember().getMemberId())
+                .boardClubId(boardClubComment.getBoardClub().getBoardClubId())
+                .content(boardClubComment.getContent())
+                .createdAt(boardClubComment.getCreatedAt())
+                .modifiedAt(boardClubComment.getModifiedAt())
+                .build();
+    }
 
     TrackerDto.Response trackerTotrackerResponse(Tracker tracker);
 }
