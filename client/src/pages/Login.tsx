@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -7,11 +6,10 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import BACK1 from '../../public/ob3.png';
 import BACK2 from '../../public/ob4.png';
-
-import LoginBG from '../../public/login.png';
 import RegisterForm from '../components/RegisterForm';
 
 interface FormInput {
+    email: string;
     username: string;
     password: string;
 }
