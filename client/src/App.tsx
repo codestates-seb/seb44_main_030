@@ -10,7 +10,6 @@ import { CookiesProvider } from 'react-cookie';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import Toast from './components/common/ToastUI/toast';
-import { Link } from 'react-router-dom';
 
 function App() {
     const location = useLocation();

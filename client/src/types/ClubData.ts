@@ -15,6 +15,8 @@ export interface ClubBoardData {
     boardClubStatus: string;
     createdAt: string;
     modifiedAt: string;
+    likeCount: number; // added
+    memberLiked: number[]; // added
 }
 
 export interface ClubBoardPageInfo {

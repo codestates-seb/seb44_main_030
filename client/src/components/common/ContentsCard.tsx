@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-
 import Tag from './Tag';
-
 import ViewsIcon from '../../../public/view.png';
 import MessageIcon from '../../../public/bubble-chat.png';
 import LikeIcon from '../../assets/heart (1).png';
@@ -23,6 +21,7 @@ interface PostProps {
 }
 
 interface CommunityPostProps extends PostProps {
+    kind: 'community';
     communityProps: {
         memberProfileImg: string; //[작성자 프로필 이미지 소스]
         name: string; //[작성자 닉네임]
@@ -36,6 +35,7 @@ interface CommunityPostProps extends PostProps {
 }
 
 interface ClubPostProps extends PostProps {
+    kind: 'club';
     clubProps: {
         boardClubId: number;
         tags: { tagName: string }[];
@@ -50,17 +50,17 @@ type CardProps = CommunityPostProps | ClubPostProps;
 
 export default function ContentsCard({ memberId, communityProps, clubProps, type }: CardProps) {
     const {
-        memberId: communityMemberId,
+        // memberId: communityMemberId,
         title: communityTitle,
         content: communityContent,
         view: communityView,
         commentCount: communityCommentCount,
         nickname: communityNickname,
         profileImageUrl: communitProfileImageUrl,
-        member,
+        // member,
         tags: communityTags,
-        registeredAt,
-        modifiedAt,
+        // registeredAt,
+        // modifiedAt,
         like,
         memberLiked = [],
         boardStandardId,
@@ -130,10 +130,10 @@ export default function ContentsCard({ memberId, communityProps, clubProps, type
 
     // 날짜 어떻게 받을 건지 상의 필요.(포맷팅 된 상태 or Not)
     // 날짜 포맷팅 임의로
-    const dateStr = modifiedAt || registeredAt || '';
-    const datePart = dateStr.split('T')[0];
-    const dateArr = datePart.split('-');
-    const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
+    // const dateStr = modifiedAt || registeredAt || '';
+    // const datePart = dateStr.split('T')[0];
+    // const dateArr = datePart.split('-');
+    // const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
 
     return (
         <CardWarp isCompleted={isCompleted}>
