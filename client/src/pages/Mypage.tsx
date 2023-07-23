@@ -33,7 +33,7 @@ const Mypage = () => {
     const refreshToken = cookies.RefreshToken;
     const API_URL = import.meta.env.VITE_KEY;
 
-    const memberId = 4; //memberId Link로받던가 아니면  header포함해서받던가하기
+    const memberId = 1; //memberId Link로받던가 아니면  header포함해서받던가하기
     const { data, isLoading, isError, error } = useQuery<any, Error>({
         queryKey: ['memberinfo', memberId],
         queryFn: () => getInfos(memberId),
