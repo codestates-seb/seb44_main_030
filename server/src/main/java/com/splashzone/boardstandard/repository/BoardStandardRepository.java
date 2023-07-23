@@ -10,14 +10,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface BoardStandardRepository extends JpaRepository<BoardStandard, Long> {
-    @Query("SELECT b from BoardStandard b")
+    @Query("SELECT b FROM BoardStandard b")
     Page<BoardStandard> findByBoardStandard(Pageable pageable);
 
     @Modifying
-    @Query("UPDATE BoardStandard c SET c.view = c.view + 1 WHERE c.boardStandardId = :boardStandardId")
+    @Query("UPDATE BoardStandard b SET b.view = b.view + 1 WHERE b.boardStandardId = :boardStandardId")
     int updateViews(Long boardStandardId);
 
     Page<BoardStandard> findByLikeCountGreaterThanEqual(Pageable pageable, int number);
 
     Page<BoardStandard> findByMember(Member member, Pageable pageable);
+
+    @Query(value = "SELECT b FROM BoardStandard b WHERE b.title LIKE %:keyword% OR b.content LIKE %:keyword%")
+    Page<BoardStandard> findAllSearch(String keyword, Pageable pageable);
 }

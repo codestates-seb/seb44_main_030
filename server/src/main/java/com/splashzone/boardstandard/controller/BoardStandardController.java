@@ -106,6 +106,17 @@ public class BoardStandardController {
                 new MultiResponseDto<>(boardStandardMapper.boardStandardsToBoardStandardResponseDtos(boardStandards), pageBoardStandards), HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity getBoardStandardsByKeyword(@Positive @RequestParam Integer page,
+                                                     @Positive @RequestParam Integer size,
+                                                     @RequestParam(value = "keyword") String keyword) {
+        Page<BoardStandard> pageBoardStandards = boardStandardService.searchBoardStandards(page - 1, size, keyword);
+        List<BoardStandard> boardStandards = pageBoardStandards.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boardStandardMapper.boardStandardsToBoardStandardResponseDtos(boardStandards), pageBoardStandards), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{standard-id}")
     public ResponseEntity deleteBoardStandard(Authentication authentication,
                                               @PathVariable("standard-id") @Positive Long boardStandardId) {

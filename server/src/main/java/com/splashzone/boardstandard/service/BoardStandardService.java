@@ -80,6 +80,13 @@ public class BoardStandardService {
         return boardStandardRepository.findByBoardStandard(PageRequest.of(page, size, Sort.by("boardStandardId").descending()));
     }
 
+    public Page<BoardStandard> searchBoardStandards(Integer page, Integer size, String keyword) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("boardStandardId").descending());
+        Page<BoardStandard> pageBoardStandards = boardStandardRepository.findAllSearch(keyword, pageRequest);
+
+        return pageBoardStandards;
+    }
+
     public void deleteBoardStandard(Long boardStandardId) {
         BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandardId);
 
