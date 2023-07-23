@@ -5,10 +5,12 @@ import com.splashzone.boardclub.dto.BoardClubDto;
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.boardclubcomment.dto.BoardClubCommentDto;
 import com.splashzone.boardclubcomment.entity.BoardClubComment;
+import com.splashzone.boardclubcomment.mapper.BoardClubCommentMapper;
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.boardstandardcomment.dto.BoardStandardCommentDto;
 import com.splashzone.boardstandardcomment.entity.BoardStandardComment;
+import com.splashzone.boardstandardcomment.mapper.BoardStandardCommentMapper;
 import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
 import com.splashzone.exception.BusinessLogicException;
@@ -49,6 +51,8 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
     private final TrackerMapper trackerMapper;
+    private final BoardClubCommentMapper boardClubCommentMapper;
+    private final BoardStandardCommentMapper boardStandardCommentMapper;
 
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
@@ -109,9 +113,11 @@ public class MemberController {
     public ResponseEntity terminatedMember(Authentication authentication,
                                            @PathVariable("member-id") @Positive Long memberId) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()).getMemberId(), memberId)) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
+
         memberService.terminateMember(memberId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -156,15 +162,24 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/standardcomments/{member-id}")
-    public ResponseEntity geyMyStandardComments(@PathVariable("member-id") Long memberId,
+    public ResponseEntity geyMyStandardComments(Authentication authentication,
+                                                @PathVariable("member-id") Long memberId,
                                                 @Positive @RequestParam Integer page,
                                                 @Positive @RequestParam Integer size) {
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                memberService.findMember(memberId))) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         Page<BoardStandardComment> boardStandardCommentPage = memberService.findStandardCommentsByMember(memberId, page - 1, size);
-        List<BoardStandardCommentDto.Response> boardStandardCommentResponses = boardStandardCommentPage.getContent().stream()
-                .map(mapper::boardStandardCommentToBoardStandardCommentResponseDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(new MultiResponseDto<>(boardStandardCommentResponses, boardStandardCommentPage));
+        List<BoardStandardComment> boardStandardComments = boardStandardCommentPage.getContent();
+
+        return ResponseEntity.ok(new MultiResponseDto<>(
+                boardStandardCommentMapper.boardStandardCommentsToBoardStandardCommentResponseDtos(boardStandardComments), boardStandardCommentPage));
     }
+
     @GetMapping("/mypage/clubcomments/{member-id}")
     public ResponseEntity getMyClubComments(Authentication authentication,
                                             @PathVariable("member-id") @Positive Long memberId,
@@ -178,10 +193,10 @@ public class MemberController {
         }
 
         Page<BoardClubComment> boardClubCommentPage = memberService.findClubCommentsByMember(memberId, page - 1, size);
-        List<BoardClubCommentDto.Response> boardClubCommentResponses = boardClubCommentPage.getContent().stream()
-                .map(mapper::boardClubCommentToBoardClubCommentResponseDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(new MultiResponseDto<>(boardClubCommentResponses, boardClubCommentPage));
+        List<BoardClubComment> boardClubComments = boardClubCommentPage.getContent();
+
+        return ResponseEntity.ok(new MultiResponseDto<>(
+                boardClubCommentMapper.boardClubCommentsToBoardClubCommentResponseDtos(boardClubComments), boardClubCommentPage));
     }
 
     @GetMapping("/mypage/trackers/{member-id}")
@@ -196,17 +211,19 @@ public class MemberController {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        Page<Tracker> pageTrackers = memberService.findTrackersByMember(memberId, page - 1, size);
-        List<Tracker> trackers = pageTrackers.getContent();
+        Page<Tracker> trackerPage = memberService.findTrackersByMember(memberId, page - 1, size);
+        List<Tracker> trackers = trackerPage.getContent();
 
-        return ResponseEntity.ok(new MultiResponseDto<>(trackerMapper.trackersToTrackerResponseDtos(trackers), pageTrackers));
+        return ResponseEntity.ok(new MultiResponseDto<>(trackerMapper.trackersToTrackerResponseDtos(trackers), trackerPage));
     }
 
-//    @DeleteMapping("/logout")
-//    public ResponseEntity logout(@RequestHeader("Access") @Positive String accessToken) {
-//        log.info(accessToken);
-//        accessTokenService.deleteAccessToken(accessToken);
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
+    /*
+    @DeleteMapping("/logout")
+    public ResponseEntity logout(@RequestHeader("Access") @Positive String accessToken) {
+        log.info(accessToken);
+        accessTokenService.deleteAccessToken(accessToken);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+     */
 
 }

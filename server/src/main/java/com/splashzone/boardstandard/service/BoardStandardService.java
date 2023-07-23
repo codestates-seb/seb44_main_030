@@ -81,7 +81,11 @@ public class BoardStandardService {
 
     public BoardStandard findVerifiedBoardStandard(Long boardStandardId) {
         Optional<BoardStandard> optionalBoardStandard = boardStandardRepository.findById(boardStandardId);
-        BoardStandard findBoardStandard = optionalBoardStandard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_STANDARD_NOT_FOUND));
+
+        BoardStandard findBoardStandard =
+                optionalBoardStandard.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.BOARD_STANDARD_NOT_FOUND));
+
         return findBoardStandard;
     }
 

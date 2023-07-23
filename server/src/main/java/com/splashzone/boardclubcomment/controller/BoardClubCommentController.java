@@ -77,6 +77,7 @@ public class BoardClubCommentController {
                 HttpStatus.OK);
     }
 
+    /*
     @GetMapping
     public ResponseEntity getBoardClubComments(@Positive @RequestParam Integer page,
                                                @Positive @RequestParam Integer size) {
@@ -85,6 +86,16 @@ public class BoardClubCommentController {
 
         return new ResponseEntity<>(
                 new MultiResponseDto<>(boardClubCommentMapper.boardClubCommentsToBoardClubCommentResponseDtos(boardClubComments), pageBoardClubComments),
+                HttpStatus.OK);
+    }
+     */
+
+    @GetMapping("/clubs/{club-id}")
+    public ResponseEntity getBoardClubCommentsByBoardClub(@PathVariable("club-id") @Positive Long boardClubId) {
+        List<BoardClubComment> boardClubComments = boardClubCommentService.findBoardClubComments(boardClubId);
+
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(boardClubCommentMapper.boardClubCommentsToBoardClubCommentResponseDtos(boardClubComments)),
                 HttpStatus.OK);
     }
 

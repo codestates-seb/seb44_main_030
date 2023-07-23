@@ -12,9 +12,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface BoardClubCommentMapper {
     default BoardClubComment boardClubCommentPostDtotoBoardClubComment(BoardClubCommentDto.Post requestBody, Member member) {
-//        Member member = new Member();
-//        member.setMemberId(requestBody.getMemberId());
-
         BoardClub boardClub = new BoardClub();
         boardClub.setBoardClubId(requestBody.getBoardClubId());
 
@@ -26,9 +23,6 @@ public interface BoardClubCommentMapper {
     }
 
     default BoardClubComment boardClubCommentPatchDtotoBoardClubComment(BoardClubCommentDto.Patch requestBody, Long boardClubCommentId, Member member) {
-//        Member member = new Member();
-//        member.setMemberId(requestBody.getMemberId());
-
         BoardClub boardClub = new BoardClub();
         boardClub.setBoardClubId(requestBody.getBoardClubId());
 
@@ -42,10 +36,11 @@ public interface BoardClubCommentMapper {
 
     default BoardClubCommentDto.Response boardClubCommentToBoardClubCommentResponseDto(BoardClubComment boardClubComment) {
         return BoardClubCommentDto.Response.builder()
-                .boardClubCommentId(boardClubComment.getBoardClubCommentId())
-                .memberId(boardClubComment.getMember().getMemberId())
                 .boardClubId(boardClubComment.getBoardClub().getBoardClubId())
+                .boardClubCommentId(boardClubComment.getBoardClubCommentId())
                 .content(boardClubComment.getContent())
+                .profileImageUrl(boardClubComment.getMember().getProfileImageUrl())
+                .nickname((boardClubComment.getMember().getNickname()))
                 .createdAt(boardClubComment.getCreatedAt())
                 .modifiedAt(boardClubComment.getModifiedAt())
                 .build();

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,8 +55,19 @@ public class BoardStandardCommentService {
         return findVerifiedBoardStandardComment(boardStandardCommentId);
     }
 
+    /*
     public Page<BoardStandardComment> findBoardStandardComments(Integer page, Integer size) {
         return boardStandardCommentRepository.findAll(PageRequest.of(page, size, Sort.by("boardStandardCommentId")));
+    }
+     */
+
+    public List<BoardStandardComment> findBoardStandardComments(Long boardStandardId) {
+        BoardStandard findBoardStandard = boardStandardService.findVerifiedBoardStandard(boardStandardId);
+        return findAllCommentsByBoardStandard(findBoardStandard);
+    }
+
+    public List<BoardStandardComment> findAllCommentsByBoardStandard(BoardStandard boardStandard) {
+        return boardStandardCommentRepository.findAllBoardStandardCommentsByBoardStandard(boardStandard);
     }
 
     public void deleteBoardStandardComment(Long boardStandardCommentId) {
