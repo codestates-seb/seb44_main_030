@@ -40,6 +40,8 @@ public class BoardStandardCommentDto {
 
         private String content;
 
+        private Long memberId;
+
         private String profileImageUrl;
 
         private String nickname;

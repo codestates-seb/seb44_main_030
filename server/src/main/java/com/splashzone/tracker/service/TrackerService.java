@@ -31,7 +31,7 @@ public class TrackerService {
         try {
             Member findMember = memberService.findVerifiedMember(tracker.getMember().getMemberId());
 
-            Tracker reBuildTracker = Tracker.builder()
+            Tracker postTracker = Tracker.builder()
                     .title(tracker.getTitle())
                     .content(tracker.getContent())
                     .todayDate(tracker.getTodayDate())
@@ -41,9 +41,9 @@ public class TrackerService {
                     .member(findMember)
                     .build();
 
-            findMember.getTrackers().add(reBuildTracker);
+            findMember.getTrackers().add(postTracker);
 
-            return trackerRepository.save(reBuildTracker);
+            return trackerRepository.save(postTracker);
         } catch (ParseException parseException) {
             throw new BusinessLogicException(ExceptionCode.INVALID_DATE_FORMAT);
         }
