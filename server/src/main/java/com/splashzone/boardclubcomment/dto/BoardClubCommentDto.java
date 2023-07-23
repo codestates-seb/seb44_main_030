@@ -13,9 +13,6 @@ public class BoardClubCommentDto {
     @Getter
     @NoArgsConstructor
     public static class Post {
-//        @Positive
-//        private Long memberId;
-
         @Positive
         private Long boardClubId;
 
@@ -26,14 +23,8 @@ public class BoardClubCommentDto {
     @Getter
     @NoArgsConstructor
     public static class Patch {
-//        @Positive
-//        private Long memberId;
-
         @Positive
         private Long boardClubId;
-
-//        @Positive
-//        private Long boardClubCommentId;
 
         private String content;
     }
@@ -43,13 +34,15 @@ public class BoardClubCommentDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
-        private Long boardClubCommentId;
-
-        private Long memberId;
-
         private Long boardClubId;
 
+        private Long boardClubCommentId;
+
         private String content;
+
+        private String profileImageUrl;
+
+        private String nickname;
 
         private LocalDateTime createdAt;
 

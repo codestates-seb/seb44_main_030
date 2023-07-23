@@ -5,6 +5,7 @@ import com.splashzone.boardclub.dto.BoardClubDto;
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.boardclubcomment.dto.BoardClubCommentDto;
 import com.splashzone.boardclubcomment.entity.BoardClubComment;
+import com.splashzone.boardclubcomment.mapper.BoardClubCommentMapper;
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.boardstandardcomment.dto.BoardStandardCommentDto;
@@ -49,6 +50,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
     private final TrackerMapper trackerMapper;
+    private final BoardClubCommentMapper boardClubCommentMapper;
 
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
@@ -178,10 +180,10 @@ public class MemberController {
         }
 
         Page<BoardClubComment> boardClubCommentPage = memberService.findClubCommentsByMember(memberId, page - 1, size);
-        List<BoardClubCommentDto.Response> boardClubCommentResponses = boardClubCommentPage.getContent().stream()
-                .map(mapper::boardClubCommentToBoardClubCommentResponseDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(new MultiResponseDto<>(boardClubCommentResponses, boardClubCommentPage));
+        List<BoardClubComment> boardClubComments = boardClubCommentPage.getContent();
+
+        return ResponseEntity.ok(new MultiResponseDto<>(
+                boardClubCommentMapper.boardClubCommentsToBoardClubCommentResponseDtos(boardClubComments), boardClubCommentPage));
     }
 
     @GetMapping("/mypage/trackers/{member-id}")
@@ -196,10 +198,10 @@ public class MemberController {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        Page<Tracker> pageTrackers = memberService.findTrackersByMember(memberId, page - 1, size);
-        List<Tracker> trackers = pageTrackers.getContent();
+        Page<Tracker> trackerPage = memberService.findTrackersByMember(memberId, page - 1, size);
+        List<Tracker> trackers = trackerPage.getContent();
 
-        return ResponseEntity.ok(new MultiResponseDto<>(trackerMapper.trackersToTrackerResponseDtos(trackers), pageTrackers));
+        return ResponseEntity.ok(new MultiResponseDto<>(trackerMapper.trackersToTrackerResponseDtos(trackers), trackerPage));
     }
 
 //    @DeleteMapping("/logout")

@@ -42,10 +42,11 @@ public interface BoardClubCommentMapper {
 
     default BoardClubCommentDto.Response boardClubCommentToBoardClubCommentResponseDto(BoardClubComment boardClubComment) {
         return BoardClubCommentDto.Response.builder()
-                .boardClubCommentId(boardClubComment.getBoardClubCommentId())
-                .memberId(boardClubComment.getMember().getMemberId())
                 .boardClubId(boardClubComment.getBoardClub().getBoardClubId())
+                .boardClubCommentId(boardClubComment.getBoardClubCommentId())
                 .content(boardClubComment.getContent())
+                .profileImageUrl(boardClubComment.getMember().getProfileImageUrl())
+                .nickname((boardClubComment.getMember().getNickname()))
                 .createdAt(boardClubComment.getCreatedAt())
                 .modifiedAt(boardClubComment.getModifiedAt())
                 .build();

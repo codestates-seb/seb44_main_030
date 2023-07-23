@@ -40,17 +40,4 @@ public interface MemberMapper {
     }
 
     BoardClubDto.Response boardClubToBoardClubResponseDto(BoardClub boardClub);
-
-    default BoardClubCommentDto.Response boardClubCommentToBoardClubCommentResponseDto(BoardClubComment boardClubComment){
-        return BoardClubCommentDto.Response.builder()
-                .boardClubCommentId(boardClubComment.getBoardClubCommentId())
-                .memberId(boardClubComment.getMember().getMemberId())
-                .boardClubId(boardClubComment.getBoardClub().getBoardClubId())
-                .content(boardClubComment.getContent())
-                .createdAt(boardClubComment.getCreatedAt())
-                .modifiedAt(boardClubComment.getModifiedAt())
-                .build();
-    }
-
-    TrackerDto.Response trackerTotrackerResponse(Tracker tracker);
 }

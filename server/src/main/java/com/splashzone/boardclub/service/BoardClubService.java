@@ -57,8 +57,6 @@ public class BoardClubService {
         bridgeTagToBoardClub(boardClub, reBuildBoardClub);
 
         return boardClubRepository.save(reBuildBoardClub);
-
-        // score 증가 로직 추가 예정
     }
 
     public BoardClub updateBoardClub(BoardClub boardClub) {

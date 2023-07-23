@@ -2,6 +2,7 @@ package com.splashzone.boardclubcomment.service;
 
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.boardclub.service.BoardClubService;
+import com.splashzone.boardclubcomment.dto.BoardClubCommentDto;
 import com.splashzone.boardclubcomment.entity.BoardClubComment;
 import com.splashzone.boardclubcomment.repository.BoardClubCommentRepository;
 import com.splashzone.exception.BusinessLogicException;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,8 +58,19 @@ public class BoardClubCommentService {
         return findVerifiedBoardClubComment(boardClubCommentId);
     }
 
+    /*
     public Page<BoardClubComment> findBoardClubComments(Integer page, Integer size) {
         return boardClubCommentRepository.findAll(PageRequest.of(page, size, Sort.by("boardClubCommentId")));
+    }
+     */
+
+    public List<BoardClubComment> findBoardClubComments(Long boardClubId) {
+        BoardClub findBoardClub = boardClubService.findVerifiedBoardClub(boardClubId);
+        return findAllBoardClubCommentsByBoardClub(findBoardClub);
+    }
+
+    public List<BoardClubComment> findAllBoardClubCommentsByBoardClub(BoardClub boardClub) {
+        return boardClubCommentRepository.findAllBoardClubCommentsByBoardClub(boardClub);
     }
 
     public void deleteBoardClubComment(Long boardClubCommentId) {
