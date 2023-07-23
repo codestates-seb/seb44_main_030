@@ -24,13 +24,13 @@ interface SearchResponse {
 const SearchEngine = () => {
     const [keyword, setKeyword] = useState('');
     const dispatch = useDispatch();
-
+    const KAKAO_KEY = import.meta.env.VITE_KAKAO;
     const onClickHandler = async () => {
         const result = axios.get<SearchResponse>(
             encodeURI(`https://dapi.kakao.com/v2/local/search/keyword?query=${keyword}`),
             {
                 headers: {
-                    Authorization: `KakaoAK 2f22bcea66f5cf1a556e5c4ec4c5bd47`,
+                    Authorization: KAKAO_KEY,
                 },
             },
         );
