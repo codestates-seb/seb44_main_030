@@ -38,7 +38,7 @@ const Clubtable = () => {
     if (isError)
         return (
             <>
-                <h3>Oops, someting went wrong</h3> <p>{error.toString()}</p>
+                <p>아직 작성한 게시글이 없습니다!</p>
             </>
         );
     const totalElements = data.pageInfo.totalElements;

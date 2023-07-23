@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import moment from 'moment';
@@ -6,7 +6,6 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setToast } from '../store/toastState';
 import { useCookies } from 'react-cookie';
-import FetchModal from './fetchModal';
 
 interface InputProps {
     height?: string;
@@ -26,35 +25,43 @@ interface DataProps {
 interface ModalProps {
     setModal: React.Dispatch<React.SetStateAction<boolean>>;
     value: any;
-    mark: any;
     caldata: any;
 }
 
-const Modal = ({ setModal, value, mark, caldata }: ModalProps) => {
+const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
+    const [prev, setPrev] = useState();
     const dispatch = useDispatch();
     const dae = moment(value).format('YYYYMMDD');
     const todayDate = moment(value).format('YYYY-MM-DD');
-    console.log(todayDate);
-    console.log(mark);
+
+    const foundObject = caldata.find((item) => item.todayDate === todayDate);
+
+    const trackerIdValue = foundObject.trackerId;
 
     const [startType, setStartType] = useState('');
 
-    const [isFinished, setIsFinished] = useState(false);
     const { register, handleSubmit, watch } = useForm();
     const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
     const authorizationToken = cookies.AuthorizationToken;
     const refreshToken = cookies.RefreshToken;
 
-    useEffect(() => {
-        if (mark.includes(todayDate)) {
-            setIsFinished(true);
-            console.log('일치함');
-        }
-    }, []);
-
-    const handleClose = (e) => {
+    const handleClose = () => {
         setModal(false);
     };
+    useEffect(() => {
+        axios
+            .get(`http://13.209.142.240:8080/trackers/${trackerIdValue}`, {
+                headers: {
+                    Authorization: `${decodeURIComponent(authorizationToken)}`,
+                    Refresh: `${refreshToken}`,
+                    withCredentials: true,
+                },
+            })
+            .then((data) => setPrev(data.data.data));
+    }, [trackerIdValue]);
+
+    console.log(prev);
+    if (prev === undefined) return null;
 
     const options = [];
     options.push(
@@ -97,11 +104,11 @@ const Modal = ({ setModal, value, mark, caldata }: ModalProps) => {
         data.exerciseStartTime = modifiedValue;
         data.exerciseEndTime = modfied2Value;
         data.todayDate = todayDate;
-        const url = 'http://13.209.142.240:8080/trackers';
+        const url = `http://13.209.142.240:8080/trackers/${trackerIdValue}`;
         console.log(data);
 
         try {
-            const response = await axios.post(url, data, {
+            const response = await axios.patch(url, data, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
@@ -119,56 +126,68 @@ const Modal = ({ setModal, value, mark, caldata }: ModalProps) => {
         }
     };
 
-    return (
-        <>
-            {isFinished === false ? (
-                <Styledmodal>
-                    <div className="modal-background">
-                        <div className="modal" onClick={(e) => e.stopPropagation()}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                <h3 style={{ fontWeight: 'bold' }}>운동정보 기록하기</h3>
-                                <button className="modal-close" onClick={handleClose}>
-                                    X
-                                </button>
-                            </div>
-                            <Styledform onSubmit={handleSubmit(onSubmitHandler)}>
-                                <h1>Session Time</h1>
+    const time = prev.exerciseTime;
+    const hours = Math.floor(time / 60);
+    const Minutes = time % 60;
 
-                                <div>
-                                    <div>운동시간선택</div>
-                                    <>
-                                        시작{' '}
-                                        <select {...register('exerciseStartTime')} onChange={handleStartTypeChange}>
-                                            {options}
-                                        </select>
-                                        끝{' '}
-                                        <select {...register('exerciseEndTime')} disabled={startType === ''}>
-                                            {endOptions}
-                                        </select>
-                                    </>
-                                </div>
-                                <div
-                                    style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}
-                                >
-                                    <StyledInput height="30px" {...register('title')}></StyledInput>
-                                    <Styledtextarea height="300px" {...register('content')}></Styledtextarea>
-                                    <div>
-                                        <Styledbutton type="submit">저장</Styledbutton>
-                                        <Styledbutton onClick={handleClose}>취소</Styledbutton>
-                                    </div>
-                                </div>
-                            </Styledform>
-                        </div>
+    if (prev === undefined) return null;
+    return (
+        <Styledmodal>
+            <div className="modal-background">
+                <div className="modal" onClick={(e) => e.stopPropagation()}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                        <h3 style={{ fontWeight: 'bold' }}>운동정보 수정하기</h3>
+                        <button className="modal-close" onClick={handleClose}>
+                            X
+                        </button>
                     </div>
-                </Styledmodal>
-            ) : (
-                <FetchModal setModal={setModal} value={value} caldata={caldata} />
-            )}
-        </>
+                    <Styledform onSubmit={handleSubmit(onSubmitHandler)}>
+                        <h1>Session Time</h1>
+
+                        <div>
+                            <div>운동시간선택</div>
+                            <div>총 운동시간: {`${hours}시간 ${Minutes}분`}</div>
+                            <>
+                                시작{' '}
+                                <select {...register('exerciseStartTime')} onChange={handleStartTypeChange}>
+                                    {options}
+                                </select>
+                                끝{' '}
+                                <select {...register('exerciseEndTime')} disabled={startType === ''}>
+                                    {endOptions}
+                                </select>
+                            </>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+                            <StyledInput
+                                height="30px"
+                                {...register('title')}
+                                value={prev.title}
+                                onChange={(e) => {
+                                    setPrev((prev) => ({ ...prev, title: e.target.value }));
+                                }}
+                            ></StyledInput>
+                            <Styledtextarea
+                                height="300px"
+                                {...register('content')}
+                                value={prev.content}
+                                onChange={(e) => {
+                                    setPrev((prev) => ({ ...prev, content: e.target.value }));
+                                }}
+                            ></Styledtextarea>
+                            <div>
+                                <Styledbutton type="submit">수정</Styledbutton>
+                                <Styledbutton onClick={handleClose}>취소</Styledbutton>
+                            </div>
+                        </div>
+                    </Styledform>
+                </div>
+            </div>
+        </Styledmodal>
     );
 };
 
-export default Modal;
+export default FetchModal;
 
 const Styledform = styled.form`
     width: 100%;
