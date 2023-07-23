@@ -95,7 +95,10 @@ const Tabcomponent0 = () => {
                     <Calendar
                         onChange={setValue}
                         value={value}
-                        formatDay={(locale, date) => moment(date).format('D')}
+                        formatDay={(locale, date) => {
+                            console.log('locale:', locale);
+                            return moment(date).format('D');
+                        }}
                         //locale추가?
                         tileContent={({ date }) => {
                             const html = [];
