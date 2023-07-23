@@ -4,8 +4,9 @@ import moment from 'moment';
 import { useState } from 'react';
 import { Loading } from './Lodaing';
 import PageButton from './PageButton';
-import { getClubdata } from '../api/MypageApi/getClubApi';
 import { Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
 
 type Data = {
     boardClubId?: number;
@@ -28,6 +29,25 @@ interface Clubdata {
 
 const Clubtable = () => {
     const [pagenumber, setPageNumber] = useState(1);
+    const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const authorizationToken = cookies.AuthorizationToken;
+    const refreshToken = cookies.RefreshToken;
+
+    const getClubdata = (page: number) => {
+        const API_URL = import.meta.env.VITE_KEY;
+        return axios
+            .get(`${API_URL}/members/mypage/clubs/1?page=${page}&size=20`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `${decodeURIComponent(authorizationToken)}`,
+                    Refresh: `${refreshToken}`,
+                    withCredentials: true,
+                },
+            })
+            .then((response) => {
+                return { postData: response.data.data, pageInfo: response.data.pageInfo };
+            });
+    };
     const { data, isLoading, isError } = useQuery<any, Error>({
         queryKey: ['myclub', pagenumber],
         queryFn: () => getClubdata(pagenumber),
@@ -70,7 +90,7 @@ const Clubtable = () => {
                 <div>상태</div>
             </Styledwrapper>
             {data.postData.map((post: Data) => {
-                return <Tablecontent post={post}></Tablecontent>;
+                return <Tablecontent post={post} key={post.boardClubId}></Tablecontent>;
             })}
             <PageContainer>
                 <PageButton data={{ value: '이전' }} onClick={PreviouspageHandler} />

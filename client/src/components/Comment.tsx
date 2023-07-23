@@ -46,6 +46,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
     const location = useLocation();
     const boardType = location.pathname.split('/')[1] === 'community' ? 'standardcomments' : 'clubcomments';
     const boardCommentId = boardClubCommentId || boardStandardCommentId;
+    const loginId = 3; //storage사용
 
     const { register, handleSubmit, reset } = useForm<CommentInput>({
         mode: 'onSubmit',

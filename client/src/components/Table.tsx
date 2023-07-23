@@ -1,12 +1,13 @@
 //type 일반게시글 이거나 모임게시글이거나
 import styled from 'styled-components';
-import { getCommuity } from '../api/MypageApi/getCommunityApi';
 import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import { useState } from 'react';
 import { Loading } from './Lodaing';
 import PageButton from './PageButton';
 import { Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
 
 //클럽,일반게시글 따라서 다르게 보여주기. type을 지정해서
 //체크박스로 전체삭제같은거 구현할수있게하기
@@ -35,9 +36,28 @@ interface CommunityData {
 
 const Table = () => {
     const [pagenumber, setPageNumber] = useState(1);
+    const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const authorizationToken = cookies.AuthorizationToken;
+    const refreshToken = cookies.RefreshToken;
+
+    const getCommunity = (page: number) => {
+        const API_URL = import.meta.env.VITE_KEY;
+        return axios
+            .get(`${API_URL}/members/mypage/standards/1?page=${page}&size=20`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `${decodeURIComponent(authorizationToken)}`,
+                    Refresh: `${refreshToken}`,
+                    withCredentials: true,
+                },
+            })
+            .then((response) => {
+                return { postData: response.data.data, pageInfo: response.data.pageInfo };
+            });
+    };
     const { data, isLoading, isError } = useQuery<any, Error>({
         queryKey: ['mycommunity', pagenumber],
-        queryFn: () => getCommuity(pagenumber),
+        queryFn: () => getCommunity(pagenumber),
     });
 
     if (isLoading) return <Loading />;
@@ -78,7 +98,7 @@ const Table = () => {
                 <div>조회</div>
             </Styledwrapper>
             {data.postData.map((post: Data) => {
-                return <Tablecontent post={post}></Tablecontent>;
+                return <Tablecontent post={post} key={post.standardId}></Tablecontent>;
             })}
             <PageContainer>
                 <PageButton data={{ value: '이전' }} onClick={PreviouspageHandler} />

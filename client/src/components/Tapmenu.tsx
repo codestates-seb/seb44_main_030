@@ -59,7 +59,7 @@ const Tabcomponent0 = () => {
 
     useEffect(() => {
         axios
-            .get(`${API_URL}/members/mypage/trackers/4?page=1&size=100`, {
+            .get(`${API_URL}/members/mypage/trackers/1?page=1&size=100`, {
                 headers: {
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
                     Refresh: `${refreshToken}`,
