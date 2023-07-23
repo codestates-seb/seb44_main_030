@@ -12,10 +12,9 @@ public class BoardStandardDto {
     @Getter
     @Setter
     public static class Post{
-//        @Positive
-//        private Long memberId;
         @NotBlank(message = "제목을 입력하세요")
         private String title;
+
         @NotBlank(message = "내용을 입력하세요")
         private String content;
     }
@@ -23,29 +22,32 @@ public class BoardStandardDto {
     @Getter
     @Setter
     public static class Patch{
-//        @Positive
-//        private Long memberId;
-//        @Positive
-//        private long boardStandardId;
         private String title;
-        private String content;
-        private LocalDateTime createdAt;
-        private LocalDateTime modifiedAt;
-//        public void setBoardStandardId(Long boardStandardId) {
-//            this.boardStandardId = boardStandardId;
-//        }
 
+        private String content;
+
+        private LocalDateTime createdAt;
+
+        private LocalDateTime modifiedAt;
     }
 
     @Getter
     @Setter
     public static class Response{
         private Long boardStandardId;
+
         private String title;
+
         private String content;
+
         private int view;
+
+        private int likeCount;
+
         private LocalDateTime createdAt;
+
         private LocalDateTime modifiedAt;
+
         private MemberDto.Response member;
     }
 
@@ -58,9 +60,13 @@ public class BoardStandardDto {
     @Setter
     public static class CommentResponse{
         private long boardStandardId;
+
         private String standardContent;
+
         private LocalDateTime dateCreated;
+
         private LocalDateTime dateModified;
+
         private MemberDto.Response member;
     }
 }

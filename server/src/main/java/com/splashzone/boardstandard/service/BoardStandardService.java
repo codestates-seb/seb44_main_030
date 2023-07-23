@@ -2,7 +2,9 @@ package com.splashzone.boardstandard.service;
 
 import com.splashzone.boardstandard.dto.BoardStandardDto;
 import com.splashzone.boardstandard.entity.BoardStandard;
+import com.splashzone.boardstandard.entity.BoardStandardLike;
 import com.splashzone.boardstandard.mapper.BoardStandardMapper;
+import com.splashzone.boardstandard.repository.BoardStandardLikeRepository;
 import com.splashzone.boardstandard.repository.BoardStandardRepository;
 import com.splashzone.exception.BusinessLogicException;
 import com.splashzone.exception.ExceptionCode;
@@ -21,8 +23,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class BoardStandardService {
+    private static final String SUCCESS_LIKE_BOARD_STANDARD = "좋아요 처리 완료";
+    private static final String SUCCESS_UNLIKE_BOARD_STANDARD = "좋아요 취소 완료";
     private final BoardStandardMapper boardStandardMapper;
     private final BoardStandardRepository boardStandardRepository;
+    private final BoardStandardLikeRepository boardStandardLikeRepository;
     private final MemberService memberService;
 
     public BoardStandard createStandard(BoardStandard boardStandard) {
@@ -36,11 +41,6 @@ public class BoardStandardService {
         member.getBoardStandards().add(reBuildBoardStandard);
 
         return boardStandardRepository.save(reBuildBoardStandard);
-
-//        BoardStandard boardStandard = boardStandardMapper.postDtoToBoardStandard(postDto);
-//        boardStandard.setMember(member);
-//        boardStandardRepository.save(boardStandard);
-//        return boardStandard;
     }
 
     public BoardStandard updateStandard(BoardStandard boardStandard) {
@@ -50,14 +50,10 @@ public class BoardStandardService {
     }
 
     public BoardStandard findStandard(Long boardStandardId) {
-        BoardStandard boardStandard = boardStandardRepository.findById(boardStandardId).orElseThrow(() -> new RuntimeException());
-        //뷰수 추가
-        boardStandard.setView(boardStandard.getView() + 1);
-        boardStandardRepository.save(boardStandard);
-        return boardStandard;
+        return findVerifiedBoardStandard(boardStandardId);
     }
 
-    public Page<BoardStandard> findStandards(int page, int size) {
+    public Page<BoardStandard> findStandards(Integer page, Integer size) {
         return boardStandardRepository.findByBoardStandard(PageRequest.of(page, size, Sort.by("boardStandardId").descending()));
     }
 
@@ -65,18 +61,6 @@ public class BoardStandardService {
     public void deleteStandard(Long boardStandardId) {
         BoardStandard boardStandard = boardStandardRepository.findById(boardStandardId).orElseThrow(() -> new RuntimeException());
         boardStandardRepository.delete(boardStandard);
-//        BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandardId);
-//        boardStandardRepository.delete(findBoardStandard);
-    }
-
-    //회원이 존재하는지 확인
-    private void verifyBoardStandard(BoardStandard boardStandard) {
-        memberService.findMember(boardStandard.getMember().getMemberId());
-    }
-
-    //조회수 증가
-    public int increaseViews(Long boardStandardId) {
-        return boardStandardRepository.updateViews(boardStandardId);
     }
 
     public BoardStandard findVerifiedBoardStandard(Long boardStandardId) {
@@ -87,6 +71,45 @@ public class BoardStandardService {
                         new BusinessLogicException(ExceptionCode.BOARD_STANDARD_NOT_FOUND));
 
         return findBoardStandard;
+    }
+
+    //조회수 증가
+    public int updateViews(Long boardStandardId) {
+        return boardStandardRepository.updateViews(boardStandardId);
+    }
+
+    public String updateLikeOfBoardStandard(Long boardStandardId, Long memberId) {
+        BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandardId);
+
+        Member findMember = memberService.findVerifiedMember(memberId);
+
+        if (!hasBoardStandardLike(findBoardStandard, findMember)) {
+            findBoardStandard.increaseLikeCount();
+            return createBoardStandardLike(findBoardStandard, findMember);
+        }
+
+        findBoardStandard.decreaseLikeCount();
+        return removeBoardStandardLike(findBoardStandard, findMember);
+    }
+
+    public String createBoardStandardLike(BoardStandard boardStandard, Member member) {
+        BoardStandardLike boardStandardLike = new BoardStandardLike(boardStandard, member);
+        boardStandardLikeRepository.save(boardStandardLike);
+        return SUCCESS_LIKE_BOARD_STANDARD;
+    }
+
+    public String removeBoardStandardLike(BoardStandard boardStandard, Member member) {
+        BoardStandardLike boardStandardLike = boardStandardLikeRepository.findByBoardStandardAndMember(boardStandard, member)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.LIKE_NOT_FOUND));
+
+        boardStandardLikeRepository.delete(boardStandardLike);
+
+        return SUCCESS_UNLIKE_BOARD_STANDARD;
+    }
+
+    public boolean hasBoardStandardLike(BoardStandard boardStandard, Member member) {
+        return boardStandardLikeRepository.findByBoardStandardAndMember(boardStandard, member)
+                .isPresent();
     }
 
     //총 질문 수 카운트

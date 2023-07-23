@@ -32,7 +32,8 @@ public class BoardStandard extends Auditable {
     @Column(name = "VIEW", nullable = false, columnDefinition = "integer default 0")
     private int view;
 
-    //TODO tagId mapping,likeCount 추가 해야됨!!
+    @Column(name = "LIKE_COUNT", nullable = true)
+    private int likeCount;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
@@ -41,7 +42,6 @@ public class BoardStandard extends Auditable {
     @Builder.Default
     @OneToMany(mappedBy = "boardStandard", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BoardStandardComment> boardStandardComments = new ArrayList<>();
-
 
     public BoardStandard(Long boardStandardId, String title, String content, int view) {
         this.boardStandardId = boardStandardId;
@@ -53,6 +53,14 @@ public class BoardStandard extends Auditable {
     public void changeBoardStandard(BoardStandard boardStandard) {
         this.title = boardStandard.getTitle();
         this.content = boardStandard.getContent();
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
     }
 
     public void setMember(Member member) {

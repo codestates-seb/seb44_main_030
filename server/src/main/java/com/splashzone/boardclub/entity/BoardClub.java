@@ -52,6 +52,9 @@ public class BoardClub extends Auditable {
     @Column(name = "VIEW", nullable = false, columnDefinition = "integer default 0")
     private int view;
 
+    @Column(name = "LIKE_COUNT", nullable = true)
+    private int likeCount;
+
     @Enumerated(value = EnumType.STRING)
     @Builder.Default
     @Column(name = "BOARD_CLUB_STATUS", nullable = false)
@@ -68,13 +71,6 @@ public class BoardClub extends Auditable {
     @Builder.Default
     @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BoardClubComment> boardClubComments = new ArrayList<>();
-
-//    @Builder.Default
-//    @OneToMany(mappedBy = "boardClub")
-//    private List<Like> likes = new ArrayList<>();
-
-    @Column(name = "LIKE_COUNT", nullable = true)
-    private int likeCount;
 
     public enum BoardClubStatus {
         BOARD_CLUB_RECRUITING("모집 중"),

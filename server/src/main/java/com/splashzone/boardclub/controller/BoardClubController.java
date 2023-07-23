@@ -39,8 +39,8 @@ public class BoardClubController {
     private static final int RECOMMEND_LIKE_COUNT = 1;
     private final BoardClubService boardClubService;
     private final BoardClubMapper boardClubMapper;
-    private final MemberService memberService;
     private final BoardClubRepository boardClubRepository;
+    private final MemberService memberService;
 
     @PostMapping
     public ResponseEntity postBoardClub(Authentication authentication,

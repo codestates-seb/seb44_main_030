@@ -17,5 +17,7 @@ public interface BoardStandardRepository extends JpaRepository<BoardStandard, Lo
     @Query("UPDATE BoardStandard c SET c.view = c.view + 1 WHERE c.boardStandardId = :boardStandardId")
     int updateViews(Long boardStandardId);
 
+    Page<BoardStandard> findByLikeCountGreaterThanEqual(Pageable pageable, int number);
+
     Page<BoardStandard> findByMember(Member member, Pageable pageable);
 }

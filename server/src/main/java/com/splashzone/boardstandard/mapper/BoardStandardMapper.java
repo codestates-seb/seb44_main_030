@@ -28,11 +28,12 @@ public interface BoardStandardMapper {
         responseDto.setCreatedAt(boardStandard.getCreatedAt());
         responseDto.setModifiedAt(boardStandard.getModifiedAt());
         responseDto.setView(boardStandard.getView());
+        responseDto.setLikeCount(boardStandard.getLikeCount());
         responseDto.setMember(memberToMemberResponse(boardStandard.getMember()));
 
         return responseDto;
     }
-    default List<BoardStandardDto.Response> boardStandardToResponseDto(List<BoardStandard> boardStandards){
+    default List<BoardStandardDto.Response> boardStandardsToResponseDtos(List<BoardStandard> boardStandards){
         if (boardStandards == null) {
             return null;
         }
