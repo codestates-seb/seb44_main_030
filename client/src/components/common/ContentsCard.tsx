@@ -21,7 +21,6 @@ interface PostProps {
 }
 
 interface CommunityPostProps extends PostProps {
-    kind: 'community';
     communityProps: {
         memberProfileImg: string; //[작성자 프로필 이미지 소스]
         name: string; //[작성자 닉네임]
@@ -35,7 +34,6 @@ interface CommunityPostProps extends PostProps {
 }
 
 interface ClubPostProps extends PostProps {
-    kind: 'club';
     clubProps: {
         boardClubId: number;
         tags: { tagName: string }[];

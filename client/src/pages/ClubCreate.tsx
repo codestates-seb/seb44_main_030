@@ -15,6 +15,15 @@ import ConfirmModal from '../components/common/ConfirmModal';
 import { usePostHeader } from '../api/getHeader.ts';
 import { setToast } from '../store/toastState';
 
+type ClubMapData = {
+    position: {
+        lat: number;
+        lng: number;
+    };
+    placeName: string;
+    addressName: string;
+};
+
 type FormData = {
     capacity: number;
     contactRoute: string;
@@ -28,7 +37,7 @@ type FormData = {
     addressName: string;
     latitude: number;
     longitude: number;
-    clubMap?: object;
+    clubMap: ClubMapData;
     boardClubStatus: string;
 };
 
@@ -96,7 +105,6 @@ const ClubCreate = () => {
             // console.log(clubMap);
             const API_URL = import.meta.env.VITE_KEY;
             const englishTagName = getKeyByValue(tags, data.clubTag);
-            const { position, addressName, placeName } = data.clubMap;
             const payload = {
                 // 이 부분은 로그인한 유저의 ID로 수정
                 capacity: Number(data.capacity),
@@ -105,10 +113,10 @@ const ClubCreate = () => {
                 dueDate: data.dueDate,
                 contact: data.contact, //{ [data.contactRoute]: data.contact },
                 tags: [{ tagName: englishTagName }],
-                latitude: position.lat,
-                longitude: position.lng,
-                placeName,
-                addressName,
+                latitude: data.clubMap.position.lat,
+                longitude: data.clubMap.position.lng,
+                placeName: data.clubMap.placeName,
+                addressName: data.clubMap.addressName,
             };
             if (clubDetail.boardClubId !== undefined) {
                 payload['boardClubStatus'] = 'BOARD_CLUB_RECRUITING';
