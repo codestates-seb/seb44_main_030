@@ -63,10 +63,6 @@ export default function ScrollBanner({ bannerImg }: { bannerImg: string }) {
                     <SwiperWarp>
                         <img src={bannerImg} />
                     </SwiperWarp>
-                    {/* <SwiperPageTab>
-                        <ArrowLeft />
-                        <ArrowRight />
-                    </SwiperPageTab> */}
                 </SwiperContainer>
             </RollBanner>
         </Link>
@@ -105,31 +101,3 @@ const SwiperWarp = styled.div`
         object-fit: cover;
     }
 `;
-
-// const SwiperPageTab = styled.div`
-//     display: flex;
-//     position: absolute;
-//     width: 100%;
-//     top: 0;
-//     bottom: 0;
-//     align-items: center;
-//     justify-content: space-between;
-// `;
-
-// const Arrow = styled.span`
-//     color: white;
-//     font-size: 2em;
-//     cursor: pointer;
-// `;
-
-// const ArrowLeft = styled(Arrow)`
-//     &:before {
-//         content: '◀';
-//     }
-// `;
-
-// const ArrowRight = styled(Arrow)`
-//     &:after {
-//         content: '▶';
-//     }
-// `;

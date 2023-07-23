@@ -28,6 +28,7 @@ type FormData = {
     latitude: number;
     longitude: number;
     clubMap?: object;
+    boardClubStatus: string;
 };
 
 const ClubCreate = () => {
@@ -42,25 +43,15 @@ const ClubCreate = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const dispatch = useDispatch();
 
+    const getKeyByValue = (object: any, value: string) => {
+        return Object.keys(object).find((key) => object[key] === value);
+    };
+
+    console.log(clubDetail);
+
     const updateClubMap = (data: any) => {
         setClubMap(data);
     };
-
-    const {
-        register,
-        setValue,
-        handleSubmit,
-        control,
-        formState: { errors },
-    } = useForm<FormData>({
-        defaultValues: {
-            title: clubDetail.title || '',
-            content: clubDetail.content || '',
-            contact: clubDetail.contact || '',
-            dueDate: clubDetail.dueDate || '',
-        },
-        mode: 'onChange',
-    });
 
     const tags = useMemo(
         () => ({
@@ -80,9 +71,25 @@ const ClubCreate = () => {
         [],
     );
 
-    const getKeyByValue = (object: any, value: string) => {
-        return Object.keys(object).find((key) => object[key] === value);
-    };
+    const {
+        register,
+        setValue,
+        handleSubmit,
+        control,
+        formState: { errors },
+    } = useForm<FormData>({
+        defaultValues: {
+            title: clubDetail.title || '',
+            content: clubDetail.content || '',
+            contact: clubDetail.contact || '',
+            dueDate: clubDetail.dueDate || '',
+            capacity: clubDetail.capacity || '',
+            contactRoute: clubDetail.contactRoute || '',
+            clubTag: getKeyByValue(tags, clubDetail.clubTag) || '',
+            clubMap: clubDetail.clubMap || '',
+        },
+        mode: 'onChange',
+    });
 
     const onSubmit = useCallback(
         async (data: FormData) => {
@@ -99,7 +106,6 @@ const ClubCreate = () => {
                 dueDate: data.dueDate,
                 contact: data.contact, //{ [data.contactRoute]: data.contact },
                 tags: [{ tagName: englishTagName }],
-
                 latitude: position.lat,
                 longitude: position.lng,
                 ...restClubMap,

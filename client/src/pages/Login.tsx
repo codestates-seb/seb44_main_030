@@ -30,9 +30,11 @@ const Login = () => {
             const response = await axios.post(`${API_URL}/auth/login`, data, {
                 withCredentials: true,
             });
-            console.log(response.data);
             const Authorization = response.headers.authorization;
             const Refresh = response.headers.refresh;
+            // const memberId = response.headers['memberid'];
+            // console.log(memberId);
+
             if (Authorization && Refresh) {
                 setCookie('AuthorizationToken', Authorization, { path: '/' });
                 setCookie('RefreshToken', Refresh, { path: '/' });
@@ -41,7 +43,7 @@ const Login = () => {
                 console.error('error');
             }
         } catch (error) {
-            console.error(error);
+            alert('아이디 또는 비밀번호가 틀렸습니다! 다시 입력해주세요!');
         }
     };
 

@@ -2,7 +2,6 @@ import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useCa
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
 import backgroundImg from '../assets/Community_background.png';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
@@ -105,10 +104,6 @@ const ClubDetail = () => {
     const handleNavigateContact = useCallback(() => {
         window.open(contact, '_blank');
     }, [contact]);
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
 
     const mapdata = {
         addressName,
