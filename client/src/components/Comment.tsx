@@ -1,36 +1,52 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios, { AxiosError } from 'axios';
 import ConfirmModal from './common/ConfirmModal';
 import { usePostHeader } from '../api/getHeader';
+import moment from 'moment';
 type CommentProps = {
     commentData: {
         memberId: number;
-        commentId: number;
-        name: string;
-        memberProfileImg: string;
+        nickname: string;
+        profileImageUrl: string;
         content: string;
         registeredAt: string;
-        modifiedAt: string | null;
+        modifiedAt: string;
+        boardClubCommentId?: number;
+        boardStandardCommentId?: number;
     };
+    boardStandardClubId: number;
 };
 type CommentInput = {
     Content: string;
 };
-const Comment = ({ commentData }: CommentProps) => {
-    const { commentId, memberId, name, memberProfileImg, content, registeredAt, modifiedAt } = commentData;
+type payloadType = {
+    content: string;
+    boardStandardId?: number;
+    boardClubId?: number;
+};
+const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
+    console.log(commentData, 'asdfkasjfdlsafjlkjlkfjaslkdjfklasdf');
+    const {
+        memberId,
+        nickname,
+        profileImageUrl,
+        content,
+        registeredAt,
+        boardClubCommentId = 0,
+        boardStandardCommentId = 0,
+    } = commentData;
     const navigate = useNavigate();
-    const [modifiedDate, setModifiedAt] = useState<string | null>(modifiedAt);
     const [isEditOn, setIsEditOn] = useState<boolean>(false);
     const [commentContent, setCommentContent] = useState<string>(content);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const headers = usePostHeader(); 
+    const headers = usePostHeader();
     const location = useLocation();
-    const boardType = location.pathname.split('/')[1] === 'community' ? 'boardcomments' : 'clubcomments';
-
-    const loginId = 1; //useSelector 사용
+    const boardType = location.pathname.split('/')[1] === 'community' ? 'standardcomments' : 'clubcomments';
+    const boardCommentId = boardClubCommentId || boardStandardCommentId;
+    const loginId = 3; //storage사용
 
     const { register, handleSubmit, reset } = useForm<CommentInput>({
         mode: 'onSubmit',
@@ -38,10 +54,6 @@ const Comment = ({ commentData }: CommentProps) => {
             Content: '',
         },
     });
-
-    useEffect(() => {
-        setModifiedAt(modifiedAt);
-    }, [modifiedAt]);
 
     // 모달 창 닫기
     const handleCloseModal = () => {
@@ -51,31 +63,33 @@ const Comment = ({ commentData }: CommentProps) => {
     // 댓글 수정 patch api 요청
     const onSubmit: SubmitHandler<CommentInput> = async (data) => {
         // console.log(data);
-        const payload = {
+        const payload: payloadType = {
             content: `${data.Content}`,
         };
+        if (boardType === 'standardcomments') {
+            payload.boardStandardId = Number(boardStandardClubId);
+        }
+        if (boardType === 'clubcomments') {
+            payload.boardClubId = Number(boardStandardClubId);
+        }
+        console.log(payload, 'sadfjlksadjfkldsjfklsadfj');
         const API_URL = import.meta.env.VITE_KEY;
         try {
-            //commentId가 club, community 별로 나눠져서 관리 되는지? 합쳐서 관리되는지? 잘모름. 일단 임의로 작성.
-            const response = await axios.patch(`${API_URL}/${boardType}/${commentId}`, payload, headers);
+            const response = await axios.patch(`${API_URL}/${boardType}/${boardCommentId}`, payload, headers);
             if (response.status === 200 || response.status === 201) {
-                console.log('수정 성공');
-            } else {
-                // 오류 처리
-                console.log('수정 요청을 실패했습니다');
+                alert('댓글수정 완료!');
             }
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
-                console.log('Axios Error occurred while creating the patch', (error as AxiosError).response?.data);
-            } else {
-                console.log('Error occurred while creating the patch', error);
+                if (error.message === 'Request failed with status code 403') {
+                    alert('잘못된 요청입니다');
+                }
             }
         }
         console.log(payload);
         setCommentContent(data.Content);
         reset();
         setIsEditOn((prev) => !prev);
-        alert('댓글수정 완료!');
     };
 
     const handleNavigateProfile = useCallback(() => {
@@ -90,41 +104,36 @@ const Comment = ({ commentData }: CommentProps) => {
     // 댓글 삭제 Delete 요청
     const handleDelete = async () => {
         try {
-            const response = await axios.delete(`${import.meta.env.VITE_KEY}/${boardType}/${commentId}`,headers);
+            const response = await axios.delete(`${import.meta.env.VITE_KEY}/${boardType}/${boardCommentId}`, headers);
             if (response.status === 200 || response.status === 204) {
-                console.log('삭제 성공');
-            } else {
-                // 오류 처리
-                console.log('삭제 요청을 실패했습니다');
+                window.location.reload();
             }
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
-                console.log('Axios Error occurred while creating the patch', (error as AxiosError).response?.data);
+                handleCloseModal();
+                if (error.message === 'Request failed with status code 403') {
+                    alert('잘못된 요청입니다');
+                }
             } else {
                 console.log('Error occurred while creating the patch', error);
             }
         }
     };
 
-    const handleCancelEdit = useCallback(() => {
+    const handleCancelEdit = () => {
         reset();
         setIsEditOn((prev) => !prev);
-    }, []);
-
-    // 날짜 어떻게 받을 건지 상의 필요.(포맷팅 된 상태 or Not)
-    // 날짜 포맷팅 임의로
-    const dateStr = modifiedDate || registeredAt;
-    const datePart = dateStr.split('T')[0];
-    const dateArr = datePart.split('-');
-    const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
-    const formattedDate = modifiedDate ? `${newDateStr} (수정됨)` : newDateStr;
+    };
 
     return (
         <CommentContainer>
             <UserInfoBox>
-                <img src={memberProfileImg} alt="profile_image" />
-                <div title={`${name}`} onClick={handleNavigateProfile}>
-                    {name}
+                <img
+                    src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${profileImageUrl}`}
+                    alt="profile_image"
+                />
+                <div title={`${nickname}`} onClick={handleNavigateProfile}>
+                    {nickname}
                 </div>
             </UserInfoBox>
             {isEditOn ? (
@@ -147,7 +156,8 @@ const Comment = ({ commentData }: CommentProps) => {
                 <ContentBox>{commentContent}</ContentBox>
             )}
             <DateBox>
-                {memberId === loginId && (
+                {/* memberId === loginId &&  */}
+                {
                     <div className="edit">
                         {isEditOn || (
                             <div>
@@ -163,8 +173,8 @@ const Comment = ({ commentData }: CommentProps) => {
                             </div>
                         )}
                     </div>
-                )}
-                <div>{formattedDate}</div>
+                }
+                <div>{moment(registeredAt).format('YYYY-MM-DD')}</div>
             </DateBox>
         </CommentContainer>
     );

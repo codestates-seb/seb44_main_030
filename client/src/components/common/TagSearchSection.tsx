@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import SearchIcon from '../../assets/Search.svg';
@@ -23,38 +23,25 @@ const TagSearchSection = ({ currTag, handleNavigateCreate }: TagSearchSectionPro
     const dispatch = useDispatch();
     const location = useLocation();
     const boardType = location.pathname.split('/')[1];
-    function useQueryParam() {
-        //console.log(useLocation().search);
-        return new URLSearchParams(useLocation().search);
-    }
 
     //URLSearchParams 객체(query)는 get메서드로 쿼리파라미터 값 불러올 수있음.
-    const query = useQueryParam();
-    const page = Number(query.get('page') || 1); // 기본 페이지를 1로 설정
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<SearchInput>({
+    const { register, handleSubmit } = useForm<SearchInput>({
         defaultValues: {
             Keyword: keyword === 'null' ? '' : keyword,
         },
     });
 
     //태그선택
-    const handleTagSelect = useCallback(
-        (e: React.MouseEvent<HTMLLIElement>) => {
-            const selectedTagName = e.currentTarget.innerText;
-            dispatch(savePosition(window.scrollY));
-            if (boardType === 'community') {
-                navigate(`/${boardType}/${selectedTagName}/${keyword}`);
-            }
-            if (boardType === 'club') {
-                navigate(`/${boardType}/${selectedTagName}/${keyword}`);
-            }
-        },
-        [boardType, dispatch, keyword, navigate],
-    );
+    const handleTagSelect = (e: React.MouseEvent<HTMLLIElement>) => {
+        const selectedTagName = e.currentTarget.innerText;
+        dispatch(savePosition(window.scrollY));
+        if (boardType === 'community') {
+            navigate(`/${boardType}/${selectedTagName}/${keyword}`);
+        }
+        if (boardType === 'club') {
+            navigate(`/${boardType}/${selectedTagName}/${keyword}`);
+        }
+    };
 
     //검색
     const onSubmit: SubmitHandler<SearchInput> = (data) => {

@@ -28,7 +28,7 @@ interface CommunityPostProps extends PostProps {
         modifiedAt: string | null;
         like: number; //[게시글에 대한 좋아요 갯수]
         memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
-        standardId: number; //[게시글 자체에 대한 ID]
+        boardStandardId: number; //[게시글 자체에 대한 ID]
     };
 }
 
@@ -62,14 +62,13 @@ export default function ContentsCard({
         content: communityContent,
         view: communityView,
         commentCount: communityCommentCount,
-        name,
-        memberProfileImg,
+        member,
         tag,
         registeredAt,
         modifiedAt,
         like,
         memberLiked = [],
-        standardId,
+        boardStandardId,
     } = communityProps || {};
 
     const {
@@ -85,7 +84,7 @@ export default function ContentsCard({
         likeCount: clubLikeCount = 0, //[게시글에 대한 좋아요 갯수]
         memberLiked: clubMemberLiked = [],
     } = clubProps || {};
-
+    console.log(communityProps)
     const [clubStatus, setClubStatus] = useState(boardClubStatus);
     useEffect(() => {
         const now = new Date();
@@ -112,7 +111,7 @@ export default function ContentsCard({
     const moveToDetail = () => {
         if (type === 'community') {
             dispatch(savePosition(window.scrollY));
-            navigate(`/community/detail/${standardId}`);
+            navigate(`/community/detail/${boardStandardId}`);
         } else if (type) {
             dispatch(savePosition(window.scrollY));
             navigate(`/club/detail/${boardClubId}`);
@@ -144,10 +143,10 @@ export default function ContentsCard({
                     <h3>{communityProps ? communityTitle : clubTitle}</h3>
                 </TitleContainer>
                 <ContentsContainer onClick={moveToDetail}>
-                    <span dangerouslySetInnerHTML={{ __html: communityProps ? communityContent : clubContent }}></span>
+                    <p>{communityProps ? communityContent : clubContent}</p>
                 </ContentsContainer>
                 <TagContainer>
-                    {communityProps && <Tag tag={tag} className="tag-component" />}
+                    {communityProps && <Tag tag={tag||'태그없음'} className="tag-component" />}
                     {clubProps &&
                         tags.map((tag: { tagName: string }) => (
                             <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />
@@ -156,8 +155,8 @@ export default function ContentsCard({
             </TitleContentsTagWarp>
             <InfoContainer>
                 <UserInfo>
-                    <img src={memberProfileImg} className="user-icon" />
-                    <span onClick={handleNavigateProfile}>{nickname}</span>
+                    <img src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${member?.profileImageUrl}`} className="user-icon" />
+                    <span onClick={handleNavigateProfile}>{member?.nickname}</span>
                 </UserInfo>
                 <ContentsInfo>
                     {isLiked ? (
@@ -174,7 +173,7 @@ export default function ContentsCard({
                     <img src={ViewsIcon} />
                     <span>{communityProps ? communityView : clubView}</span>
                     <img src={MessageIcon} />
-                    <span>{communityProps ? communityCommentCount : clubCommentCount}</span>
+                    <span>{communityProps ? communityCommentCount||0 : clubCommentCount||0}</span>
                 </ContentsInfo>
             </InfoContainer>
         </CardWarp>
@@ -247,10 +246,10 @@ const TitleContainer = styled.div`
 `;
 const ContentsContainer = styled.div`
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     width: 300px;
-    height: 69px;
+    height: 77px;
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -258,6 +257,11 @@ const ContentsContainer = styled.div`
     &:hover {
         color: #c1daf5;
         cursor: pointer;
+    }
+    >p{
+        display: flex;
+        align-items: center;
+        word-wrap: break-word;
     }
 `;
 
@@ -295,6 +299,9 @@ const UserInfo = styled.div`
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        &:hover{
+            cursor: pointer;
+        }
     }
 `;
 

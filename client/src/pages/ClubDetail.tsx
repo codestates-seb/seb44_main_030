@@ -174,7 +174,7 @@ const ClubDetail = () => {
                         </div>
                     </div>
                 </ContentSection>
-                <DetailCommentSection comment={clubDetail?.comment} />
+                <DetailCommentSection boardStandardClubId={boardClubId} />
             </PostContainer>
         </Background>
     );

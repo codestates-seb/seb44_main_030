@@ -1,7 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import React from 'react';
 import { useNavigate } from 'react-router';
-import backgroundImg from '../assets/Signup_background.png';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import RegisterForm from '../components/RegisterForm';
 import { motion } from 'framer-motion';

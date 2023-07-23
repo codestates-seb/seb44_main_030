@@ -3,9 +3,12 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {useCallback} from 'react';
 import { usePostHeader } from '../api/getHeader.ts';
-
+type DeletePostReturnType = {
+    handleDeletePost: () => void;
+    boardType: 'standards' | 'club';
+};
 //DetailContentSection.tsx 에서 게시글 삭제 기능에 사용
-export function useDeletePost(postId:number) {
+export function useDeletePost(postId:number):DeletePostReturnType {
     const navigate = useNavigate();
     const location = useLocation();
     const headers = usePostHeader(); 

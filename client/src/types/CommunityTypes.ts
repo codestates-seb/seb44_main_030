@@ -7,7 +7,7 @@ export type memberData = {
 }
 
 export type CommunityPostData = {
-    standardId:number;
+    boardStandardId:number;
     title:string;
     content:string;
     view:number;
@@ -29,5 +29,5 @@ export type allCommunityData = {
 }
 
 export type RouteParams = {
-    standardId: string;
+    boardStandardId: string;
 };

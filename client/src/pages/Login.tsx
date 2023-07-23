@@ -30,10 +30,11 @@ const Login = () => {
             const response = await axios.post(`${API_URL}/auth/login`, data, {
                 withCredentials: true,
             });
+
+            // const memberid = response.headers.get('MemberId');
+            console.log(response); //멤버id가 들어와야함
             const Authorization = response.headers.authorization;
             const Refresh = response.headers.refresh;
-            // const memberId = response.headers['memberid'];
-            // console.log(memberId);
 
             if (Authorization && Refresh) {
                 setCookie('AuthorizationToken', Authorization, { path: '/' });
@@ -71,7 +72,7 @@ const Login = () => {
                             })}
                         />
                         <div className="forError">
-                            {errors.email ? <span>{errors.email.message}</span> : <span></span>}
+                            {errors?.username ? <span>{errors?.username.message}</span> : <span></span>}
                         </div>
                         <div className="forLabel">
                             <label htmlFor="password">Password</label>

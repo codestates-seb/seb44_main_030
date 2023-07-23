@@ -8,17 +8,19 @@ import { Loading } from '../components/Lodaing.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { getDetailCommunityPost } from '../api/CommunityApi/CommunityApi.ts';
 import { RouteParams } from '../types/CommunityTypes.ts';
+import moment from 'moment';
 
 type BackgroundStyledProps = {
     $image: string;
 };
 
 const CommunityDetail = () => {
-    const { standardId } = useParams<RouteParams>();
-    if (!standardId) {
+    const { boardStandardId } = useParams<RouteParams>();
+
+    if (!boardStandardId) {
         throw new Error('해당 게시글에 대한 ID가 존재하지 않습니다.');
     }
-    const mockMemberId = 1; //useSelector 사용
+
     const navigate = useNavigate();
 
     const {
@@ -26,10 +28,10 @@ const CommunityDetail = () => {
         error: errorData,
         data,
     } = useQuery(
-        ['communityDetail', standardId],
+        ['communityDetail', boardStandardId],
         () => {
-            console.log(`게시글ID:${standardId}데이터를 가져옵니다.`);
-            return getDetailCommunityPost(standardId);
+            console.log(`게시글ID:${boardStandardId}데이터를 가져옵니다.`);
+            return getDetailCommunityPost(boardStandardId);
         },
         {
             staleTime: 10000, // 10초
@@ -49,7 +51,7 @@ const CommunityDetail = () => {
     }, []);
 
     const handleNavigateProfile = useCallback(() => {
-        navigate(`/mypage`);
+        navigate(`/mypage`, { state: detailCommunityData?.member?.memberId });
     }, [detailCommunityData?.member?.memberId]);
 
     useEffect(() => {
@@ -73,13 +75,15 @@ const CommunityDetail = () => {
                     <div>
                         <div>
                             <h3>관련태그: </h3>
-                            <span className="tag">{/* {tag} */}</span>{' '}
+                            <span className="tag">{detailCommunityData.tag || '태그없음'}</span>
                         </div>
                         <div>
-                            <span className="date">{detailCommunityData?.createdAt}</span>
-                            {/* <img src={memberProfileImg} /> */}
+                            <span className="date">{moment(detailCommunityData?.createdAt).format('YYYY-MM-DD')}</span>
+                            <img
+                                src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${detailCommunityData.member?.profileImageUrl}`}
+                            />
                             <span className="name" onClick={handleNavigateProfile}>
-                                {detailCommunityData?.name}
+                                {detailCommunityData?.member.nickname}
                             </span>
                         </div>
                     </div>
@@ -93,10 +97,10 @@ const CommunityDetail = () => {
                     isLiked={detailCommunityData?.isLiked}
                     likeCount={detailCommunityData?.likeCount}
                     memberId={detailCommunityData?.member?.memberId}
-                    standardId={detailCommunityData?.standardId}
+                    boardStandardId={detailCommunityData?.boardStandardId}
                     tag={detailCommunityData?.tag}
                 />
-                <DetailCommentSection comment={detailCommunityData?.comment} />
+                <DetailCommentSection boardStandardClubId={boardStandardId} />
             </PostContainer>
         </Background>
     );

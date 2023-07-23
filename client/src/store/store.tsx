@@ -4,7 +4,6 @@ import mapSlice from './map';
 import infoSlice from './info';
 import selectinfo from './selectinfo';
 import scrollReducer from './scroll';
-import userReducer from './user';
 import editDataReducer from './editData';
 import toastState from './toastState';
 export const store = configureStore({
@@ -14,7 +13,6 @@ export const store = configureStore({
         selection: selectinfo,
         scroll: scrollReducer,
         editData: editDataReducer,
-        user: userReducer,
         toast: toastState,
     },
     middleware: getDefaultMiddleware({
