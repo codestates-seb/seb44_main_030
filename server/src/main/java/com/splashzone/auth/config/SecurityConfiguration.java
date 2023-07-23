@@ -114,7 +114,7 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://qwerasdfzxcvasdf.netlify.app/ ",
+        configuration.setAllowedOrigins(Arrays.asList("https://jolly-kringle-b6ed45.netlify.app/",
                                                       "http://13.209.142.240:8080/",
                                                       "http://127.0.0.1:5173/",
                                                       "http://localhost:5173/",
