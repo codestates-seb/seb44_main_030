@@ -28,7 +28,7 @@ interface Clubdata {
 
 const Clubtable = () => {
     const [pagenumber, setPageNumber] = useState(1);
-    const { data, isLoading, isError, error } = useQuery<any, Error>({
+    const { data, isLoading, isError } = useQuery<any, Error>({
         queryKey: ['myclub', pagenumber],
         queryFn: () => getClubdata(pagenumber),
     });

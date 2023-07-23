@@ -31,8 +31,9 @@ const Mypage = () => {
     const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
     const authorizationToken = cookies.AuthorizationToken;
     const refreshToken = cookies.RefreshToken;
+    const API_URL = import.meta.env.VITE_KEY;
 
-    const memberId = 1; //memberId Link로받던가 아니면  header포함해서받던가하기
+    const memberId = 4; //memberId Link로받던가 아니면  header포함해서받던가하기
     const { data, isLoading, isError, error } = useQuery<any, Error>({
         queryKey: ['memberinfo', memberId],
         queryFn: () => getInfos(memberId),
@@ -40,7 +41,7 @@ const Mypage = () => {
 
     const patchInfos = (edit: member) =>
         axios
-            .patch(`http://13.209.142.240:8080/members/${memberId}`, edit, {
+            .patch(`${API_URL}/members/${memberId}`, edit, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
@@ -96,7 +97,7 @@ const Mypage = () => {
         formData.append('multipartFile', upimage);
 
         try {
-            const response = await axios.patch(`http://13.209.142.240:8080/members/image/${memberId}`, formData, {
+            const response = await axios.patch(`${API_URL}/members/image/${memberId}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
@@ -179,7 +180,7 @@ const Mypage = () => {
                                             {edit ? (
                                                 <Styledtextarea
                                                     value={member.bio}
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                    onChange={(e: any) => {
                                                         setMember((prev) => ({
                                                             ...prev,
                                                             bio: e.target.value,
