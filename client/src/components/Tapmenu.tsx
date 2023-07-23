@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import Block from './style/Wrapper';
 import Calendar from 'react-calendar';
 import moment from 'moment';
@@ -7,7 +8,8 @@ import 'react-calendar/dist/Calendar.css';
 import Modal from './Modal';
 import Table from './Table';
 import Clubtable from './Clubtable';
-
+import ProfileImage from './style/ProfileImage';
+import { useCookies } from 'react-cookie';
 // 포스트요청 게시글작성-> get요청으로 전체 스플래시 트래크 정보를 가져와야겟죠(날짜,tracker-id)  ->개별 splash tracker 조회(개별) ->splash-id
 
 const Tabmenu = () => {
@@ -40,22 +42,35 @@ const Tabmenu = () => {
 };
 const Tabcomponent0 = () => {
     const [value, setValue] = useState(new Date());
-    const mark = ['2023-07-08', '2023-07-10', '2023-07-15'];
+    const [caldata, setCalData] = useState([]);
     const [modal, setModal] = useState(false);
 
-    // useEffect(() => {
-    //     if (!mounted.current) {
-    //         mounted.current = true;
-    //     } else {
-    //         const dae = moment(value).format('YYYY-MM-DD');
-    //         const value1 = mark.includes(dae);
-    //         if (value1 === false) {
-    //             setModal(!modal);
-    //         }
-    //     }
-    // }, [value]);
+    const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const authorizationToken = cookies.AuthorizationToken;
+    const refreshToken = cookies.RefreshToken;
+
+    useEffect(() => {
+        axios
+            .get('http://13.209.142.240:8080/members/mypage/trackers/1?page=1&size=100', {
+                headers: {
+                    Authorization: `${decodeURIComponent(authorizationToken)}`,
+                    Refresh: `${refreshToken}`,
+                    withCredentials: true,
+                },
+            })
+            .then((data) =>
+                setCalData(
+                    data.data.data.map((item) => ({
+                        trackerId: item.trackerId,
+                        todayDate: item.todayDate,
+                    })),
+                ),
+            );
+    }, []);
+
+    const mark = caldata.map((item) => item.todayDate);
+
     const HandleClickDay = () => {
-        console.log(value);
         setModal(!modal);
     };
 
@@ -78,8 +93,16 @@ const Tabcomponent0 = () => {
 
                             if (mark.find((x) => x === moment(date).format('YYYY-MM-DD'))) {
                                 html.push(
-                                    <div className="dot" key={moment(date).format('YYYY-MM-DD')}>
-                                        ✔
+                                    <div
+                                        className="dot"
+                                        key={moment(date).format('YYYY-MM-DD')}
+                                        style={{ position: 'relative', top: '-15px' }}
+                                    >
+                                        <ProfileImage
+                                            width="40px"
+                                            height="40px"
+                                            url="../../public/lovepik-dolphin-png-image_401337360_wh1200.png"
+                                        ></ProfileImage>
                                     </div>,
                                 );
                             }
@@ -92,9 +115,8 @@ const Tabcomponent0 = () => {
                         }}
                         onClickDay={HandleClickDay}
                     />
-                    <div>{moment(value).format('YYYY-MM-DD')}</div>
                 </ReactCalander>
-                {modal && <Modal setModal={setModal} value={value} mark={mark}></Modal>}
+                {modal && <Modal setModal={setModal} value={value} mark={mark} caldata={caldata}></Modal>}
             </div>
         </>
     );
