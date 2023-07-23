@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Builder
 @Entity
@@ -22,10 +22,11 @@ public class BoardStandard extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardStandardId;
 
-    @Column(name = "TITLE", nullable = false)
+    @Column(name = "TITLE", nullable = false, length = 100)
     private String title;
 
     @Column(name = "CONTENT", nullable = false)
+    @Lob
     private String content;
 
     @Setter
@@ -41,18 +42,18 @@ public class BoardStandard extends Auditable {
 
     @Builder.Default
     @OneToMany(mappedBy = "boardStandard", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<BoardStandardTag> boardStandardTags = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "boardStandard", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BoardStandardComment> boardStandardComments = new ArrayList<>();
 
-    public BoardStandard(Long boardStandardId, String title, String content, int view) {
-        this.boardStandardId = boardStandardId;
-        this.title = title;
-        this.content = content;
-        this.view = view;
-    }
-
-    public void changeBoardStandard(BoardStandard boardStandard) {
+    public void changeBoardStandard(BoardStandard boardStandard, List<BoardStandardTag> standardTags) {
         this.title = boardStandard.getTitle();
         this.content = boardStandard.getContent();
+
+        this.boardStandardTags.clear();
+        this.boardStandardTags.addAll(standardTags);
     }
 
     public void increaseLikeCount() {

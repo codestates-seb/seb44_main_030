@@ -32,13 +32,12 @@ import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.*;
 
-@Validated
 @RestController
 @RequestMapping("/standards")
+@Validated
 @RequiredArgsConstructor
-@Slf4j
 public class BoardStandardController {
-    private final static String STANDARD_DEFAULT_URL = "/standards";
+    private final static String BOARD_STANDARD_DEFAULT_URL = "/standards";
     private static final int RECOMMEND_LIKE_COUNT = 1;
     private final BoardStandardService boardStandardService;
     private final BoardStandardMapper boardStandardMapper;
@@ -47,71 +46,69 @@ public class BoardStandardController {
 
     @PostMapping
     public ResponseEntity postBoardStandard(Authentication authentication,
-                                       @Valid @RequestBody BoardStandardDto.Post postDto) {
+                                            @Valid @RequestBody BoardStandardDto.Post postDto) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
         System.out.println("postStandard MEMBER: " + member);
 
-        BoardStandard boardStandard = boardStandardMapper.postDtoToBoardStandard(postDto);
+        BoardStandard boardStandard = boardStandardMapper.boardStandardPostDtoToBoardStandard(postDto);
         boardStandard.setMember(member);
 
-        BoardStandard postBoardStandard = boardStandardService.createStandard(boardStandard);
-        URI location = UriCreator.createUri(STANDARD_DEFAULT_URL, postBoardStandard.getBoardStandardId());
+        BoardStandard postBoardStandard = boardStandardService.createBoardStandard(boardStandard);
+        URI location = UriCreator.createUri(BOARD_STANDARD_DEFAULT_URL, postBoardStandard.getBoardStandardId());
 
-//        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).build();
 
-        return new ResponseEntity<>(boardStandardMapper.boardStandardToResponseDto(postBoardStandard),
-                HttpStatus.CREATED);
+//        return new ResponseEntity<>(boardStandardMapper.boardStandardToResponseDto(postBoardStandard),
+//                HttpStatus.CREATED);
     }
 
     @PatchMapping("/{standard-id}")
     public ResponseEntity patchBoardStandard(Authentication authentication,
-                                        @PathVariable("standard-id") @Positive Long boardStandardId,
-                                        @Valid @RequestBody BoardStandardDto.Patch patchDto) {
+                                             @PathVariable("standard-id") @Positive Long boardStandardId,
+                                             @Valid @RequestBody BoardStandardDto.Patch patchDto) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
         System.out.println("patchStandard MEMBER: " + member);
 
-        BoardStandard boardStandard = boardStandardMapper.patchDtoToBoardStandard(patchDto);
+        BoardStandard boardStandard = boardStandardMapper.boardStandardPatchDtoToBoardStandard(patchDto, boardStandardId);
         boardStandard.setMember(member);
 
         boardStandard.setBoardStandardId(boardStandardId);
 
-        BoardStandard patchBoardStandard = boardStandardService.updateStandard(boardStandard);
+        BoardStandard patchBoardStandard = boardStandardService.updateBoardStandard(boardStandard);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(boardStandardMapper.boardStandardToResponseDto(patchBoardStandard)), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(boardStandardMapper.boardStandardToBoardStandardResponseDto(patchBoardStandard)), HttpStatus.OK);
     }
 
     @GetMapping("/{standard-id}")
     public ResponseEntity getBoardStandard(@PathVariable("standard-id") Long boardStandardId) {
-        BoardStandard boardStandard = boardStandardService.findStandard(boardStandardId);
+        BoardStandard boardStandard = boardStandardService.findBoardStandard(boardStandardId);
 
         boardStandardService.updateViews(boardStandardId);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(boardStandardMapper.boardStandardToResponseDto(boardStandard)), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(boardStandardMapper.boardStandardToBoardStandardResponseDto(boardStandard)), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity getBoardStandards(@RequestParam("page") int page,
-                                       @RequestParam("size") int size,
-                                       @RequestParam(required = false) String keyword) {
-        Page<BoardStandard> pageBoardStandards = boardStandardService.findStandards(page - 1, size);
+    public ResponseEntity getBoardStandards(@Positive @RequestParam Integer page,
+                                            @Positive @RequestParam Integer size) {
+        Page<BoardStandard> pageBoardStandards = boardStandardService.findBoardStandards(page - 1, size);
         List<BoardStandard> boardStandards = pageBoardStandards.getContent();
 
         for (int i = 0; i < boardStandards.size(); i++) {
             System.out.println(boardStandards.get(i).toString());
-
         }
 
         return new ResponseEntity<>(
-                new MultiResponseDto<>(boardStandardMapper.boardStandardsToResponseDtos(boardStandards), pageBoardStandards), HttpStatus.OK);
+                new MultiResponseDto<>(boardStandardMapper.boardStandardsToBoardStandardResponseDtos(boardStandards), pageBoardStandards), HttpStatus.OK);
     }
 
     @DeleteMapping("/{standard-id}")
     public ResponseEntity deleteBoardStandard(Authentication authentication,
-                                         @Positive @PathVariable("standard-id") Long boardStandardId) {
+                                              @PathVariable("standard-id") @Positive Long boardStandardId) {
         if (authentication == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
@@ -119,11 +116,11 @@ public class BoardStandardController {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
-                boardStandardService.findStandard(boardStandardId).getMember())) {
+                boardStandardService.findBoardStandard(boardStandardId).getMember())) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
 
-        boardStandardService.deleteStandard(boardStandardId);
+        boardStandardService.deleteBoardStandard(boardStandardId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -146,7 +143,7 @@ public class BoardStandardController {
         List<BoardStandard> boardStandards = pageBoardStandards.getContent();
 
         return new ResponseEntity<>(
-                new MultiResponseDto<>(boardStandardMapper.boardStandardsToResponseDtos(boardStandards), pageBoardStandards), HttpStatus.OK);
+                new MultiResponseDto<>(boardStandardMapper.boardStandardsToBoardStandardResponseDtos(boardStandards), pageBoardStandards), HttpStatus.OK);
     }
 
     @GetMapping("/count")
@@ -156,5 +153,4 @@ public class BoardStandardController {
 
         return ResponseEntity.ok(count);
     }
-
 }

@@ -1,8 +1,10 @@
-package com.splashzone.boardclub.entity;
+package com.splashzone.boardstandard.entity;
 
-import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.tag.entity.Tag;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -11,14 +13,14 @@ import javax.persistence.*;
 @Getter
 @Builder
 @Entity
-public class BoardClubTag {
+public class BoardStandardTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardClubTagId;
+    private Long boardStandardTagId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "BOARD_CLUB_ID")
-    private BoardClub boardClub;
+    @JoinColumn(name = "BOARD_STANDARD_ID")
+    private BoardStandard boardStandard;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "TAG_ID")

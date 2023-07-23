@@ -29,7 +29,7 @@ public class BoardClub extends Auditable {
     private String content;
 
     @Column(name = "DUE_DATE", nullable = false)
-    private LocalDate dueDate; // 모집일이 지나면 자동으로 모집 종료되게 처리, 현재보다 이전일은 지정 못하게 처리
+    private LocalDate dueDate;
 
     @Column(name = "CAPACITY", nullable = false)
     private Integer capacity;

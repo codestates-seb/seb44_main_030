@@ -53,7 +53,6 @@ public class BoardClubController {
         BoardClub boardClub = boardClubMapper.boardClubPostDtotoBoardClub(postDto);
         boardClub.setMember(member);
 
-        //
         BoardClub postBoardClub = boardClubService.createBoardClub(boardClub);
         URI location = UriCreator.createUri(BOARD_CLUB_DEFAULT_URL, postBoardClub.getBoardClubId());
 

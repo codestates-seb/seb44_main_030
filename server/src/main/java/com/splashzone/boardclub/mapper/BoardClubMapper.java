@@ -25,7 +25,6 @@ public interface BoardClubMapper {
                 .addressName(requestBody.getAddressName())
                 .latitude(requestBody.getLatitude())
                 .longitude(requestBody.getLongitude())
-//                .member(member)
                 .boardClubTags(getBoardClubTagsFromTagDto(requestBody.getTags()))
                 .build();
     }
@@ -42,7 +41,6 @@ public interface BoardClubMapper {
                 .addressName(requestBody.getAddressName())
                 .latitude(requestBody.getLatitude())
                 .longitude(requestBody.getLongitude())
-//                .member(member)
                 .boardClubTags(getBoardClubTagsFromTagDto(requestBody.getTags()))
                 .boardClubStatus(requestBody.getBoardClubStatus())
                 .build();
@@ -51,7 +49,8 @@ public interface BoardClubMapper {
     default BoardClubDto.Response boardClubToBoardClubResponseDto(BoardClub boardClub) {
         return BoardClubDto.Response.builder()
                 .boardClubId(boardClub.getBoardClubId())
-//                .memberId(boardClub.getMember().getMemberId())
+                .memberId(boardClub.getMember().getMemberId())
+                .profileImageUrl(boardClub.getMember().getProfileImageUrl())
                 .nickname(boardClub.getMember().getNickname())
                 .title(boardClub.getTitle())
                 .content(boardClub.getContent())
@@ -73,9 +72,11 @@ public interface BoardClubMapper {
 
     default List<BoardClubDto.Response> boardClubsToBoardClubResponseDtos(List<BoardClub> boardClubs) {
         List<BoardClubDto.Response> list = new ArrayList<>(boardClubs.size());
+
         for (BoardClub boardClub : boardClubs) {
             list.add(boardClubToBoardClubResponseDto(boardClub));
         }
+
         return list;
     }
 

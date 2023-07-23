@@ -39,7 +39,7 @@ public class BoardClubService {
     public BoardClub createBoardClub(BoardClub boardClub) {
         Member findMember = memberService.findVerifiedMember(boardClub.getMember().getMemberId());
 
-        BoardClub reBuildBoardClub = BoardClub.builder()
+        BoardClub postBoardClub = BoardClub.builder()
                 .title(boardClub.getTitle())
                 .content(boardClub.getContent())
                 .dueDate(boardClub.getDueDate())
@@ -52,11 +52,11 @@ public class BoardClubService {
                 .member(findMember)
                 .build();
 
-        findMember.getBoardClubs().add(reBuildBoardClub);
+        findMember.getBoardClubs().add(postBoardClub);
 
-        bridgeTagToBoardClub(boardClub, reBuildBoardClub);
+        bridgeTagToBoardClub(boardClub, postBoardClub);
 
-        return boardClubRepository.save(reBuildBoardClub);
+        return boardClubRepository.save(postBoardClub);
     }
 
     public BoardClub updateBoardClub(BoardClub boardClub) {
@@ -106,25 +106,15 @@ public class BoardClubService {
         return findBoardClub;
     }
 
-    /*
-    private void deleteOriginTagInBoardClub(BoardClub findBoardClub) {
-        findBoardClub.getBoardClubTags().stream()
+    private void bridgeTagToBoardClub(BoardClub boardClub, BoardClub postBoardClub) {
+        boardClub.getBoardClubTags().stream()
                 .forEach(boardClubTag -> {
-                    boardClubTag.removeTo(findBoardClub, boardClubTag.getTag());
-                    boardClubTagRepository.delete(boardClubTag);
-                });
-    }
-     */
-
-    private void bridgeTagToBoardClub(BoardClub boardClub, BoardClub reBuildBoardClub) {
-        boardClub.getBoardClubTags().stream() // 수정한 모임게시글에서 태그를 가져온다.
-                .forEach(boardClubTag -> {
-                    Tag dbTag = tagService.findVerifiedTagByTagName(boardClubTag.getTag().getTagName()); // 수정한 모임게시글의 태그가 DB에 있는지 확인한다.
+                    Tag dbTag = tagService.findVerifiedTagByTagName(boardClubTag.getTag().getTagName());
                     BoardClubTag reBuildBoardClubTag =
                             BoardClubTag.builder()
-                                    .boardClub(reBuildBoardClub)
-                                    .tag(dbTag).build(); // 수정한 모임게시글의 태그를 reBuildBoardClub에 저장한다.
-                    boardClubTagRepository.save(reBuildBoardClubTag); // 태그를 repository에 저장한다.
+                                    .boardClub(postBoardClub)
+                                    .tag(dbTag).build();
+                    boardClubTagRepository.save(reBuildBoardClubTag);
                 });
     }
 
