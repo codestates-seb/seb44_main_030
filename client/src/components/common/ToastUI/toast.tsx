@@ -1,12 +1,12 @@
 import { useRef, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setToast } from '../../../store/toastState';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 const Toast = () => {
     const [status, setStatus] = useState('start');
     const dispatch = useDispatch();
     const toastRef = useRef<HTMLDivElement>(null);
+    const message = useSelector((state: RootState) => state.toast.toastMessage);
 
     useEffect(() => {
         setTimeout(() => {
@@ -23,7 +23,7 @@ const Toast = () => {
     useEffect(() => {
         if (status === 'exit' && toastRef.current) {
             const handleTransitionEnd = () => {
-                dispatch(setToast(false));
+                dispatch(clearToast());
             };
 
             toastRef.current.addEventListener('transitionend', handleTransitionEnd);
@@ -33,11 +33,11 @@ const Toast = () => {
                 }
             };
         }
-    }, [status]);
+    }, [status, dispatch]);
 
     return (
         <StyledToast ref={toastRef} className={status}>
-            <p>저장되었습니다!</p>
+            <p>{message}</p>
         </StyledToast>
     );
 };

@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Tag from './Tag';
 
 import ViewsIcon from '../../../public/view.png';
 import MessageIcon from '../../../public/bubble-chat.png';
-import LikeIcon from '../../assets/Like.svg';
+import LikeIcon from '../../assets/heart (1).png';
 import LikeFilledIcon from '../../assets/Like_filled.svg';
 import { savePosition } from '../../store/scroll.ts';
 import { useDispatch } from 'react-redux';
@@ -38,6 +38,9 @@ interface ClubPostProps extends PostProps {
         tags: { tagName: string }[];
         dueDate: string;
         boardClubStatus: string;
+        nickname: string;
+        likeCount: number;
+        memberLiked: Array<number>;
     };
 }
 
@@ -79,6 +82,8 @@ export default function ContentsCard({
         dueDate,
         boardClubStatus,
         nickname,
+        likeCount: clubLikeCount = 0, //[게시글에 대한 좋아요 갯수]
+        memberLiked: clubMemberLiked = [],
     } = clubProps || {};
 
     const [clubStatus, setClubStatus] = useState(boardClubStatus);
@@ -95,14 +100,14 @@ export default function ContentsCard({
 
     const dispatch = useDispatch();
     const loginId = 1; //useSelector 사용
-    const [likeCount, setLikeCount] = useState(like);
-    const [isLiked, setIsLiked] = useState(memberLiked.includes(loginId));
+    const [likeCount, setLikeCount] = useState(like || clubLikeCount);
+    const [isLiked, setIsLiked] = useState((memberLiked || clubMemberLiked).includes(loginId));
     const navigate = useNavigate();
     //props 변경될 때 상태 최신화 위함
     useEffect(() => {
-        setLikeCount(like);
-        setIsLiked(memberLiked.includes(loginId));
-    }, [like, memberLiked, loginId]);
+        setLikeCount(like || clubLikeCount);
+        setIsLiked((memberLiked || clubMemberLiked).includes(loginId));
+    }, [like, clubLikeCount, memberLiked, clubMemberLiked, loginId]);
 
     const moveToDetail = () => {
         if (type === 'community') {
@@ -155,18 +160,17 @@ export default function ContentsCard({
                     <span onClick={handleNavigateProfile}>{nickname}</span>
                 </UserInfo>
                 <ContentsInfo>
-                    {communityProps?.like &&
-                        (isLiked ? (
-                            <>
-                                <img src={LikeFilledIcon} onClick={handleLike} />
-                                <span>{likeCount}</span>
-                            </>
-                        ) : (
-                            <>
-                                <img src={LikeIcon} onClick={handleLike} />
-                                <span>{likeCount}</span>
-                            </>
-                        ))}
+                    {isLiked ? (
+                        <>
+                            <img src={LikeFilledIcon} onClick={handleLike} />
+                            <span>{likeCount}</span>
+                        </>
+                    ) : (
+                        <>
+                            <img src={LikeIcon} onClick={handleLike} />
+                            <span>{likeCount}</span>
+                        </>
+                    )}
                     <img src={ViewsIcon} />
                     <span>{communityProps ? communityView : clubView}</span>
                     <img src={MessageIcon} />
