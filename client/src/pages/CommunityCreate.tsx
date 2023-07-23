@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 import { RootState } from '../store/store.tsx';
 import axios, { AxiosError } from 'axios';
 import ConfirmModal from '../components/common/ConfirmModal.tsx';
-import ReactQuill from 'react-quill';
-import { useCookies } from 'react-cookie';
+// import ReactQuill from 'react-quill';
+
 import { usePostHeader } from '../api/getHeader.ts';
 type FormData = {
     title: string;
@@ -34,7 +34,7 @@ const CommunityCreate = () => {
     const {
         register,
         handleSubmit,
-        control,
+        // control,
         formState: { errors },
     } = useForm<FormData>({
         defaultValues: {
@@ -71,7 +71,7 @@ const CommunityCreate = () => {
             memberId: 3, // 이 부분은 로그인한 유저의 ID로 수정
             title: data.title,
             content: data.content,
-            tags: [{tagName: englishTagName}],
+            tags: [{ tagName: englishTagName }],
         };
         const patchPayload = {
             title: data.title,
@@ -125,22 +125,22 @@ const CommunityCreate = () => {
         return () => {
             dispatch(reset());
         };
-    }, []);
+    }, [dispatch]);
 
-    const toolbarOptions = [
-        [{ header: '1' }, { header: '2' }],
-        [{ size: [] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
-        [
-            {
-                color: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
-            },
-            {
-                background: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
-            },
-        ],
-    ];
+    // const toolbarOptions = [
+    //     [{ header: '1' }, { header: '2' }],
+    //     [{ size: [] }],
+    //     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    //     [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
+    //     [
+    //         {
+    //             color: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
+    //         },
+    //         {
+    //             background: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
+    //         },
+    //     ],
+    // ];
 
     return (
         <CreateFormContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

@@ -1,4 +1,4 @@
-import React, { ReactNode, FormEventHandler } from 'react';
+import { ReactNode, FormEventHandler } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router';
 import LogoIcon from '../../public/onlyLOGO.png';

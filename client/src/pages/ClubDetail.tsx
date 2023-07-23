@@ -1,4 +1,4 @@
-import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useCallback, useEffect } from 'react';
+import { Key, useCallback } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -24,43 +24,44 @@ const ClubDetail = () => {
     const headers = usePostHeader();
     const { boardClubId } = useParams<{ boardClubId: string }>();
     const numberBoardClubId = boardClubId ? Number(boardClubId) : 0;
-    const { status, data: clubDetail, error } = useClubBoardDetail(numberBoardClubId);
+    const { data: clubDetail } = useClubBoardDetail(numberBoardClubId);
 
-    let boardClubStatus,
+    let //
+        // boardClubStatus,
         contact,
         content,
         capacity,
-        createdAt,
+        // createdAt,
         dueDate,
         memberId,
-        modifiedAt,
+        // modifiedAt,
         tags,
         title,
         view,
         addressName,
         placeName,
         latitude,
-        likeCount,
+        // likeCount,
         longitude,
         nickname;
 
     if (clubDetail && clubDetail.data) {
         ({
-            boardClubStatus,
+            // boardClubStatus,
             contact,
             content,
             capacity,
-            createdAt,
+            // createdAt,
             dueDate,
             memberId,
-            modifiedAt,
+            // modifiedAt,
             tags,
             title,
             view,
             addressName,
             placeName,
             latitude,
-            likeCount,
+            // likeCount,
             longitude,
             nickname,
         } = clubDetail.data);
@@ -79,7 +80,7 @@ const ClubDetail = () => {
         navigate(`/mypage`, { state: memberId });
     }, [memberId, navigate]);
     const handleEdit = useCallback(() => {
-        navigate(`/club/create/${boardClubId}`, { state: { clubDetail: clubDetail.data }, headers });
+        navigate(`/club/create/${boardClubId}`, { state: { clubDetail: clubDetail.data } });
     }, [clubDetail, boardClubId]);
 
     const mutation = useMutation(
@@ -97,7 +98,7 @@ const ClubDetail = () => {
 
     const handleDelete = useCallback(() => {
         if (window.confirm('게시글을 삭제하시겠습니까?')) {
-            mutation.mutate(boardClubId);
+            mutation.mutate(Number(boardClubId));
         }
     }, [mutation, boardClubId]);
 
@@ -111,7 +112,7 @@ const ClubDetail = () => {
         latitude,
         longitude,
     };
-    console.log(mapdata);
+    // console.log(mapdata);
 
     if (clubDetail === undefined || mapdata === undefined) return null;
 
@@ -174,7 +175,7 @@ const ClubDetail = () => {
                         </div>
                     </div>
                 </ContentSection>
-                <DetailCommentSection boardStandardClubId={boardClubId} />
+                <DetailCommentSection boardStandardClubId={Number(boardClubId)} />
             </PostContainer>
         </Background>
     );
