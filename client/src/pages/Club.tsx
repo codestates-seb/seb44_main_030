@@ -62,7 +62,7 @@ function Club() {
                         data.pages &&
                         data.pages.map((page) =>
                             page.data.map((clubData: ClubBoardData) => {
-                                console.log(clubData);
+                                // console.log(clubData);
                                 return (
                                     <motion.div
                                         key={clubData.boardClubId}

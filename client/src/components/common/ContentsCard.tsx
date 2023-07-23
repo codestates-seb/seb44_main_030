@@ -10,6 +10,7 @@ import LikeIcon from '../../assets/heart (1).png';
 import LikeFilledIcon from '../../assets/Like_filled.svg';
 import { savePosition } from '../../store/scroll.ts';
 import { useDispatch } from 'react-redux';
+
 interface PostProps {
     memberId: number;
     title: string;
@@ -17,6 +18,8 @@ interface PostProps {
     view: number;
     commentCount: number;
     type: string;
+    profileImageUrl: string;
+    nickname: string;
 }
 
 interface CommunityPostProps extends PostProps {
@@ -38,7 +41,6 @@ interface ClubPostProps extends PostProps {
         tags: { tagName: string }[];
         dueDate: string;
         boardClubStatus: string;
-        nickname: string;
         likeCount: number;
         memberLiked: Array<number>;
     };
@@ -46,24 +48,17 @@ interface ClubPostProps extends PostProps {
 
 type CardProps = CommunityPostProps | ClubPostProps;
 
-export default function ContentsCard({
-    memberId,
-    title,
-    content,
-    view,
-    commentCount,
-    communityProps,
-    clubProps,
-    type,
-}: CardProps) {
+export default function ContentsCard({ memberId, communityProps, clubProps, type }: CardProps) {
     const {
         memberId: communityMemberId,
         title: communityTitle,
         content: communityContent,
         view: communityView,
         commentCount: communityCommentCount,
+        nickname: communityNickname,
+        profileImageUrl: communitProfileImageUrl,
         member,
-        tags:communityTags,
+        tags: communityTags,
         registeredAt,
         modifiedAt,
         like,
@@ -76,15 +71,19 @@ export default function ContentsCard({
         content: clubContent,
         view: clubView,
         commentCount: clubCommentCount,
+        nickname: clubNickname,
+        profileImageUrl: clubProfileImageUrl,
         boardClubId,
         tags,
         dueDate,
         boardClubStatus,
-        nickname,
         likeCount: clubLikeCount = 0, //[게시글에 대한 좋아요 갯수]
         memberLiked: clubMemberLiked = [],
     } = clubProps || {};
-    console.log(communityProps)
+
+    console.log(communityProps);
+    console.log(clubProps);
+
     const [clubStatus, setClubStatus] = useState(boardClubStatus);
     useEffect(() => {
         const now = new Date();
@@ -146,8 +145,10 @@ export default function ContentsCard({
                     <p>{communityProps ? communityContent : clubContent}</p>
                 </ContentsContainer>
                 <TagContainer>
-                    {communityProps && communityTags.map((tag: { tagName: string }) => (
-                            <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />))}
+                    {communityProps &&
+                        communityTags.map((tag: { tagName: string }) => (
+                            <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />
+                        ))}
                     {clubProps &&
                         tags.map((tag: { tagName: string }) => (
                             <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />
@@ -156,8 +157,13 @@ export default function ContentsCard({
             </TitleContentsTagWarp>
             <InfoContainer>
                 <UserInfo>
-                    <img src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${member?.profileImageUrl}`} className="user-icon" />
-                    <span onClick={handleNavigateProfile}>{member?.nickname}</span>
+                    <img
+                        src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${
+                            communitProfileImageUrl || clubProfileImageUrl
+                        }`}
+                        className="user-icon"
+                    />
+                    <span onClick={handleNavigateProfile}>{clubNickname || communityNickname}</span>
                 </UserInfo>
                 <ContentsInfo>
                     {isLiked ? (
@@ -174,7 +180,7 @@ export default function ContentsCard({
                     <img src={ViewsIcon} />
                     <span>{communityProps ? communityView : clubView}</span>
                     <img src={MessageIcon} />
-                    <span>{communityProps ? communityCommentCount||0 : clubCommentCount||0}</span>
+                    <span>{communityProps ? communityCommentCount || 0 : clubCommentCount || 0}</span>
                 </ContentsInfo>
             </InfoContainer>
         </CardWarp>
@@ -259,7 +265,7 @@ const ContentsContainer = styled.div`
         color: #c1daf5;
         cursor: pointer;
     }
-    >p{
+    > p {
         display: flex;
         align-items: center;
         word-wrap: break-word;
@@ -300,7 +306,7 @@ const UserInfo = styled.div`
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        &:hover{
+        &:hover {
             cursor: pointer;
         }
     }

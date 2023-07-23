@@ -11,7 +11,7 @@ export default function useClubBoardData() {
             getNextPageParam: (lastPage, allPages) => {
                 const maxPages = lastPage.pageInfo?.totalPages;
                 const nextPage = allPages.length + 1;
-                console.log('maxPages, nextPage:', maxPages, nextPage);
+                // console.log('maxPages, nextPage:', maxPages, nextPage);
                 return maxPages && nextPage <= maxPages ? nextPage : undefined;
             },
         },
