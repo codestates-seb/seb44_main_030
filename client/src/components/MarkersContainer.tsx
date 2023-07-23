@@ -19,7 +19,7 @@ const MarkersContainer = ({ updateClubMap, setShowMap }: MarkersContaierProps) =
     const submitHandler = () => {
         console.log(selection);
         updateClubMap(selection);
-        dispatch(setToast(true));
+        dispatch(setToast('저장되었습니다!'));
         setShowMap(false);
     };
     console.log(selection);

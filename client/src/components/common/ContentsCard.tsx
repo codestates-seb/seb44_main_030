@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Tag from './Tag';
 
 import ViewsIcon from '../../../public/view.png';
 import MessageIcon from '../../../public/bubble-chat.png';
-import LikeIcon from '../../assets/Like.svg';
+import LikeIcon from '../../assets/heart (1).png';
 import LikeFilledIcon from '../../assets/Like_filled.svg';
 import { savePosition } from '../../store/scroll.ts';
 import { useDispatch } from 'react-redux';
@@ -28,7 +28,7 @@ interface CommunityPostProps extends PostProps {
         modifiedAt: string | null;
         like: number; //[게시글에 대한 좋아요 갯수]
         memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
-        standardId: number; //[게시글 자체에 대한 ID]
+        boardStandardId: number; //[게시글 자체에 대한 ID]
     };
 }
 
@@ -38,6 +38,9 @@ interface ClubPostProps extends PostProps {
         tags: { tagName: string }[];
         dueDate: string;
         boardClubStatus: string;
+        nickname: string;
+        likeCount: number;
+        memberLiked: Array<number>;
     };
 }
 
@@ -59,14 +62,13 @@ export default function ContentsCard({
         content: communityContent,
         view: communityView,
         commentCount: communityCommentCount,
-        name,
-        memberProfileImg,
-        tag,
+        member,
+        tags:communityTags,
         registeredAt,
         modifiedAt,
         like,
         memberLiked = [],
-        standardId,
+        boardStandardId,
     } = communityProps || {};
 
     const {
@@ -79,8 +81,10 @@ export default function ContentsCard({
         dueDate,
         boardClubStatus,
         nickname,
+        likeCount: clubLikeCount = 0, //[게시글에 대한 좋아요 갯수]
+        memberLiked: clubMemberLiked = [],
     } = clubProps || {};
-
+    console.log(communityProps)
     const [clubStatus, setClubStatus] = useState(boardClubStatus);
     useEffect(() => {
         const now = new Date();
@@ -95,19 +99,19 @@ export default function ContentsCard({
 
     const dispatch = useDispatch();
     const loginId = 1; //useSelector 사용
-    const [likeCount, setLikeCount] = useState(like);
-    const [isLiked, setIsLiked] = useState(memberLiked.includes(loginId));
+    const [likeCount, setLikeCount] = useState(like || clubLikeCount);
+    const [isLiked, setIsLiked] = useState((memberLiked || clubMemberLiked).includes(loginId));
     const navigate = useNavigate();
     //props 변경될 때 상태 최신화 위함
     useEffect(() => {
-        setLikeCount(like);
-        setIsLiked(memberLiked.includes(loginId));
-    }, [like, memberLiked, loginId]);
+        setLikeCount(like || clubLikeCount);
+        setIsLiked((memberLiked || clubMemberLiked).includes(loginId));
+    }, [like, clubLikeCount, memberLiked, clubMemberLiked, loginId]);
 
     const moveToDetail = () => {
         if (type === 'community') {
             dispatch(savePosition(window.scrollY));
-            navigate(`/community/detail/${standardId}`);
+            navigate(`/community/detail/${boardStandardId}`);
         } else if (type) {
             dispatch(savePosition(window.scrollY));
             navigate(`/club/detail/${boardClubId}`);
@@ -139,10 +143,11 @@ export default function ContentsCard({
                     <h3>{communityProps ? communityTitle : clubTitle}</h3>
                 </TitleContainer>
                 <ContentsContainer onClick={moveToDetail}>
-                    <span dangerouslySetInnerHTML={{ __html: communityProps ? communityContent : clubContent }}></span>
+                    <p>{communityProps ? communityContent : clubContent}</p>
                 </ContentsContainer>
                 <TagContainer>
-                    {communityProps && <Tag tag={tag} className="tag-component" />}
+                    {communityProps && communityTags.map((tag: { tagName: string }) => (
+                            <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />))}
                     {clubProps &&
                         tags.map((tag: { tagName: string }) => (
                             <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />
@@ -151,26 +156,25 @@ export default function ContentsCard({
             </TitleContentsTagWarp>
             <InfoContainer>
                 <UserInfo>
-                    <img src={memberProfileImg} className="user-icon" />
-                    <span onClick={handleNavigateProfile}>{nickname}</span>
+                    <img src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${member?.profileImageUrl}`} className="user-icon" />
+                    <span onClick={handleNavigateProfile}>{member?.nickname}</span>
                 </UserInfo>
                 <ContentsInfo>
-                    {communityProps?.like &&
-                        (isLiked ? (
-                            <>
-                                <img src={LikeFilledIcon} onClick={handleLike} />
-                                <span>{likeCount}</span>
-                            </>
-                        ) : (
-                            <>
-                                <img src={LikeIcon} onClick={handleLike} />
-                                <span>{likeCount}</span>
-                            </>
-                        ))}
+                    {isLiked ? (
+                        <>
+                            <img src={LikeFilledIcon} onClick={handleLike} />
+                            <span>{likeCount}</span>
+                        </>
+                    ) : (
+                        <>
+                            <img src={LikeIcon} onClick={handleLike} />
+                            <span>{likeCount}</span>
+                        </>
+                    )}
                     <img src={ViewsIcon} />
                     <span>{communityProps ? communityView : clubView}</span>
                     <img src={MessageIcon} />
-                    <span>{communityProps ? communityCommentCount : clubCommentCount}</span>
+                    <span>{communityProps ? communityCommentCount||0 : clubCommentCount||0}</span>
                 </ContentsInfo>
             </InfoContainer>
         </CardWarp>
@@ -243,10 +247,10 @@ const TitleContainer = styled.div`
 `;
 const ContentsContainer = styled.div`
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     width: 300px;
-    height: 69px;
+    height: 77px;
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -254,6 +258,11 @@ const ContentsContainer = styled.div`
     &:hover {
         color: #c1daf5;
         cursor: pointer;
+    }
+    >p{
+        display: flex;
+        align-items: center;
+        word-wrap: break-word;
     }
 `;
 
@@ -291,6 +300,9 @@ const UserInfo = styled.div`
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        &:hover{
+            cursor: pointer;
+        }
     }
 `;
 

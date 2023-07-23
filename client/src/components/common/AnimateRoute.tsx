@@ -1,8 +1,6 @@
-import React from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import loadable from '@loadable/component';
 import { AnimatePresence } from 'framer-motion';
-import Table from '../Table';
 import ClubMapContainer from '../clubMap';
 
 const Main = loadable(() => import('../../pages/Main'));
@@ -29,7 +27,7 @@ export default function AnimateRoute() {
                 <Route path="/community/:tag/:keyword" element={<Community></Community>}></Route>
                 <Route path="/community" element={<Navigate replace to="/community/전체/null" />} />
                 <Route path="/community/create" element={<CommunityCreate></CommunityCreate>}></Route>
-                <Route path="/community/detail/:standardId" element={<CommunityDetail></CommunityDetail>}></Route>
+                <Route path="/community/detail/:boardStandardId" element={<CommunityDetail></CommunityDetail>}></Route>
                 <Route path="/club/detail/:boardClubId" element={<ClubDetail></ClubDetail>}></Route>
                 <Route path="/club/:tag/:keyword?" element={<Club></Club>}></Route>
                 <Route path="/club/create" element={<ClubCreate></ClubCreate>}></Route>

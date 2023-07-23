@@ -42,6 +42,7 @@ const CommunityCreate = () => {
             content,
             tag: tag || '전체',
         },
+        mode: 'onBlur',
     });
 
     const tags = {
@@ -70,7 +71,7 @@ const CommunityCreate = () => {
             memberId: 3, // 이 부분은 로그인한 유저의 ID로 수정
             title: data.title,
             content: data.content,
-            tag: englishTagName,
+            tags: [{tagName: englishTagName}],
         };
         const patchPayload = {
             title: data.title,
@@ -82,7 +83,6 @@ const CommunityCreate = () => {
             try {
                 const response = await axios.patch(`${API_URL}/standards/${postId}`, patchPayload, headers);
                 if (response.status === 200 || response.status === 201) {
-                    dispatch(reset());
                     navigate(-1); // patch 요청 성공 시 이전 페이지로 이동
                 } else {
                     // 오류 처리
@@ -117,12 +117,14 @@ const CommunityCreate = () => {
     };
 
     const handleCancel = () => {
-        dispatch(reset());
         navigate(-1);
     };
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        return () => {
+            dispatch(reset());
+        };
     }, []);
 
     const toolbarOptions = [
@@ -161,7 +163,7 @@ const CommunityCreate = () => {
                             {...register('title', {
                                 required: '제목을 입력해주세요',
                                 minLength: { value: 5, message: '5자 이상 입력해주세요' },
-                                maxLength: { value: 20, message: '20자 이내로 입력해주세요' },
+                                maxLength: { value: 20, message: '40자 이내로 입력해주세요' },
                             })}
                         />
                         {errors.title && <ErrorMessage>{errors?.title.message}</ErrorMessage>}
@@ -171,10 +173,11 @@ const CommunityCreate = () => {
                             placeholder="모임에 대해 소개해주세요!"
                             {...register('content', {
                                 required: '내용을 입력해주세요',
-                                minLength: { value: 30, message: '30자 이상 입력해주세요' },
+                                minLength: { value: 10, message: '10자 이상 입력해주세요' },
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
                         />
+                        {errors.content && <ErrorMessage>{errors?.content.message}</ErrorMessage>}
                         {/* <Controller
                             name="content"
                             control={control}

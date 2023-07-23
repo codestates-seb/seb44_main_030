@@ -1,36 +1,41 @@
-import React from 'react';
 import styled from 'styled-components';
 import Comment from '../components/Comment.tsx';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
 import { usePostHeader } from '../api/getHeader.ts';
+import { useQueryComment } from '../api/CommentApi/commentApi.ts';
+
 type CommentInput = {
     Content: string;
 };
-type Comment = {
-    memberId: number;
-    name: string;
-    memberProfileImg: string;
-    content: string;
-    registeredAt: string;
-    modifiedAt: string | null;
+
+type DetailCommentSectionProps = {
+    boardStandardClubId: number;
 };
 
-interface DetailCommentSectionProps {
-    comment: Comment[];
-}
-const DetailCommentSection = ({ comment }: DetailCommentSectionProps) => {
-    const boardType = location.pathname.split('/')[1] === 'community' ? 'boardcomments' : 'clubcomments';
-    const { register, handleSubmit, reset } = useForm<CommentInput>({ mode: 'onSubmit' });
-    const headers = usePostHeader(); 
+type payloadType = {
+    content: string;
+    boardStandardId?: number;
+    boardClubId?: number;
+};
+const DetailCommentSection = ({ boardStandardClubId }: DetailCommentSectionProps) => {
+    const boardType = location.pathname.split('/')[1] === 'community' ? 'standardcomments' : 'clubcomments';
+    const { register, handleSubmit, reset } = useForm<CommentInput>({ mode: 'onSubmit' }); //댓글작성 폼
+    const headers = usePostHeader(); //api 요청 헤더
+
     //댓글 작성 요청
     const onSubmit: SubmitHandler<CommentInput> = (data) => {
-        // console.log(data);
-        // 댓글 작성 post api 요청
         const API_URL = import.meta.env.VITE_KEY;
-        const payload = {
+        const payload: payloadType = {
             content: `${data.Content}`,
         };
+        if (boardType === 'standardcomments') {
+            payload.boardStandardId = boardStandardClubId;
+        }
+        if (boardType === 'clubcomments') {
+            payload.boardClubId = boardStandardClubId;
+        }
+
         axios
             .post(`${API_URL}/${boardType}`, payload, headers)
             .then((res) => console.log(res.status))
@@ -39,6 +44,14 @@ const DetailCommentSection = ({ comment }: DetailCommentSectionProps) => {
         alert('댓글작성 완료!');
     };
 
+    //댓글 조회
+    const { data: commentData, isError, isLoading } = useQueryComment(boardStandardClubId, boardType);
+    if(isLoading){
+        return <div>데이터를 불러오는 중</div>
+    }
+    if(isError){
+        return <div>데이터를 불러오는데 실패하였습니다.</div>
+    }
     return (
         <CommentSection>
             <CreateCommentSpace>
@@ -55,9 +68,7 @@ const DetailCommentSection = ({ comment }: DetailCommentSectionProps) => {
                 </StyledForm>
             </CreateCommentSpace>
             <div>
-                {comment?.map((commentData) => (
-                    <Comment commentData={commentData} />
-                ))}
+                {commentData.data?.map((data)=><Comment commentData={data} boardStandardClubId={boardStandardClubId} />)}
             </div>
         </CommentSection>
     );

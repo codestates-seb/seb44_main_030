@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -7,17 +6,16 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import BACK1 from '../../public/ob3.png';
 import BACK2 from '../../public/ob4.png';
-
-import LoginBG from '../../public/login.png';
 import RegisterForm from '../components/RegisterForm';
 
 interface FormInput {
+    email: string;
     username: string;
     password: string;
 }
 
 const Login = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
+    const [cookies, setCookie] = useCookies(['AuthorizationToken', 'RefreshToken']);
     const {
         register,
         handleSubmit,
@@ -32,9 +30,12 @@ const Login = () => {
             const response = await axios.post(`${API_URL}/auth/login`, data, {
                 withCredentials: true,
             });
-            console.log(response.data);
+
+            // const memberid = response.headers.get('MemberId');
+            console.log(response); //멤버id가 들어와야함
             const Authorization = response.headers.authorization;
             const Refresh = response.headers.refresh;
+
             if (Authorization && Refresh) {
                 setCookie('AuthorizationToken', Authorization, { path: '/' });
                 setCookie('RefreshToken', Refresh, { path: '/' });
@@ -43,7 +44,7 @@ const Login = () => {
                 console.error('error');
             }
         } catch (error) {
-            console.error(error);
+            alert('아이디 또는 비밀번호가 틀렸습니다! 다시 입력해주세요!');
         }
     };
 
@@ -71,7 +72,7 @@ const Login = () => {
                             })}
                         />
                         <div className="forError">
-                            {errors.email ? <span>{errors.email.message}</span> : <span></span>}
+                            {errors?.username ? <span>{errors?.username.message}</span> : <span></span>}
                         </div>
                         <div className="forLabel">
                             <label htmlFor="password">Password</label>

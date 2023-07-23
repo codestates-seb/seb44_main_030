@@ -5,6 +5,7 @@ interface ClubTagProps {
     tag: string;
     $isSelected?: boolean;
     onClick?: (event: React.MouseEvent<HTMLLIElement>) => void;
+    className?: string;
 }
 interface TagWarpStyledProps {
     $isSelected?: boolean;

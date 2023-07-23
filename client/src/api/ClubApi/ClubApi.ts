@@ -3,7 +3,7 @@ import { ClubResponse } from '../../types/ClubData';
 
 export default async function getClubBoardData(page: number) {
     const API_URL = import.meta.env.VITE_KEY;
-    const response = await axios.get<ClubResponse>(`${API_URL}/clubs?page=${page}&size=12`, {});
+    const response = await axios.get<ClubResponse>(`${API_URL}/clubs?page=${page}&size=6`, {});
     return response.data;
 }
 

@@ -1,12 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
 import backgroundImg from '../assets/Community_background.png';
 import ViewIcon from '../assets/View.svg';
 import CommentIcon from '../assets/Comment.svg';
-import { useForm, SubmitHandler } from 'react-hook-form';
 import { useClubBoardDetail } from '../api/ClubApi/ClubDataHooks.ts';
 import axios from 'axios';
 import DetailCommentSection from '../components/DetailCommentSection.tsx';
@@ -76,10 +74,10 @@ const ClubDetail = () => {
         navigate(-1);
         //이동했을 때, 이전 페이지 상태(스크롤위치, 페이지번호, 태그상태)를 유지해야한다.
         //router기능 이용하거나, redux에 저장해서 구현할 것.
-    }, []);
+    }, [navigate]);
     const handleNavigateProfile = useCallback(() => {
         navigate(`/mypage`, { state: memberId });
-    }, [memberId]);
+    }, [memberId, navigate]);
     const handleEdit = useCallback(() => {
         navigate(`/club/create/${boardClubId}`, { state: { clubDetail: clubDetail.data }, headers });
     }, [clubDetail, boardClubId]);
@@ -107,10 +105,6 @@ const ClubDetail = () => {
         window.open(contact, '_blank');
     }, [contact]);
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
     const mapdata = {
         addressName,
         placeName,
@@ -133,11 +127,18 @@ const ClubDetail = () => {
                         <div>
                             <h3>관련 태그: </h3>
                             {tags &&
-                                tags.map((tag, idx) => (
-                                    <span key={idx} className="tag">
-                                        {tag.tagName}
-                                    </span>
-                                ))}
+                                tags.map(
+                                    (
+                                        tag: {
+                                            tagName: string | undefined | null;
+                                        },
+                                        idx: Key | null | undefined,
+                                    ) => (
+                                        <span key={idx} className="tag">
+                                            {tag.tagName}
+                                        </span>
+                                    ),
+                                )}
                         </div>
                         <div>
                             <h3>모집 인원: </h3>
@@ -151,7 +152,7 @@ const ClubDetail = () => {
                             <h3>연락 방법: </h3>
                             <span onClick={handleNavigateContact}>링크</span>
                         </div>
-                        <UserInfo>{nickname}</UserInfo>
+                        <UserInfo onClick={handleNavigateProfile}>{nickname}</UserInfo>
                     </ContentInfo>
                 </TitleSection>
                 <ClubMapContainer mapdata={mapdata} />
@@ -173,7 +174,7 @@ const ClubDetail = () => {
                         </div>
                     </div>
                 </ContentSection>
-                <DetailCommentSection comment={clubDetail?.comment} />
+                <DetailCommentSection boardStandardClubId={boardClubId} />
             </PostContainer>
         </Background>
     );
