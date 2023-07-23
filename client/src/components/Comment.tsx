@@ -8,11 +8,11 @@ import { usePostHeader } from '../api/getHeader';
 import moment from 'moment';
 type CommentProps = {
     commentData: {
-        memberId: number;
+        memberId?: number;
         nickname: string;
         profileImageUrl: string;
         content: string;
-        registeredAt: string;
+        createdAt: string;
         modifiedAt: string;
         boardClubCommentId?: number;
         boardStandardCommentId?: number;
@@ -34,7 +34,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
         nickname,
         profileImageUrl,
         content,
-        registeredAt,
+        createdAt,
         boardClubCommentId = 0,
         boardStandardCommentId = 0,
     } = commentData;
@@ -72,7 +72,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
         if (boardType === 'clubcomments') {
             payload.boardClubId = Number(boardStandardClubId);
         }
-        console.log(payload, 'sadfjlksadjfkldsjfklsadfj');
+        
         const API_URL = import.meta.env.VITE_KEY;
         try {
             const response = await axios.patch(`${API_URL}/${boardType}/${boardCommentId}`, payload, headers);
@@ -174,7 +174,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
                         )}
                     </div>
                 }
-                <div>{moment(registeredAt).format('YYYY-MM-DD')}</div>
+                <div>{moment(createdAt).format('YYYY-MM-DD')}</div>
             </DateBox>
         </CommentContainer>
     );

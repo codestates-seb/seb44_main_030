@@ -63,7 +63,7 @@ export default function ContentsCard({
         view: communityView,
         commentCount: communityCommentCount,
         member,
-        tag,
+        tags:communityTags,
         registeredAt,
         modifiedAt,
         like,
@@ -146,7 +146,8 @@ export default function ContentsCard({
                     <p>{communityProps ? communityContent : clubContent}</p>
                 </ContentsContainer>
                 <TagContainer>
-                    {communityProps && <Tag tag={tag||'태그없음'} className="tag-component" />}
+                    {communityProps && communityTags.map((tag: { tagName: string }) => (
+                            <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />))}
                     {clubProps &&
                         tags.map((tag: { tagName: string }) => (
                             <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />
