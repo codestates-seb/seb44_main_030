@@ -44,6 +44,7 @@ const Tabcomponent0 = () => {
     const [value, setValue] = useState(new Date());
     const [caldata, setCalData] = useState([]);
     const [modal, setModal] = useState(false);
+    const API_URL = import.meta.env.VITE_KEY;
 
     const [cookies] = useCookies(['AuthorizationToken', 'RefreshToken']);
     const authorizationToken = cookies.AuthorizationToken;
@@ -51,7 +52,7 @@ const Tabcomponent0 = () => {
 
     useEffect(() => {
         axios
-            .get('http://13.209.142.240:8080/members/mypage/trackers/1?page=1&size=100', {
+            .get(`${API_URL}/members/mypage/trackers/1?page=1&size=100`, {
                 headers: {
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
                     Refresh: `${refreshToken}`,

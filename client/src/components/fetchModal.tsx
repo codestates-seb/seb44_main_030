@@ -9,7 +9,7 @@ import { useCookies } from 'react-cookie';
 
 interface InputProps {
     height?: string;
-    onChange?: () => void;
+    onChange?: any;
     value?: string;
 }
 
@@ -33,8 +33,9 @@ const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
     const dispatch = useDispatch();
     const dae = moment(value).format('YYYYMMDD');
     const todayDate = moment(value).format('YYYY-MM-DD');
+    const API_URL = import.meta.env.VITE_KEY;
 
-    const foundObject = caldata.find((item) => item.todayDate === todayDate);
+    const foundObject = caldata.find((item: any) => item.todayDate === todayDate);
 
     const trackerIdValue = foundObject.trackerId;
 
@@ -50,7 +51,7 @@ const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
     };
     useEffect(() => {
         axios
-            .get(`http://13.209.142.240:8080/trackers/${trackerIdValue}`, {
+            .get(`${API_URL}/trackers/${trackerIdValue}`, {
                 headers: {
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
                     Refresh: `${refreshToken}`,
@@ -104,7 +105,7 @@ const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
         data.exerciseStartTime = modifiedValue;
         data.exerciseEndTime = modfied2Value;
         data.todayDate = todayDate;
-        const url = `http://13.209.142.240:8080/trackers/${trackerIdValue}`;
+        const url = `${API_URL}/trackers/${trackerIdValue}`;
         console.log(data);
 
         try {

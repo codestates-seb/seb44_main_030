@@ -34,8 +34,7 @@ const Modal = ({ setModal, value, mark, caldata }: ModalProps) => {
     const dispatch = useDispatch();
     const dae = moment(value).format('YYYYMMDD');
     const todayDate = moment(value).format('YYYY-MM-DD');
-    console.log(todayDate);
-    console.log(mark);
+    const API_URL = import.meta.env.VITE_KEY;
 
     const [startType, setStartType] = useState('');
 
@@ -97,8 +96,7 @@ const Modal = ({ setModal, value, mark, caldata }: ModalProps) => {
         data.exerciseStartTime = modifiedValue;
         data.exerciseEndTime = modfied2Value;
         data.todayDate = todayDate;
-        const url = 'http://13.209.142.240:8080/trackers';
-        console.log(data);
+        const url = `${API_URL}/trackers`;
 
         try {
             const response = await axios.post(url, data, {
