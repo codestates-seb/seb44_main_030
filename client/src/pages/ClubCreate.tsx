@@ -8,12 +8,21 @@ import { motion } from 'framer-motion';
 import { reset } from '../store/editData.ts';
 import { useDispatch } from 'react-redux';
 import axios, { AxiosError } from 'axios';
-import ReactQuill from 'react-quill';
+// import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Map from './Map.tsx';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { usePostHeader } from '../api/getHeader.ts';
 import { setToast } from '../store/toastState';
+
+type ClubMapData = {
+    position: {
+        lat: number;
+        lng: number;
+    };
+    placeName: string;
+    addressName: string;
+};
 
 type FormData = {
     capacity: number;
@@ -28,7 +37,7 @@ type FormData = {
     addressName: string;
     latitude: number;
     longitude: number;
-    clubMap?: object;
+    clubMap: ClubMapData;
     boardClubStatus: string;
 };
 
@@ -47,8 +56,6 @@ const ClubCreate = () => {
     const getKeyByValue = (object: any, value: string) => {
         return Object.keys(object).find((key) => object[key] === value);
     };
-
-    console.log(clubDetail);
 
     const updateClubMap = (data: any) => {
         setClubMap(data);
@@ -94,11 +101,10 @@ const ClubCreate = () => {
 
     const onSubmit = useCallback(
         async (data: FormData) => {
-            console.log(data);
-            console.log(clubMap);
+            // console.log(data);
+            // console.log(clubMap);
             const API_URL = import.meta.env.VITE_KEY;
             const englishTagName = getKeyByValue(tags, data.clubTag);
-            const { id, position, ...restClubMap } = data.clubMap;
             const payload = {
                 // 이 부분은 로그인한 유저의 ID로 수정
                 capacity: Number(data.capacity),
@@ -107,9 +113,10 @@ const ClubCreate = () => {
                 dueDate: data.dueDate,
                 contact: data.contact, //{ [data.contactRoute]: data.contact },
                 tags: [{ tagName: englishTagName }],
-                latitude: position.lat,
-                longitude: position.lng,
-                ...restClubMap,
+                latitude: data.clubMap.position.lat,
+                longitude: data.clubMap.position.lng,
+                placeName: data.clubMap.placeName,
+                addressName: data.clubMap.addressName,
             };
             if (clubDetail.boardClubId !== undefined) {
                 payload['boardClubStatus'] = 'BOARD_CLUB_RECRUITING';
@@ -138,7 +145,7 @@ const ClubCreate = () => {
                 }
             }
         },
-        [clubDetail.boardClubId, clubMap, headers, navigate, tags],
+        [clubDetail.boardClubId, dispatch, headers, navigate, tags],
     );
 
     const handleFormKeyPress = (event: { key: string; preventDefault: () => void }) => {
@@ -178,20 +185,20 @@ const ClubCreate = () => {
         setToday(new Date());
     }, []);
 
-    const toolbarOptions = [
-        [{ header: '1' }, { header: '2' }],
-        [{ size: [] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
-        [
-            {
-                color: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
-            },
-            {
-                background: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
-            },
-        ],
-    ];
+    // const toolbarOptions = [
+    //     [{ header: '1' }, { header: '2' }],
+    //     [{ size: [] }],
+    //     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    //     [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
+    //     [
+    //         {
+    //             color: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
+    //         },
+    //         {
+    //             background: ['#000000', '#e60000', '#008a00', '#0066cc', '#9933ff'],
+    //         },
+    //     ],
+    // ];
 
     useEffect(() => {
         setValue('clubMap', clubMap);
@@ -477,51 +484,51 @@ const Input = styled.input`
     }
 `;
 
-const StyledReactQuill = styled(ReactQuill)`
-    box-sizing: border-box;
-    max-width: 100%;
-    height: auto;
-    border: none;
-    outline: none;
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
+// const StyledReactQuill = styled(ReactQuill)`
+//     box-sizing: border-box;
+//     max-width: 100%;
+//     height: auto;
+//     border: none;
+//     outline: none;
+//     background-color: #fff;
+//     border-radius: 15px;
+//     box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.15);
 
-    .ql-toolbar {
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-        background-color: #f5f5f5;
-        border: none;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+//     .ql-toolbar {
+//         border-top-left-radius: 15px;
+//         border-top-right-radius: 15px;
+//         background-color: #f5f5f5;
+//         border: none;
+//         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
-        .ql-picker-label,
-        .ql-picker-options {
-            font-size: 18px;
-        }
+//         .ql-picker-label,
+//         .ql-picker-options {
+//             font-size: 18px;
+//         }
 
-        .ql-picker-options {
-            background-color: #f5f5f5;
-            border: none;
-            padding: 5px;
-        }
-    }
+//         .ql-picker-options {
+//             background-color: #f5f5f5;
+//             border: none;
+//             padding: 5px;
+//         }
+//     }
 
-    .ql-container {
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-        background-color: #fff;
-        border: none;
-        border-top: none;
-        box-shadow: none;
+//     .ql-container {
+//         border-bottom-left-radius: 15px;
+//         border-bottom-right-radius: 15px;
+//         background-color: #fff;
+//         border: none;
+//         border-top: none;
+//         box-shadow: none;
 
-        .ql-editor {
-            min-width: 1200px;
-            min-height: 600px;
-            padding: 20px;
-            font-size: 30px;
-        }
-    }
-`;
+//         .ql-editor {
+//             min-width: 1200px;
+//             min-height: 600px;
+//             padding: 20px;
+//             font-size: 30px;
+//         }
+//     }
+// `;
 const TextArea = styled.textarea`
     display: flex;
     flex-direction: column;

@@ -4,29 +4,30 @@ export type memberData = {
     email: string;
     nickname: string;
     bio: string;
-}
+};
 
 export type CommunityPostData = {
-    boardStandardId:number;
-    title:string;
-    content:string;
-    view:number;
-    createdAt:string;
-    modifiedAt:string;
-    member:memberData;
-}
+    standardId: any;
+    boardStandardId: number;
+    title: string;
+    content: string;
+    view: number;
+    createdAt: string;
+    modifiedAt: string;
+    member: memberData;
+};
 
 export type PageInfoData = {
     page: number;
     size: number;
     totalElements: number;
     totalPages: number;
-}
+};
 
 export type allCommunityData = {
     data: Array<CommunityPostData>;
     pageInfo: PageInfoData;
-}
+};
 
 export type RouteParams = {
     boardStandardId: string;

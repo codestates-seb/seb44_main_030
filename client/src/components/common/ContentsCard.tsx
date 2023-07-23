@@ -1,71 +1,64 @@
 import { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-
 import Tag from './Tag';
-
 import ViewsIcon from '../../../public/view.png';
 import MessageIcon from '../../../public/bubble-chat.png';
 import LikeIcon from '../../assets/heart (1).png';
 import LikeFilledIcon from '../../assets/Like_filled.svg';
 import { savePosition } from '../../store/scroll.ts';
 import { useDispatch } from 'react-redux';
-interface PostProps {
-    memberId: number;
-    title: string;
-    content: string;
-    view: number;
-    commentCount: number;
-    type: string;
-}
 
-interface CommunityPostProps extends PostProps {
-    communityProps: {
-        memberProfileImg: string; //[작성자 프로필 이미지 소스]
-        name: string; //[작성자 닉네임]
-        tag: string;
-        registeredAt: string;
-        modifiedAt: string | null;
-        like: number; //[게시글에 대한 좋아요 갯수]
-        memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
-        boardStandardId: number; //[게시글 자체에 대한 ID]
-    };
-}
+// interface PostProps {
+//     memberId: number;
+//     title: string;
+//     content: string;
+//     view: number;
+//     commentCount: number;
+//     type: string;
+//     profileImageUrl: string;
+//     nickname: string;
+// }
 
-interface ClubPostProps extends PostProps {
-    clubProps: {
-        boardClubId: number;
-        tags: { tagName: string }[];
-        dueDate: string;
-        boardClubStatus: string;
-        nickname: string;
-        likeCount: number;
-        memberLiked: Array<number>;
-    };
-}
+// interface CommunityPostProps extends PostProps {
+//     communityProps: {
+//         memberProfileImg: string; //[작성자 프로필 이미지 소스]
+//         name: string; //[작성자 닉네임]
+//         tag: string;
+//         registeredAt: string;
+//         modifiedAt: string | null;
+//         like: number; //[게시글에 대한 좋아요 갯수]
+//         memberLiked: Array<number>; //[게시글에 좋아요를 누른 멤버ID배열]
+//         boardStandardId: number; //[게시글 자체에 대한 ID]
+//     };
+// }
 
-type CardProps = CommunityPostProps | ClubPostProps;
+// interface ClubPostProps extends PostProps {
+//     clubProps: {
+//         boardClubId: number;
+//         tags: { tagName: string }[];
+//         dueDate: string;
+//         boardClubStatus: string;
+//         likeCount: number;
+//         memberLiked: Array<number>;
+//     };
+// }
 
-export default function ContentsCard({
-    memberId,
-    title,
-    content,
-    view,
-    commentCount,
-    communityProps,
-    clubProps,
-    type,
-}: CardProps) {
+// type CardProps = CommunityPostProps | ClubPostProps;
+
+export default function ContentsCard({ memberId, communityProps, clubProps, type }: any) {
     const {
-        memberId: communityMemberId,
+        // memberId: communityMemberId,
         title: communityTitle,
         content: communityContent,
         view: communityView,
         commentCount: communityCommentCount,
-        member,
-        tags:communityTags,
-        registeredAt,
-        modifiedAt,
+        nickname: communityNickname,
+        profileImageUrl: communitProfileImageUrl,
+        // member,
+        tags: communityTags,
+        // registeredAt,
+        // modifiedAt,
         like,
         memberLiked = [],
         boardStandardId,
@@ -76,15 +69,19 @@ export default function ContentsCard({
         content: clubContent,
         view: clubView,
         commentCount: clubCommentCount,
+        nickname: clubNickname,
+        profileImageUrl: clubProfileImageUrl,
         boardClubId,
         tags,
         dueDate,
         boardClubStatus,
-        nickname,
         likeCount: clubLikeCount = 0, //[게시글에 대한 좋아요 갯수]
         memberLiked: clubMemberLiked = [],
     } = clubProps || {};
-    console.log(communityProps)
+
+    console.log(communityProps);
+    console.log(clubProps);
+
     const [clubStatus, setClubStatus] = useState(boardClubStatus);
     useEffect(() => {
         const now = new Date();
@@ -131,10 +128,10 @@ export default function ContentsCard({
 
     // 날짜 어떻게 받을 건지 상의 필요.(포맷팅 된 상태 or Not)
     // 날짜 포맷팅 임의로
-    const dateStr = modifiedAt || registeredAt || '';
-    const datePart = dateStr.split('T')[0];
-    const dateArr = datePart.split('-');
-    const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
+    // const dateStr = modifiedAt || registeredAt || '';
+    // const datePart = dateStr.split('T')[0];
+    // const dateArr = datePart.split('-');
+    // const newDateStr = dateArr[0].slice(2) + '. ' + dateArr[1] + '. ' + dateArr[2];
 
     return (
         <CardWarp isCompleted={isCompleted}>
@@ -146,8 +143,10 @@ export default function ContentsCard({
                     <p>{communityProps ? communityContent : clubContent}</p>
                 </ContentsContainer>
                 <TagContainer>
-                    {communityProps && communityTags.map((tag: { tagName: string }) => (
-                            <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />))}
+                    {communityProps &&
+                        communityTags.map((tag: { tagName: string }) => (
+                            <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />
+                        ))}
                     {clubProps &&
                         tags.map((tag: { tagName: string }) => (
                             <Tag key={tag.tagName} tag={tag.tagName} className="tag-component" />
@@ -156,8 +155,13 @@ export default function ContentsCard({
             </TitleContentsTagWarp>
             <InfoContainer>
                 <UserInfo>
-                    <img src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${member?.profileImageUrl}`} className="user-icon" />
-                    <span onClick={handleNavigateProfile}>{member?.nickname}</span>
+                    <img
+                        src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${
+                            communitProfileImageUrl || clubProfileImageUrl
+                        }`}
+                        className="user-icon"
+                    />
+                    <span onClick={handleNavigateProfile}>{clubNickname || communityNickname}</span>
                 </UserInfo>
                 <ContentsInfo>
                     {isLiked ? (
@@ -174,7 +178,7 @@ export default function ContentsCard({
                     <img src={ViewsIcon} />
                     <span>{communityProps ? communityView : clubView}</span>
                     <img src={MessageIcon} />
-                    <span>{communityProps ? communityCommentCount||0 : clubCommentCount||0}</span>
+                    <span>{communityProps ? communityCommentCount || 0 : clubCommentCount || 0}</span>
                 </ContentsInfo>
             </InfoContainer>
         </CardWarp>
@@ -259,7 +263,7 @@ const ContentsContainer = styled.div`
         color: #c1daf5;
         cursor: pointer;
     }
-    >p{
+    > p {
         display: flex;
         align-items: center;
         word-wrap: break-word;
@@ -300,7 +304,7 @@ const UserInfo = styled.div`
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        &:hover{
+        &:hover {
             cursor: pointer;
         }
     }
