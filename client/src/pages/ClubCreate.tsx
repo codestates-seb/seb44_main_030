@@ -13,6 +13,7 @@ import 'react-quill/dist/quill.snow.css';
 import Map from './Map.tsx';
 import ConfirmModal from '../components/common/ConfirmModal';
 import { usePostHeader } from '../api/getHeader.ts';
+import { setToast } from '../store/toastState';
 
 type FormData = {
     capacity: number;
@@ -119,8 +120,10 @@ const ClubCreate = () => {
                 let response;
                 if (clubDetail.boardClubId !== undefined) {
                     response = await axios.patch(`${API_URL}/clubs/${clubDetail.boardClubId}`, payload, headers);
+                    dispatch(setToast('수정되었습니다!'));
                 } else {
                     response = await axios.post(`${API_URL}/clubs`, payload, headers);
+                    dispatch(setToast('등록되었습니다!'));
                 }
                 if (response.status === 200 || response.status === 201) {
                     navigate(-1);
@@ -290,15 +293,15 @@ const ClubCreate = () => {
                         {errors.title && <ErrorMessage>{errors?.title.message}</ErrorMessage>}
                     </Title>
                     <Content>
-                        {/* <TextArea
+                        <TextArea
                             placeholder="모임에 대해 소개해주세요!"
                             {...register('content', {
                                 required: '내용을 입력해주세요',
                                 minLength: { value: 30, message: '30자 이상 입력해주세요' },
                                 maxLength: { value: 500, message: '500자 이내로 입력해주세요' },
                             })}
-                        /> */}
-                        <Controller
+                        />
+                        {/* <Controller
                             name="content"
                             control={control}
                             defaultValue=""
@@ -310,7 +313,7 @@ const ClubCreate = () => {
                             render={({ field }) => (
                                 <StyledReactQuill {...field} modules={{ toolbar: toolbarOptions }} />
                             )}
-                        />
+                        /> */}
                         {errors.title && <ErrorMessage>{errors?.content?.message}</ErrorMessage>}
                     </Content>
                     <ButtonWarp>

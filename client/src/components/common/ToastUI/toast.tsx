@@ -1,6 +1,7 @@
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { clearToast } from '../../../store/toastState';
 
 const Toast = () => {
     const [status, setStatus] = useState('start');
@@ -9,16 +10,13 @@ const Toast = () => {
     const message = useSelector((state: RootState) => state.toast.toastMessage);
 
     useEffect(() => {
-        setTimeout(() => {
-            setStatus('enter');
-        }, 0);
-    }, []);
-
-    useEffect(() => {
-        setTimeout(() => {
+        setStatus('enter');
+        const timeoutId = setTimeout(() => {
             setStatus('exit');
         }, 2000);
-    }, []);
+
+        return () => clearTimeout(timeoutId);
+    }, [message]);
 
     useEffect(() => {
         if (status === 'exit' && toastRef.current) {
