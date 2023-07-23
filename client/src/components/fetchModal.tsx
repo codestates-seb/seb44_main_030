@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
+import { useForm, FieldValues } from 'react-hook-form';
 import moment from 'moment';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -13,15 +13,6 @@ interface InputProps {
     value?: string;
 }
 
-interface DataProps {
-    memberId?: number;
-    title: string;
-    content: string;
-    exerciseStartTime: string;
-    exerciseEndTime: string;
-    todayDate: string;
-}
-
 interface ModalProps {
     setModal: React.Dispatch<React.SetStateAction<boolean>>;
     value: any;
@@ -29,7 +20,7 @@ interface ModalProps {
 }
 
 const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
-    const [prev, setPrev] = useState();
+    const [prev, setPrev] = useState({ exerciseTime: 0, title: '', content: '' });
     const dispatch = useDispatch();
     const dae = moment(value).format('YYYYMMDD');
     const todayDate = moment(value).format('YYYY-MM-DD');
@@ -98,10 +89,9 @@ const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
     const watchStartTime = watch('exerciseStartTime');
     const watchEndTime = watch('exerciseEndTime');
 
-    const onSubmitHandler = async (data: DataProps) => {
+    const onSubmitHandler = async (data: FieldValues) => {
         const modifiedValue = `${dae}${watchStartTime.replace(':', '')}`;
         const modfied2Value = `${dae}${watchEndTime.replace(':', '')}`;
-        data.memberId = 1;
         data.exerciseStartTime = modifiedValue;
         data.exerciseEndTime = modfied2Value;
         data.todayDate = todayDate;
@@ -164,15 +154,14 @@ const FetchModal = ({ setModal, value, caldata }: ModalProps) => {
                                 height="30px"
                                 {...register('title')}
                                 value={prev.title}
-                                onChange={(e) => {
-                                    setPrev((prev) => ({ ...prev, title: e.target.value }));
+                                onChange={(e: any) => {
+                                    setPrev((prev: any) => ({ ...prev, title: e.target.value }));
                                 }}
                             ></StyledInput>
                             <Styledtextarea
-                                height="300px"
                                 {...register('content')}
                                 value={prev.content}
-                                onChange={(e) => {
+                                onChange={(e: any) => {
                                     setPrev((prev) => ({ ...prev, content: e.target.value }));
                                 }}
                             ></Styledtextarea>

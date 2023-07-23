@@ -12,6 +12,13 @@ import ProfileImage from './style/ProfileImage';
 import { useCookies } from 'react-cookie';
 // 포스트요청 게시글작성-> get요청으로 전체 스플래시 트래크 정보를 가져와야겟죠(날짜,tracker-id)  ->개별 splash tracker 조회(개별) ->splash-id
 
+type CalData = {
+    trackerId: number;
+    todayDate: string;
+};
+
+type ValuePiece = Date | null;
+
 const Tabmenu = () => {
     const [currentTab, clickTab] = useState(0);
 
@@ -41,7 +48,7 @@ const Tabmenu = () => {
     );
 };
 const Tabcomponent0 = () => {
-    const [value, setValue] = useState(new Date());
+    const [value, setValue] = useState<ValuePiece | [ValuePiece, ValuePiece]>(new Date());
     const [caldata, setCalData] = useState([]);
     const [modal, setModal] = useState(false);
     const API_URL = import.meta.env.VITE_KEY;
@@ -52,7 +59,7 @@ const Tabcomponent0 = () => {
 
     useEffect(() => {
         axios
-            .get(`${API_URL}/members/mypage/trackers/1?page=1&size=100`, {
+            .get(`${API_URL}/members/mypage/trackers/4?page=1&size=100`, {
                 headers: {
                     Authorization: `${decodeURIComponent(authorizationToken)}`,
                     Refresh: `${refreshToken}`,
@@ -61,7 +68,7 @@ const Tabcomponent0 = () => {
             })
             .then((data) =>
                 setCalData(
-                    data.data.data.map((item) => ({
+                    data.data.data.map((item: any) => ({
                         trackerId: item.trackerId,
                         todayDate: item.todayDate,
                     })),
@@ -69,7 +76,7 @@ const Tabcomponent0 = () => {
             );
     }, []);
 
-    const mark = caldata.map((item) => item.todayDate);
+    const mark = caldata.map((item: CalData) => item.todayDate);
 
     const HandleClickDay = () => {
         setModal(!modal);
@@ -89,6 +96,7 @@ const Tabcomponent0 = () => {
                         onChange={setValue}
                         value={value}
                         formatDay={(locale, date) => moment(date).format('D')}
+                        //locale추가?
                         tileContent={({ date }) => {
                             const html = [];
 

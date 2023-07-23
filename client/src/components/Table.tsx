@@ -35,7 +35,7 @@ interface CommunityData {
 
 const Table = () => {
     const [pagenumber, setPageNumber] = useState(1);
-    const { data, isLoading, isError, error } = useQuery<any, Error>({
+    const { data, isLoading, isError } = useQuery<any, Error>({
         queryKey: ['mycommunity', pagenumber],
         queryFn: () => getCommuity(pagenumber),
     });

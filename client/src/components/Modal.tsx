@@ -1,27 +1,12 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
+import { useForm, FieldValues } from 'react-hook-form';
 import moment from 'moment';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setToast } from '../store/toastState';
 import { useCookies } from 'react-cookie';
 import FetchModal from './fetchModal';
-
-interface InputProps {
-    height?: string;
-    onChange?: () => void;
-    value?: string;
-}
-
-interface DataProps {
-    memberId?: number;
-    title: string;
-    content: string;
-    exerciseStartTime: string;
-    exerciseEndTime: string;
-    todayDate: string;
-}
 
 interface ModalProps {
     setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -51,7 +36,7 @@ const Modal = ({ setModal, value, mark, caldata }: ModalProps) => {
         }
     }, []);
 
-    const handleClose = (e) => {
+    const handleClose = () => {
         setModal(false);
     };
 
@@ -89,10 +74,9 @@ const Modal = ({ setModal, value, mark, caldata }: ModalProps) => {
     const watchStartTime = watch('exerciseStartTime');
     const watchEndTime = watch('exerciseEndTime');
 
-    const onSubmitHandler = async (data: DataProps) => {
+    const onSubmitHandler = async (data: FieldValues) => {
         const modifiedValue = `${dae}${watchStartTime.replace(':', '')}`;
         const modfied2Value = `${dae}${watchEndTime.replace(':', '')}`;
-        data.memberId = 1;
         data.exerciseStartTime = modifiedValue;
         data.exerciseEndTime = modfied2Value;
         data.todayDate = todayDate;
@@ -148,8 +132,8 @@ const Modal = ({ setModal, value, mark, caldata }: ModalProps) => {
                                 <div
                                     style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}
                                 >
-                                    <StyledInput height="30px" {...register('title')}></StyledInput>
-                                    <Styledtextarea height="300px" {...register('content')}></Styledtextarea>
+                                    <StyledInput {...register('title')}></StyledInput>
+                                    <Styledtextarea {...register('content')}></Styledtextarea>
                                     <div>
                                         <Styledbutton type="submit">저장</Styledbutton>
                                         <Styledbutton onClick={handleClose}>취소</Styledbutton>
@@ -175,9 +159,9 @@ const Styledform = styled.form`
     padding: 10px;
 `;
 
-const StyledInput = styled.input<InputProps>`
+const StyledInput = styled.input`
     width: 100%;
-    height: ${(props) => props.height};
+    height: 30px;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.4);

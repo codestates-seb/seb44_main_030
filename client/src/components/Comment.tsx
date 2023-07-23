@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import ConfirmModal from './common/ConfirmModal';
 import { usePostHeader } from '../api/getHeader';
 import moment from 'moment';
@@ -46,7 +46,6 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
     const location = useLocation();
     const boardType = location.pathname.split('/')[1] === 'community' ? 'standardcomments' : 'clubcomments';
     const boardCommentId = boardClubCommentId || boardStandardCommentId;
-    const loginId = 3; //storage사용
 
     const { register, handleSubmit, reset } = useForm<CommentInput>({
         mode: 'onSubmit',
@@ -72,7 +71,7 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
         if (boardType === 'clubcomments') {
             payload.boardClubId = Number(boardStandardClubId);
         }
-        
+
         const API_URL = import.meta.env.VITE_KEY;
         try {
             const response = await axios.patch(`${API_URL}/${boardType}/${boardCommentId}`, payload, headers);
