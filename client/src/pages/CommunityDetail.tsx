@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import backgroundImg from '../assets/Community_background.png';
@@ -46,13 +46,13 @@ const CommunityDetail = () => {
     //     setIsLiked((prev) => !prev);
     // }, [isLiked]);
 
-    const hanldeNavigatePrev = useCallback(() => {
+    const hanldeNavigatePrev = () => {
         navigate(-1);
-    }, []);
+    }
 
-    const handleNavigateProfile = useCallback(() => {
-        navigate(`/mypage`, { state: detailCommunityData?.member?.memberId });
-    }, [detailCommunityData?.member?.memberId]);
+    const handleNavigateProfile = () => {
+        navigate(`/mypage`, { state: detailCommunityData?.memberId });
+    }
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -80,10 +80,10 @@ const CommunityDetail = () => {
                         <div>
                             <span className="date">{moment(detailCommunityData?.createdAt).format('YYYY-MM-DD')}</span>
                             <img
-                                src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${detailCommunityData.member?.profileImageUrl}`}
+                                src={`https://splashzone-upload.s3.ap-northeast-2.amazonaws.com/${detailCommunityData?.profileImageUrl}`}
                             />
                             <span className="name" onClick={handleNavigateProfile}>
-                                {detailCommunityData?.member.nickname}
+                                {detailCommunityData?.nickname}
                             </span>
                         </div>
                     </div>
@@ -100,7 +100,7 @@ const CommunityDetail = () => {
                     boardStandardId={detailCommunityData?.boardStandardId}
                     tag={detailCommunityData?.tag}
                 />
-                <DetailCommentSection boardStandardClubId={boardStandardId} />
+                <DetailCommentSection boardStandardClubId={Number(boardStandardId)} />
             </PostContainer>
         </Background>
     );

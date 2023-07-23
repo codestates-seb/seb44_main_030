@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -9,8 +9,8 @@ import moment from 'moment';
 type CommentProps = {
     commentData: {
         memberId?: number;
-        nickname: string;
-        profileImageUrl: string;
+        nickname?: string;
+        profileImageUrl?: string;
         content: string;
         createdAt: string;
         modifiedAt: string;
@@ -28,7 +28,6 @@ type payloadType = {
     boardClubId?: number;
 };
 const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
-    console.log(commentData, 'asdfkasjfdlsafjlkjlkfjaslkdjfklasdf');
     const {
         memberId,
         nickname,
@@ -46,6 +45,9 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
     const location = useLocation();
     const boardType = location.pathname.split('/')[1] === 'community' ? 'standardcomments' : 'clubcomments';
     const boardCommentId = boardClubCommentId || boardStandardCommentId;
+
+    // const loginId = 3; //storage사용
+
 
     const { register, handleSubmit, reset } = useForm<CommentInput>({
         mode: 'onSubmit',
@@ -91,14 +93,14 @@ const Comment = ({ commentData, boardStandardClubId }: CommentProps) => {
         setIsEditOn((prev) => !prev);
     };
 
-    const handleNavigateProfile = useCallback(() => {
+    const handleNavigateProfile = () => {
         navigate(`/mypage`, { state: memberId });
-    }, [memberId]);
+    };
 
-    const handleEdit = useCallback(() => {
+    const handleEdit = () => {
         setIsEditOn((prev) => !prev);
         reset({ Content: commentContent });
-    }, [commentContent]);
+    };
 
     // 댓글 삭제 Delete 요청
     const handleDelete = async () => {
