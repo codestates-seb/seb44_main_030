@@ -27,7 +27,7 @@ function App() {
                     {!hideHeaderFooter && <Header></Header>}
                     {!hideHeaderFooter && <div style={{ paddingTop: '85px' }}></div>}
                     <AnimateRoute />
-                    <Link to="/signup"> 클릭</Link>
+
                     {!hideHeaderFooter && <Footer></Footer>}
                 </div>
             </QueryClientProvider>
