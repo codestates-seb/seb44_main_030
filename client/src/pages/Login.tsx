@@ -32,7 +32,7 @@ const Login = () => {
             });
 
             // const memberid = response.headers.get('MemberId');
-            console.log(response); //멤버id가 들어와야함
+            console.log(response,'asdfsadfsadfasdfasdfasdf'); //멤버id가 들어와야함
             const Authorization = response.headers.authorization;
             const Refresh = response.headers.refresh;
 
