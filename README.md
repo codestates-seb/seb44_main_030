@@ -5,7 +5,7 @@
 ## 🔗 배포주소 : [Splash Zone]("https://jolly-kringle-b6ed45.netlify.app/")
 
 ## 👨‍👨‍👧‍👧 Team List
-|![이현석](https://github.com/codestates-seb/seb44_main_030/img/1.png)|![문종후](./img/2.png)|![박광민](./img/3.png)|![이에스더](./img/4.png)|![강예은](./img/5.png)|![백서현](./img/6.png)|
+|![이현석](https://github.com/codestates-seb/seb44_main_030/image/1.png)|![문종후](./image/2.png)|![박광민](./image/3.png)|![이에스더](./image/4.png)|![강예은](./image/5.png)|![백서현](./image/6.png)|
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |[이현석](https://github.com/RINORINORINORINO)|[문종후](https://github.com/Moonjonghoo)|[박광민](https://github.com/mogisilta)|[이에스더](https://github.com/devhanda)|[강예은](https://github.com/coder-bendany)|[백서현](https://github.com/Seohyun-Back)|
 |FE 팀장|FE|FE|BE 부팀장|BE|BE|
@@ -44,16 +44,25 @@
 
 <br>
 
+## 📂 Stacks
 
 
+
+<br>
+
+## 📸 Service info
+
+
+
+<br>
 
 
 
 ## 📃 [API 명세서](https://api.splashzone.site/swagger-ui/index.html#/)
-
+## 📃 [Figma](https://www.figma.com/file/Aix7izps6UHygsQRvl7NbB/물보라를-일으켜-화면명세서?type=design&node-id=0-1&mode=design)
 ## 📃 ERD
 
-<img src="./img/테이블 설계 ERD" alt="erdImg">
+<img src="./image/테이블 설계 ERD.png" alt="erdImg">
 
 </div>
 
