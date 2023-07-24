@@ -36,7 +36,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BoardClubController {
     private final static String BOARD_CLUB_DEFAULT_URL = "/clubs";
-    private static final int RECOMMEND_LIKE_COUNT = 1;
+    private static final int RECOMMEND_LIKE_COUNT = 5;
     private final BoardClubService boardClubService;
     private final BoardClubMapper boardClubMapper;
     private final BoardClubRepository boardClubRepository;

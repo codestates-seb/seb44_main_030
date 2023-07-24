@@ -38,7 +38,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class BoardStandardController {
     private final static String BOARD_STANDARD_DEFAULT_URL = "/standards";
-    private static final int RECOMMEND_LIKE_COUNT = 1;
+    private static final int RECOMMEND_LIKE_COUNT = 5;
     private final BoardStandardService boardStandardService;
     private final BoardStandardMapper boardStandardMapper;
     private final BoardStandardRepository boardStandardRepository;
