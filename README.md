@@ -5,7 +5,7 @@
 ## 🔗 배포주소 : [Splash Zone]("https://jolly-kringle-b6ed45.netlify.app/")
 
 ## 👨‍👨‍👧‍👧 Team List
-|![이현석](https://github.com/codestates-seb/seb44_main_030/image/1.png)|![문종후](./image/2.png)|![박광민](./image/3.png)|![이에스더](./image/4.png)|![강예은](./image/5.png)|![백서현](./image/6.png)|
+|![이현석](./image/1.png)|![문종후](./image/2.png)|![박광민](./image/3.png)|![이에스더](./image/4.png)|![강예은](./image/5.png)|![백서현](./image/6.png)|
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |[이현석](https://github.com/RINORINORINORINO)|[문종후](https://github.com/Moonjonghoo)|[박광민](https://github.com/mogisilta)|[이에스더](https://github.com/devhanda)|[강예은](https://github.com/coder-bendany)|[백서현](https://github.com/Seohyun-Back)|
 |FE 팀장|FE|FE|BE 부팀장|BE|BE|
