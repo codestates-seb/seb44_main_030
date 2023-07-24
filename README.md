@@ -1,46 +1,34 @@
 ## Team. 물보라를 일으켜🌊🌊🌊
 
-### 2023.06.09 - 2023.06.27
+### 2023.06.28 - 2023.07.24
 
-## 🔗 배포주소 : [Splash Zone]("https://jolly-kringle-b6ed45.netlify.app/")
+### 🔗 배포주소 : [Splash Zone](https://jolly-kringle-b6ed45.netlify.app/)
+
+<br>
 
 ## 👨‍👨‍👧‍👧 Team List
 |![이현석](./image/1.png)|![문종후](./image/2.png)|![박광민](./image/3.png)|![이에스더](./image/4.png)|![강예은](./image/5.png)|![백서현](./image/6.png)|
 |:---:|:---:|:---:|:---:|:---:|:---:|
 |[이현석](https://github.com/RINORINORINORINO)|[문종후](https://github.com/Moonjonghoo)|[박광민](https://github.com/mogisilta)|[이에스더](https://github.com/devhanda)|[강예은](https://github.com/coder-bendany)|[백서현](https://github.com/Seohyun-Back)|
-|FE 팀장|FE|FE|BE 부팀장|BE|BE|
+|FE Leader|FE|FE|BE Leader|BE|BE|
 
 <br>
 
-<details>
-<summary>담당 파트</summary>
-<div markdown="1">
+## 🐳 구현 기능
 
-**이현석**
- - 각자 기술
- 
- **문종후**
- - 각자 기술
- 
- **박광민**
- - 각자 기술
- 
- **이에스더**
- - 각자 기술
- 
- **강예은**
- - Member CRUD
+ - JWT 토큰 인증 기반 회원가입, 로그인
+ - 커뮤니티 자유게시판, 모임게시판 게시글 및 댓글 작성
+ - 게시글 태그별 조회
+ - 게시글 키워드 검색
+ - 게시글 좋아요 기능 및 좋아요순 인기글 조회
+ - 매일 운동 기록을 남길 수 있는 캘린더 Tracker
+ - 마이페이지 내 회원 정보 수정
+ - 마이페이지 내 회원이 작성한 게시글, 댓글 조회
  - s3 버킷 이미지 연동(프로필 이미지)
  - AWS EC2 배포 환경 구축
  - AWS RDS 연동(Mysql)
- - github actions 배포자동화
+ - github actions 배포 자동화
  - Dolphin 유저 레벨링 구현
- 
- **백서현**
- - 각자 기술
-
-</div>
-</details>
 
 <br>
 
@@ -68,29 +56,43 @@
 | :---------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | <img alt="github logo" src="https://techstack-generator.vercel.app/github-icon.svg" width="65" height="65"> | <img alt="Discord logo" src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/62595384e89d1d54d704ece7_3437c10597c1526c3dbd98c737c2bcae.svg" height="65" width="65"> | <img alt="Notion logo" src="https://www.notion.so/cdn-cgi/image/format=auto,width=640,quality=100/front-static/shared/icons/notion-app-icon-3d.png" height="65" width="65"> |
 
-</br>
-
-
 <br>
 
 ## 📸 Service info
 
-
-
 <br>
 
+## 🔖 Project Docs
 
+### [사용자 요구사항 정의서](https://www.notion.so/codestates/00c2869c9d7240de84e1c3525b6e4dad?pvs=4)
 
-## 📃 [API 명세서](https://api.splashzone.site/swagger-ui/index.html#/)
-## 📃 [Figma](https://www.figma.com/file/Aix7izps6UHygsQRvl7NbB/물보라를-일으켜-화면명세서?type=design&node-id=0-1&mode=design)
-## 📃 ERD
+### [화면 정의서](https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FAix7izps6UHygsQRvl7NbB%2F%EB%AC%BC%EB%B3%B4%EB%9D%BC%EB%A5%BC-%EC%9D%BC%EC%9C%BC%EC%BC%9C-%ED%99%94%EB%A9%B4%EB%AA%85%EC%84%B8%EC%84%9C%3Ftype%3Ddesign%26node-id%3D0-1%26mode%3Ddesign)
 
-<img src="./image/ERD.png" alt="erdImg">
+### [ERD](https://www.notion.so/codestates/ERD-73113f10c95e454a8f14dc14e73432f8?pvs=4)
 
-</div>
+### [API 명세서](https://www.notion.so/codestates/API-ee1edaa3835b4cb9962406f1eb298095?pvs=4)
 
+</br>
 
+## Github Rule
 
+### Commit Convention
 
+|  Message   | 설명                                     |
+| :--------: | :-------------------------------------- |
+|   `feat`   | 새로운 기능                                |
+|   `fix`    | 버그 수정                                 |
+|   `docs`   | 문서 수정                                 |
+|  `style`   | 코드 스타일 변경, 기능 수정이 없는 경우          |
+|  `design`  | 사용자 UI 디자인 변경                        |
+|   `test`   | 테스트 코드, 리펙토링 테스트 코드 추가           |
+| `refactor` | 코드 리팩토링                              |
+|  `build`   | 빌드 파일 수정                             |
+|   `perf`   | 성능 개선                                 |
+|  `rename`  | 파일 혹은 폴더명을 수정만 한 경우               |
+|    `add`   | 파일을 추가만 한 경우                        |
+|  `remove`  | 파일을 삭제만 한 경우                        |
+|   `init`   | 파일을 삭제만 한 경우                        |
+|   `etc`    | 초기 환경 설정 세팅                          |
 
-
+</br>
