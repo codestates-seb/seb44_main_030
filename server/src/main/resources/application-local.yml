@@ -1,0 +1,59 @@
+spring:
+  datasource:
+    url: ${LOCAL_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${LOCAL_USERNAME}
+    password: ${LOCAL_PASSWORD}
+  sql:
+    init:
+      mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        id:
+          new_generator_mappings: false
+    defer-datasource-initialization: true
+    show-sql: true
+    open-in-view: true
+    profiles:
+      include: database
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  logging:
+    level:
+      org:
+        springframework:
+          orm:
+            jpa: DEBUG
+        hibernate:
+          SQL: DEBUG
+          type: trace
+  server:
+    servlet:
+      encoding:
+        force-response: true
+
+mail:
+  address:
+    admin: admin@gmail.com
+
+jwt:
+  key: ${JWT_SECRET_KEY}
+  access-token-expiration-minutes: 420
+  refresh-token-expiration-minutes: 420
+
+cloud:
+  aws:
+    credentials:
+      access-Key: ${AWS_ACCESS_KEY_ID}
+      secret-Key: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: ${AWS_S3_BUCKET}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
