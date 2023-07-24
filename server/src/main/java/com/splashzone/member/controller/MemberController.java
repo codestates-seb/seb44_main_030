@@ -37,6 +37,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
@@ -91,27 +92,37 @@ public class MemberController {
     }
 
     @PatchMapping("/image/{member-id}")
-    public ResponseEntity<String> patchImage( @RequestPart MultipartFile multipartFile,
-                                              @PathVariable("member-id") @Positive Long memberId) {
+    public ResponseEntity<String> patchImage(@RequestPart MultipartFile multipartFile,
+                                             @PathVariable("member-id") @Positive Long memberId) {
         String uploadedFileName = memberService.uploadImage(multipartFile, memberId);
 
         return new ResponseEntity<>(uploadedFileName, HttpStatus.OK);
     }
 
     @GetMapping("/{member-id}")
-    public ResponseEntity getMember(@PathVariable("member-id") @Positive Long memberId) {
+    public ResponseEntity getMember(Authentication authentication,
+                                    @PathVariable("member-id") @Positive Long memberId) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()).getMemberId(), memberId)) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         Member member = memberService.findMember(memberId);
         MemberDto.Response response = mapper.memberToMemberResponse(member);
         return ResponseEntity.ok(new SingleResponseDto<>(response));
     }
 
-    @GetMapping
-    public ResponseEntity getMembers(@Positive @RequestParam Integer page,
-                                     @Positive @RequestParam Integer size) {
-        Page<Member> pageMembers = memberService.findMembers(page - 1, size);
-        List<Member> members = pageMembers.getContent();
-        return ResponseEntity.ok(new MultiResponseDto(mapper.membersToMemberResponses(members), pageMembers));
-    }
+//    @GetMapping
+//    public ResponseEntity getMembers(@Positive @RequestParam Integer page,
+//                                     @Positive @RequestParam Integer size) {
+//        Page<Member> pageMembers = memberService.findMembers(page - 1, size);
+//        List<Member> members = pageMembers.getContent();
+//        return ResponseEntity.ok(new MultiResponseDto(mapper.membersToMemberResponses(members), pageMembers));
+//    }
 
     @DeleteMapping("/{member-id}")
     public ResponseEntity terminatedMember(Authentication authentication,
@@ -222,13 +233,14 @@ public class MemberController {
                 trackerMapper.trackersToTrackerResponseDtos(trackers), pageTrackers));
     }
 
-    /*
-    @DeleteMapping("/logout")
-    public ResponseEntity logout(@RequestHeader("Access") @Positive String accessToken) {
-        log.info(accessToken);
-        accessTokenService.deleteAccessToken(accessToken);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-     */
+//    @PatchMapping("/logout")
+//    public ResponseEntity logout(HttpServletRequest request) {
+//        String encryptedRefreshToken = jwtTokenProvider.resolveRefreshToken(request);
+//        String accessToken = jwtTokenProvider.resolveAccessToken(request);
+//        authService.logout(encryptedRefreshToken, accessToken);
+//
+//        return new ResponseEntity<>(new SingleResponseDto<>("Logged out successfully"), HttpStatus.NO_CONTENT);
+//    }
+
 
 }

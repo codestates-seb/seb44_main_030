@@ -70,6 +70,11 @@ public class BoardStandardController {
                                              @Valid @RequestBody BoardStandardDto.Patch patchDto) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardStandardService.findBoardStandard(boardStandardId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
         System.out.println("patchStandard MEMBER: " + member);
 
