@@ -80,6 +80,7 @@ public class BoardStandardService {
         return boardStandardRepository.findByBoardStandard(PageRequest.of(page, size, Sort.by("boardStandardId").descending()));
     }
 
+    @Transactional(readOnly = true)
     public Page<BoardStandard> searchBoardStandards(Integer page, Integer size, String keyword) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("boardStandardId").descending());
         Page<BoardStandard> pageBoardStandards = boardStandardRepository.findAllSearch(keyword, pageRequest);
