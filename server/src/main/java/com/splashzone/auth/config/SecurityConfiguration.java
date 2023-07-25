@@ -66,6 +66,7 @@ public class SecurityConfiguration {
                                 .antMatchers(HttpMethod.POST, "/members").permitAll()
                                 .antMatchers(HttpMethod.PATCH, "/members").hasRole("USER")
                                 .antMatchers(HttpMethod.DELETE, "/members").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/members").hasRole("USER")
                                 .antMatchers(HttpMethod.POST, "/standards").hasRole("USER")
                                 .antMatchers(HttpMethod.PATCH, "/standards").hasRole("USER")
                                 .antMatchers(HttpMethod.GET, "/standards").permitAll()
@@ -86,6 +87,7 @@ public class SecurityConfiguration {
                                 .antMatchers(HttpMethod.PATCH, "/trackers").hasRole("USER")
                                 .antMatchers(HttpMethod.GET, "/trackers").hasRole("USER")
                                 .antMatchers(HttpMethod.DELETE, "/trackers").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/members/mypage").hasRole("USER")
 //                        .antMatchers(HttpMethod.POST, "/standards").permitAll()
 //                        .antMatchers(HttpMethod.POST, "/clubs").permitAll()
 //                        .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
@@ -115,11 +117,11 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("https://jolly-kringle-b6ed45.netlify.app/",
-                                                      "http://13.209.142.240:8080/",
-                                                      "http://127.0.0.1:5173/",
-                                                      "http://localhost:5173/",
-                                                      "http://localhost:8080/",
-                                                      "http://localhost:3000"));
+                "http://13.209.142.240:8080/",
+                "http://127.0.0.1:5173/",
+                "http://localhost:5173/",
+                "http://localhost:8080/",
+                "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Refresh", "MemberId"));

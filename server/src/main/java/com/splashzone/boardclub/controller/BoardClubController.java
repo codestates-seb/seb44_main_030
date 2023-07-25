@@ -36,7 +36,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BoardClubController {
     private final static String BOARD_CLUB_DEFAULT_URL = "/clubs";
-    private static final int RECOMMEND_LIKE_COUNT = 1;
+    private static final int RECOMMEND_LIKE_COUNT = 5;
     private final BoardClubService boardClubService;
     private final BoardClubMapper boardClubMapper;
     private final BoardClubRepository boardClubRepository;
@@ -63,7 +63,16 @@ public class BoardClubController {
     public ResponseEntity patchBoardClub(Authentication authentication,
                                          @PathVariable("club-id") @Positive Long boardClubId,
                                          @Valid @RequestBody BoardClubDto.Patch patchDto) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardClubService.findBoardClub(boardClubId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
         System.out.println("patchClub MEMBER: " + member);

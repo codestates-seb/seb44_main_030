@@ -38,7 +38,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class BoardStandardController {
     private final static String BOARD_STANDARD_DEFAULT_URL = "/standards";
-    private static final int RECOMMEND_LIKE_COUNT = 1;
+    private static final int RECOMMEND_LIKE_COUNT = 5;
     private final BoardStandardService boardStandardService;
     private final BoardStandardMapper boardStandardMapper;
     private final BoardStandardRepository boardStandardRepository;
@@ -69,6 +69,11 @@ public class BoardStandardController {
                                              @PathVariable("standard-id") @Positive Long boardStandardId,
                                              @Valid @RequestBody BoardStandardDto.Patch patchDto) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardStandardService.findBoardStandard(boardStandardId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
         System.out.println("patchStandard MEMBER: " + member);
