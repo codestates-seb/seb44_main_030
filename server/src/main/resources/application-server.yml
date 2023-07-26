@@ -39,7 +39,7 @@ spring:
 
 mail:
   address:
-    admin: admin@gmail.com
+    admin: ${ADMIN_EMAIL_ADDRESS}
 
 jwt:
   key: ${JWT_SECRET_KEY}
