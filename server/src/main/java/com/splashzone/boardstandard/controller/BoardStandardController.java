@@ -12,6 +12,8 @@ import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
 import com.splashzone.member.entity.Member;
 import com.splashzone.member.service.MemberService;
+import com.splashzone.tag.entity.Tag;
+import com.splashzone.tag.service.TagService;
 import com.splashzone.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,7 @@ public class BoardStandardController {
     private final BoardStandardMapper boardStandardMapper;
     private final BoardStandardRepository boardStandardRepository;
     private final MemberService memberService;
+    private final TagService tagService;
 
     @PostMapping
     public ResponseEntity postBoardStandard(Authentication authentication,
@@ -114,6 +117,18 @@ public class BoardStandardController {
                                                      @Positive @RequestParam Integer size,
                                                      @RequestParam(value = "keyword") String keyword) {
         Page<BoardStandard> pageBoardStandards = boardStandardService.searchBoardStandardsByKeyword(page - 1, size, keyword);
+        List<BoardStandard> boardStandards = pageBoardStandards.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boardStandardMapper.boardStandardsToBoardStandardResponseDtos(boardStandards), pageBoardStandards), HttpStatus.OK);
+    }
+
+    @GetMapping("/tags/{tag-id}")
+    public ResponseEntity getBoardStandardsByTag(@PathVariable("tag-id") @Positive Long tagId,
+                                                 @Positive @RequestParam Integer page,
+                                                 @Positive @RequestParam Integer size) {
+        Tag tag = tagService.findTagById(tagId);
+        Page<BoardStandard> pageBoardStandards = boardStandardService.searchBoardStandardsBySpecificTag(tag, page - 1, size);
         List<BoardStandard> boardStandards = pageBoardStandards.getContent();
 
         return new ResponseEntity<>(

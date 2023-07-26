@@ -88,6 +88,11 @@ public class BoardStandardService {
         return pageBoardStandards;
     }
 
+    @Transactional(readOnly = true)
+    public Page<BoardStandard> searchBoardStandardsBySpecificTag(Tag tag, Integer page, Integer size) {
+        return boardStandardRepository.findByBoardStandardTagsTag(tag, PageRequest.of(page, size, Sort.by("boardStandardId").descending()));
+    }
+
     public void deleteBoardStandard(Long boardStandardId) {
         BoardStandard findBoardStandard = findVerifiedBoardStandard(boardStandardId);
 
