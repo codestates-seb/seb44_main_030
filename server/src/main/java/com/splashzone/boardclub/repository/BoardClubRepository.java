@@ -2,6 +2,7 @@ package com.splashzone.boardclub.repository;
 
 import com.splashzone.boardclub.entity.BoardClub;
 import com.splashzone.member.entity.Member;
+import com.splashzone.tag.entity.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,6 @@ public interface BoardClubRepository extends JpaRepository<BoardClub, Long> {
 
     // memberId로 findByMember 방법 고려
     Page<BoardClub> findByMember(Member member, Pageable pageable);
+
+    Page<BoardClub> findByBoardClubTagsTag(Tag tag, Pageable pageable);
 }

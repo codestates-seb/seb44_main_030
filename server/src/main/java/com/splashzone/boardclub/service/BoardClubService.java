@@ -118,6 +118,10 @@ public class BoardClubService {
                 });
     }
 
+    public Page<BoardClub> findBoardClubsBySpecificTag(Tag tag, Integer page, Integer size) {
+        return boardClubRepository.findByBoardClubTagsTag(tag, PageRequest.of(page, size, Sort.by("boardClubId").descending()));
+    }
+
     public int updateViews(Long boardClubId) {
         return boardClubRepository.updateViews(boardClubId);
     }

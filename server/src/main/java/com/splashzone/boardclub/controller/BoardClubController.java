@@ -11,6 +11,8 @@ import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
 import com.splashzone.member.entity.Member;
 import com.splashzone.member.service.MemberService;
+import com.splashzone.tag.entity.Tag;
+import com.splashzone.tag.service.TagService;
 import com.splashzone.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,6 +43,7 @@ public class BoardClubController {
     private final BoardClubMapper boardClubMapper;
     private final BoardClubRepository boardClubRepository;
     private final MemberService memberService;
+    private final TagService tagService;
 
     @PostMapping
     public ResponseEntity postBoardClub(Authentication authentication,
@@ -100,6 +103,18 @@ public class BoardClubController {
     public ResponseEntity getBoardClubs(@Positive @RequestParam Integer page,
                                         @Positive @RequestParam Integer size) {
         Page<BoardClub> pageBoardClubs = boardClubService.findBoardClubs(page - 1, size);
+        List<BoardClub> boardClubs = pageBoardClubs.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boardClubMapper.boardClubsToBoardClubResponseDtos(boardClubs), pageBoardClubs), HttpStatus.OK);
+    }
+
+    @GetMapping("/tags/{tag-id}")
+    public ResponseEntity getBoardClubsByTag(@PathVariable("tag-id") @Positive Long tagId,
+                                             @Positive @RequestParam Integer page,
+                                             @Positive @RequestParam Integer size) {
+        Tag tag = tagService.findTagById(tagId);
+        Page<BoardClub> pageBoardClubs = boardClubService.findBoardClubsBySpecificTag(tag, page - 1, size);
         List<BoardClub> boardClubs = pageBoardClubs.getContent();
 
         return new ResponseEntity<>(
