@@ -50,7 +50,6 @@ public class BoardStandardController {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
-        System.out.println("postStandard MEMBER: " + member);
 
         BoardStandard boardStandard = boardStandardMapper.boardStandardPostDtoToBoardStandard(postDto);
         boardStandard.setMember(member);
@@ -76,7 +75,6 @@ public class BoardStandardController {
         }
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
-        System.out.println("patchStandard MEMBER: " + member);
 
         BoardStandard boardStandard = boardStandardMapper.boardStandardPatchDtoToBoardStandard(patchDto, boardStandardId);
         boardStandard.setMember(member);
@@ -115,7 +113,7 @@ public class BoardStandardController {
     public ResponseEntity getBoardStandardsByKeyword(@Positive @RequestParam Integer page,
                                                      @Positive @RequestParam Integer size,
                                                      @RequestParam(value = "keyword") String keyword) {
-        Page<BoardStandard> pageBoardStandards = boardStandardService.searchBoardStandards(page - 1, size, keyword);
+        Page<BoardStandard> pageBoardStandards = boardStandardService.searchBoardStandardsByKeyword(page - 1, size, keyword);
         List<BoardStandard> boardStandards = pageBoardStandards.getContent();
 
         return new ResponseEntity<>(

@@ -51,7 +51,6 @@ public class BoardClubController {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
-        System.out.println("postClub MEMBER: " + member);
 
         BoardClub boardClub = boardClubMapper.boardClubPostDtotoBoardClub(postDto);
         boardClub.setMember(member);
@@ -78,7 +77,6 @@ public class BoardClubController {
         }
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
-        System.out.println("patchClub MEMBER: " + member);
 
         BoardClub boardClub = boardClubMapper.boardClubPatchDtotoBoardClub(patchDto, boardClubId);
         boardClub.setMember(member);
@@ -109,12 +107,23 @@ public class BoardClubController {
                 new MultiResponseDto<>(boardClubMapper.boardClubsToBoardClubResponseDtos(boardClubs), pageBoardClubs), HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity getBoardClubsByKeyword(@Positive @RequestParam Integer page,
+                                                 @Positive @RequestParam Integer size,
+                                                 @RequestParam(value = "keyword") String keyword) {
+        Page<BoardClub> pageBoardClubs = boardClubService.searchBoardStandardsByKeyword(page - 1, size, keyword);
+        List<BoardClub> boardClubs = pageBoardClubs.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boardClubMapper.boardClubsToBoardClubResponseDtos(boardClubs), pageBoardClubs), HttpStatus.OK);
+    }
+
     @GetMapping("/tags/{tag-id}")
     public ResponseEntity getBoardClubsByTag(@PathVariable("tag-id") @Positive Long tagId,
                                              @Positive @RequestParam Integer page,
                                              @Positive @RequestParam Integer size) {
         Tag tag = tagService.findTagById(tagId);
-        Page<BoardClub> pageBoardClubs = boardClubService.findBoardClubsBySpecificTag(tag, page - 1, size);
+        Page<BoardClub> pageBoardClubs = boardClubService.searchBoardClubsBySpecificTag(tag, page - 1, size);
         List<BoardClub> boardClubs = pageBoardClubs.getContent();
 
         return new ResponseEntity<>(
