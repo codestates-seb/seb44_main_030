@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setHeader("Refresh", refreshToken);
         response.setHeader("MemberId", member.getMemberId().toString());
 
-//        this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
+        this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
 
     private String delegateAccessToken(Member member) {
@@ -79,5 +79,4 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         return refreshToken;
     }
-
 }
