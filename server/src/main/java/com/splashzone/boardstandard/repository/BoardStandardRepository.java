@@ -2,6 +2,7 @@ package com.splashzone.boardstandard.repository;
 
 import com.splashzone.boardstandard.entity.BoardStandard;
 import com.splashzone.member.entity.Member;
+import com.splashzone.tag.entity.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,6 @@ public interface BoardStandardRepository extends JpaRepository<BoardStandard, Lo
 
     @Query(value = "SELECT b FROM BoardStandard b WHERE b.title LIKE %:keyword% OR b.content LIKE %:keyword%")
     Page<BoardStandard> findAllSearch(String keyword, Pageable pageable);
+
+    Page<BoardStandard> findByBoardStandardTagsTag(Tag tag, Pageable pageable);
 }

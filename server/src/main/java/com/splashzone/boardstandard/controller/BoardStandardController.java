@@ -12,6 +12,8 @@ import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
 import com.splashzone.member.entity.Member;
 import com.splashzone.member.service.MemberService;
+import com.splashzone.tag.entity.Tag;
+import com.splashzone.tag.service.TagService;
 import com.splashzone.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,11 +40,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class BoardStandardController {
     private final static String BOARD_STANDARD_DEFAULT_URL = "/standards";
-    private static final int RECOMMEND_LIKE_COUNT = 1;
+    private static final int RECOMMEND_LIKE_COUNT = 5;
     private final BoardStandardService boardStandardService;
     private final BoardStandardMapper boardStandardMapper;
     private final BoardStandardRepository boardStandardRepository;
     private final MemberService memberService;
+    private final TagService tagService;
 
     @PostMapping
     public ResponseEntity postBoardStandard(Authentication authentication,
@@ -50,7 +53,6 @@ public class BoardStandardController {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
-        System.out.println("postStandard MEMBER: " + member);
 
         BoardStandard boardStandard = boardStandardMapper.boardStandardPostDtoToBoardStandard(postDto);
         boardStandard.setMember(member);
@@ -70,8 +72,12 @@ public class BoardStandardController {
                                              @Valid @RequestBody BoardStandardDto.Patch patchDto) {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardStandardService.findBoardStandard(boardStandardId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
-        System.out.println("patchStandard MEMBER: " + member);
 
         BoardStandard boardStandard = boardStandardMapper.boardStandardPatchDtoToBoardStandard(patchDto, boardStandardId);
         boardStandard.setMember(member);
@@ -110,7 +116,19 @@ public class BoardStandardController {
     public ResponseEntity getBoardStandardsByKeyword(@Positive @RequestParam Integer page,
                                                      @Positive @RequestParam Integer size,
                                                      @RequestParam(value = "keyword") String keyword) {
-        Page<BoardStandard> pageBoardStandards = boardStandardService.searchBoardStandards(page - 1, size, keyword);
+        Page<BoardStandard> pageBoardStandards = boardStandardService.searchBoardStandardsByKeyword(page - 1, size, keyword);
+        List<BoardStandard> boardStandards = pageBoardStandards.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boardStandardMapper.boardStandardsToBoardStandardResponseDtos(boardStandards), pageBoardStandards), HttpStatus.OK);
+    }
+
+    @GetMapping("/tags/{tag-id}")
+    public ResponseEntity getBoardStandardsByTag(@PathVariable("tag-id") @Positive Long tagId,
+                                                 @Positive @RequestParam Integer page,
+                                                 @Positive @RequestParam Integer size) {
+        Tag tag = tagService.findTagById(tagId);
+        Page<BoardStandard> pageBoardStandards = boardStandardService.searchBoardStandardsBySpecificTag(tag, page - 1, size);
         List<BoardStandard> boardStandards = pageBoardStandards.getContent();
 
         return new ResponseEntity<>(

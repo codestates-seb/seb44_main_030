@@ -86,6 +86,19 @@ public class BoardClubService {
         return boardClubRepository.findAll(PageRequest.of(page, size, Sort.by("boardClubId").descending()));
     }
 
+    @Transactional(readOnly = true)
+    public Page<BoardClub> searchBoardStandardsByKeyword(Integer page, Integer size, String keyword) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("boardClubId").descending());
+        Page<BoardClub> pageBoardClubs = boardClubRepository.findAllSearch(keyword, pageRequest);
+
+        return pageBoardClubs;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BoardClub> searchBoardClubsBySpecificTag(Tag tag, Integer page, Integer size) {
+        return boardClubRepository.findByBoardClubTagsTag(tag, PageRequest.of(page, size, Sort.by("boardClubId").descending()));
+    }
+
     public void deleteBoardClub(Long boardClubId) {
         BoardClub findBoardClub = findVerifiedBoardClub(boardClubId);
 

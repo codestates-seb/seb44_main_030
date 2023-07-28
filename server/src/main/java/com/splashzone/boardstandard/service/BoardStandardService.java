@@ -81,11 +81,16 @@ public class BoardStandardService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BoardStandard> searchBoardStandards(Integer page, Integer size, String keyword) {
+    public Page<BoardStandard> searchBoardStandardsByKeyword(Integer page, Integer size, String keyword) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("boardStandardId").descending());
         Page<BoardStandard> pageBoardStandards = boardStandardRepository.findAllSearch(keyword, pageRequest);
 
         return pageBoardStandards;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BoardStandard> searchBoardStandardsBySpecificTag(Tag tag, Integer page, Integer size) {
+        return boardStandardRepository.findByBoardStandardTagsTag(tag, PageRequest.of(page, size, Sort.by("boardStandardId").descending()));
     }
 
     public void deleteBoardStandard(Long boardStandardId) {

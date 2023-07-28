@@ -55,7 +55,16 @@ public class BoardClubCommentController {
     public ResponseEntity patchBoardClubComment(Authentication authentication,
                                                 @PathVariable("club-comment-id") @Positive Long boardClubCommentId,
                                                 @Valid @RequestBody BoardClubCommentDto.Patch requestBody) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
+
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardClubCommentService.findBoardClubComment(boardClubCommentId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
 

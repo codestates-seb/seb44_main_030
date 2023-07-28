@@ -11,6 +11,8 @@ import com.splashzone.dto.MultiResponseDto;
 import com.splashzone.dto.SingleResponseDto;
 import com.splashzone.member.entity.Member;
 import com.splashzone.member.service.MemberService;
+import com.splashzone.tag.entity.Tag;
+import com.splashzone.tag.service.TagService;
 import com.splashzone.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,11 +38,12 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BoardClubController {
     private final static String BOARD_CLUB_DEFAULT_URL = "/clubs";
-    private static final int RECOMMEND_LIKE_COUNT = 1;
+    private static final int RECOMMEND_LIKE_COUNT = 5;
     private final BoardClubService boardClubService;
     private final BoardClubMapper boardClubMapper;
     private final BoardClubRepository boardClubRepository;
     private final MemberService memberService;
+    private final TagService tagService;
 
     @PostMapping
     public ResponseEntity postBoardClub(Authentication authentication,
@@ -48,7 +51,6 @@ public class BoardClubController {
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
-        System.out.println("postClub MEMBER: " + member);
 
         BoardClub boardClub = boardClubMapper.boardClubPostDtotoBoardClub(postDto);
         boardClub.setMember(member);
@@ -63,10 +65,18 @@ public class BoardClubController {
     public ResponseEntity patchBoardClub(Authentication authentication,
                                          @PathVariable("club-id") @Positive Long boardClubId,
                                          @Valid @RequestBody BoardClubDto.Patch patchDto) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
+        if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
+                boardClubService.findBoardClub(boardClubId).getMember())) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
         Member member = memberService.findMemberByUsername(memberDetails.getUsername());
-        System.out.println("patchClub MEMBER: " + member);
 
         BoardClub boardClub = boardClubMapper.boardClubPatchDtotoBoardClub(patchDto, boardClubId);
         boardClub.setMember(member);
@@ -91,6 +101,29 @@ public class BoardClubController {
     public ResponseEntity getBoardClubs(@Positive @RequestParam Integer page,
                                         @Positive @RequestParam Integer size) {
         Page<BoardClub> pageBoardClubs = boardClubService.findBoardClubs(page - 1, size);
+        List<BoardClub> boardClubs = pageBoardClubs.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boardClubMapper.boardClubsToBoardClubResponseDtos(boardClubs), pageBoardClubs), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity getBoardClubsByKeyword(@Positive @RequestParam Integer page,
+                                                 @Positive @RequestParam Integer size,
+                                                 @RequestParam(value = "keyword") String keyword) {
+        Page<BoardClub> pageBoardClubs = boardClubService.searchBoardStandardsByKeyword(page - 1, size, keyword);
+        List<BoardClub> boardClubs = pageBoardClubs.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(boardClubMapper.boardClubsToBoardClubResponseDtos(boardClubs), pageBoardClubs), HttpStatus.OK);
+    }
+
+    @GetMapping("/tags/{tag-id}")
+    public ResponseEntity getBoardClubsByTag(@PathVariable("tag-id") @Positive Long tagId,
+                                             @Positive @RequestParam Integer page,
+                                             @Positive @RequestParam Integer size) {
+        Tag tag = tagService.findTagById(tagId);
+        Page<BoardClub> pageBoardClubs = boardClubService.searchBoardClubsBySpecificTag(tag, page - 1, size);
         List<BoardClub> boardClubs = pageBoardClubs.getContent();
 
         return new ResponseEntity<>(
