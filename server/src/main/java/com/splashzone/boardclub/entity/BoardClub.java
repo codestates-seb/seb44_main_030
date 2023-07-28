@@ -72,6 +72,10 @@ public class BoardClub extends Auditable {
     @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BoardClubComment> boardClubComments = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "boardClub", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<BoardClubLike> boardClubLikes = new ArrayList<>();
+
     public enum BoardClubStatus {
         BOARD_CLUB_RECRUITING("모집 중"),
         BOARD_CLUB_COMPLETED("모집 완료"),
