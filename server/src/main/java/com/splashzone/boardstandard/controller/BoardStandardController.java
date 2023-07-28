@@ -138,10 +138,6 @@ public class BoardStandardController {
     @DeleteMapping("/{standard-id}")
     public ResponseEntity deleteBoardStandard(Authentication authentication,
                                               @PathVariable("standard-id") @Positive Long boardStandardId) {
-        if (authentication == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
