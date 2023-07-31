@@ -36,6 +36,11 @@ spring:
     servlet:
       encoding:
         force-response: true
+  redis:
+    port: 6379
+  cache:
+    type: redis
+    cache-names: myCache
 
 mail:
   address:
