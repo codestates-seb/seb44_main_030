@@ -48,6 +48,10 @@ public class BoardStandard extends Auditable {
     @OneToMany(mappedBy = "boardStandard", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BoardStandardComment> boardStandardComments = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "boardStandard", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<BoardStandardLike> boardStandardLikes = new ArrayList<>();
+
     public void changeBoardStandard(BoardStandard boardStandard, List<BoardStandardTag> standardTags) {
         this.title = boardStandard.getTitle();
         this.content = boardStandard.getContent();
