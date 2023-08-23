@@ -65,6 +65,10 @@ public class BoardClubController {
     public ResponseEntity patchBoardClub(Authentication authentication,
                                          @PathVariable("club-id") @Positive Long boardClubId,
                                          @Valid @RequestBody BoardClubDto.Patch patchDto) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
@@ -129,6 +133,9 @@ public class BoardClubController {
     @DeleteMapping("/{club-id}")
     public ResponseEntity deleteBoardClub(Authentication authentication,
                                           @PathVariable("club-id") @Positive Long boardClubId) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),

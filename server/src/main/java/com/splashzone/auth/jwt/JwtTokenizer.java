@@ -1,8 +1,6 @@
 package com.splashzone.auth.jwt;
 
-import com.splashzone.auth.redis.service.RedisService;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -20,8 +18,6 @@ import java.util.Map;
 
 @Component
 public class JwtTokenizer {
-    private RedisService redisService;
-
     @Getter
     @Value("${jwt.key}")
     private String secretKey;
@@ -33,34 +29,6 @@ public class JwtTokenizer {
     @Getter
     @Value("${jwt.refresh-token-expiration-minutes}")
     private int refreshTokenExpirationMinutes;
-
-    public JwtTokenizer(RedisService redisService) {
-        this.redisService = redisService;
-    }
-
-    public Jws<Claims> validateRefreshToken(String token, String username) {
-        Key key = getKeyFromBase64EncodedKey(encodeBase64SecretKey(secretKey));
-        Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-
-        String storedRefreshToken = redisService.get(username);
-        if (!token.equals(storedRefreshToken)) {
-            throw new ExpiredJwtException(null, null, "Refresh token is not valid");
-        }
-
-        return claims;
-    }
-
-    public String delegateRefreshToken(String username) {
-        String subject = username;
-        Date expiration = this.getTokenExpiration(this.getRefreshTokenExpirationMinutes());
-        String base64EncodedSecretKey = this.encodeBase64SecretKey(this.getSecretKey());
-
-        String refreshToken = this.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
-
-        redisService.set(username, refreshToken, refreshTokenExpirationMinutes);
-
-        return refreshToken;
-    }
 
     public String encodeBase64SecretKey(String secretKey) {
         return Encoders.BASE64.encode(secretKey.getBytes(StandardCharsets.UTF_8));
@@ -84,18 +52,14 @@ public class JwtTokenizer {
     public String generateRefreshToken(String subject, Date expiration, String base64EncodedSecretKey) {
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
 
-        String refreshToken = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(Calendar.getInstance().getTime())
                 .setExpiration(expiration)
                 .signWith(key)
                 .compact();
-        redisService.set(subject, refreshToken, refreshTokenExpirationMinutes);
-
-        return refreshToken;
     }
 
-    // 검증 후, Claims을 반환 하는 용도
     public Jws<Claims> getClaims(String jws, String base64EncodedSecretKey) {
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
 
@@ -106,7 +70,6 @@ public class JwtTokenizer {
         return claims;
     }
 
-    // 단순히 검증만 하는 용도로 쓰일 경우
     public void verifySignature(String jws, String base64EncodedSecretKey) {
         Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
 

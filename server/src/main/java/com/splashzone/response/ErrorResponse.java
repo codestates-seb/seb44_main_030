@@ -1,66 +1,51 @@
 package com.splashzone.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.splashzone.exception.ExceptionCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import javax.validation.ConstraintViolation;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
+@AllArgsConstructor
 public class ErrorResponse {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private int status;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String message;
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<FieldError> fieldErrors;
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<ConstraintViolationError> violationErrors;
-
-    private ErrorResponse(int status, String message) {
-        this.status = status;
-        this.message = message;
-    }
-
-    private ErrorResponse(final List<FieldError> fieldErrors,
-                          final List<ConstraintViolationError> violationErrors) {
-        this.fieldErrors = fieldErrors;
-        this.violationErrors = violationErrors;
-    }
+    private final Integer status;
+    private final String message;
+    private final List<FieldError> fieldErrors;
+    private final List<ConstraintViolationError> violationErrors;
 
     public static ErrorResponse of(BindingResult bindingResult) {
-        return new ErrorResponse(FieldError.of(bindingResult), null);
+        return new ErrorResponse(400, null, FieldError.of(bindingResult), null);
     }
 
     public static ErrorResponse of(Set<ConstraintViolation<?>> violations) {
-        return new ErrorResponse(null, ConstraintViolationError.of(violations));
+        return new ErrorResponse(400, null, null, ConstraintViolationError.of(violations));
     }
 
     public static ErrorResponse of(ExceptionCode exceptionCode) {
-        return new ErrorResponse(exceptionCode.getStatus(), exceptionCode.getMessage());
+        return new ErrorResponse(exceptionCode.getStatus(), exceptionCode.getMessage(), null, null);
     }
 
     public static ErrorResponse of(HttpStatus httpStatus) {
-        return new ErrorResponse(httpStatus.value(), httpStatus.getReasonPhrase());
+        return new ErrorResponse(httpStatus.value(), httpStatus.getReasonPhrase(), null, null);
     }
 
     public static ErrorResponse of(HttpStatus httpStatus, String message) {
-        return new ErrorResponse(httpStatus.value(), message);
+        return new ErrorResponse(httpStatus.value(), message, null, null);
     }
 
     @Getter
     public static class FieldError {
-        private String field;
-        private Object rejectedValue;
-        private String reason;
+        private final String field;
+        private final Object rejectedValue;
+        private final String reason;
 
         private FieldError(String field, Object rejectedValue, String reason) {
             this.field = field;
@@ -83,9 +68,9 @@ public class ErrorResponse {
 
     @Getter
     public static class ConstraintViolationError {
-        private String propertyPath;
-        private Object rejectedValue;
-        private String reason;
+        private final String propertyPath;
+        private final Object rejectedValue;
+        private final String reason;
 
         private ConstraintViolationError(String propertyPath, Object rejectedValue,
                                          String reason) {
@@ -104,4 +89,6 @@ public class ErrorResponse {
                     )).collect(Collectors.toList());
         }
     }
+
+
 }
