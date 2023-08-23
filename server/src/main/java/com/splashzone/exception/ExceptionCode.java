@@ -2,6 +2,7 @@ package com.splashzone.exception;
 
 import lombok.Getter;
 
+@Getter
 public enum ExceptionCode {
     MEMBER_NOT_FOUND(404, "Member not found"),
     MEMBER_EXISTS(409, "Member exists"),
@@ -16,14 +17,11 @@ public enum ExceptionCode {
     INVALID_DATE_FORMAT(400, "Invalid date format"),
     DOLPHIN_NOT_FOUND(404, "Dolphin not found");
 
-    @Getter
-    private int status;
+    private final int status;
+    private final String message;
 
-    @Getter
-    private String message;
-
-    ExceptionCode(int code, String message) {
-        this.status = code;
+    ExceptionCode(int statusCode, String message){
+        this.status = statusCode;
         this.message = message;
     }
 }

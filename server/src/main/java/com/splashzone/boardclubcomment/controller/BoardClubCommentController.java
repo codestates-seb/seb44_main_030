@@ -55,6 +55,10 @@ public class BoardClubCommentController {
     public ResponseEntity patchBoardClubComment(Authentication authentication,
                                                 @PathVariable("club-comment-id") @Positive Long boardClubCommentId,
                                                 @Valid @RequestBody BoardClubCommentDto.Patch requestBody) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
@@ -108,6 +112,10 @@ public class BoardClubCommentController {
     @DeleteMapping("/{club-comment-id}")
     public ResponseEntity deleteBoardClubComment(Authentication authentication,
                                                  @PathVariable("club-comment-id") @Positive Long boardClubCommentId) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),

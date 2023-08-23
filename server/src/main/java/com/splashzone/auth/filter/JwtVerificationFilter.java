@@ -5,7 +5,6 @@ import com.splashzone.auth.userdetails.MemberDetails;
 import com.splashzone.auth.userdetails.MemberDetailsService;
 import com.splashzone.auth.utils.CustomAuthorityUtils;
 import com.splashzone.member.entity.Member;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,7 +21,10 @@ import java.io.IOException;
 
 import io.jsonwebtoken.security.SignatureException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtTokenizer jwtTokenizer;
@@ -35,33 +37,20 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (request.getMethod().equals("OPTIONS")) {
+            return;
+        }
         try {
             Map<String, Object> claims = verifyJws(request);
             setAuthenticationToContext(claims);
-        } catch (ExpiredJwtException ee) {
-            String refreshToken = request.getHeader("Refresh");
-            if (refreshToken != null) {
-                try {
-                    Claims jwtClaims = ee.getClaims();
-                    String username = jwtClaims.getSubject();
-                    jwtTokenizer.validateRefreshToken(refreshToken, username);
-                    Date newExpiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
-                    String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-                    String newAccessToken = jwtTokenizer.generateAccessToken(jwtClaims, username, newExpiration, base64EncodedSecretKey);
-
-                    String newRefreshToken = jwtTokenizer.delegateRefreshToken(username);
-                    response.setHeader("Authorization", "Bearer " + newAccessToken);
-                    response.setHeader("Refresh", newRefreshToken);
-
-                } catch (ExpiredJwtException e) {
-                    throw new ServletException("Refresh token expired");
-                }
-            }
         } catch (SignatureException se) {
             request.setAttribute("exception", se);
+        } catch (ExpiredJwtException ee) {
+            request.setAttribute("exception", ee);
         } catch (Exception e) {
             request.setAttribute("exception", e);
         }
+
         filterChain.doFilter(request, response);
     }
 
@@ -77,12 +66,14 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         String jws = request.getHeader("Authorization").replace("Bearer ", "");
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         Map<String, Object> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
-
+        System.out.println(claims);
         return claims;
     }
 
+    //TODO 이 메서드 다시 확인해보기
     private void setAuthenticationToContext(Map<String, Object> claims) {
         String username = (String) claims.get("username");
+        System.out.println("\n*\n*\n*\n*\n*\n setAuthenticationToContext - claims: " + claims);
         List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List) claims.get("roles"));
         List<String> roles = new ArrayList<>();
         authorities.forEach(s -> roles.add(s.getAuthority()));
@@ -93,5 +84,10 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(new MemberDetails(authorityUtils, member), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        System.out.println("setAuthenticationToContext - authentication: " + authentication);
+
+
     }
+
 }

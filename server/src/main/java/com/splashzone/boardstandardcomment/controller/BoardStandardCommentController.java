@@ -55,6 +55,10 @@ public class BoardStandardCommentController {
     public ResponseEntity patchBoardStandardComment(Authentication authentication,
                                                     @PathVariable("standard-comment-id") @Positive Long boardStandardCommentId,
                                                     @Valid @RequestBody BoardStandardCommentDto.Patch requestBody) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
@@ -107,6 +111,10 @@ public class BoardStandardCommentController {
     @DeleteMapping("/{standard-comment-id}")
     public ResponseEntity deleteBoardStandardComment(Authentication authentication,
                                                      @PathVariable("standard-comment-id") @Positive Long boardStandardCommentId) {
+        if (authentication == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         UserDetails memberDetails = (MemberDetails) authentication.getPrincipal();
 
         if (!Objects.equals(memberService.findMemberByUsername(memberDetails.getUsername()),
